@@ -180,7 +180,7 @@ const EventsIntroSection: React.FC = () => {
         {/* == NEW: DEDICATED MOBILE/TABLET CAROUSEL FOR EVENT CATEGORIES == */}
         {/* =================================================================== */}
         <div className="md:hidden flex overflow-x-auto space-x-4 pb-6 snap-x snap-mandatory hide-scrollbar -mx-4 px-4">
-          {eventCategories.map((category, index) => (
+          {eventCategories.map((category) => (
             <div key={category.id} className="flex-shrink-0 w-[80vw] sm:w-[60vw] snap-center">
               <EventCard
                 category={category}
@@ -194,7 +194,7 @@ const EventsIntroSection: React.FC = () => {
         {/* == DESKTOP GRID FOR EVENT CATEGORIES == */}
         {/* =================================================================== */}
         <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-16">
-          {eventCategories.map((category, index) => (
+          {eventCategories.map((category) => (
             <EventCard
               key={category.id}
               category={category}

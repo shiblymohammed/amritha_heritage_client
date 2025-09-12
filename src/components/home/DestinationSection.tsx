@@ -217,7 +217,7 @@ const DestinationSection: React.FC = () => {
               willChange: 'transform',
             }}
           >
-            {destinations.map((destination, index) => (
+            {destinations.map((destination) => (
               <div key={destination.id} className="flex-shrink-0 w-[80vw] p-2">
                 <DestinationCard destination={destination} />
               </div>
@@ -243,11 +243,10 @@ const DestinationSection: React.FC = () => {
         {/* == DESKTOP GRID (Refined) == */}
         {/* =================================================================== */}
         <div className="hidden lg:grid grid-cols-3 gap-8 mb-16">
-          {destinations.map((destination, index) => (
+          {destinations.map((destination) => (
             <DestinationCard
               key={destination.id}
               destination={destination}
-              index={index}
             />
           ))}
         </div>
