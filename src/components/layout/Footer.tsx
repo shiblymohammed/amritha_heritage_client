@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // =================================================================
 // == ATOMIC COMPONENTS for a Cleaner Structure
 // =================================================================
 
 // Re-usable Social Icon component
-const SocialIcon = ({ href, title, children }) => (
+const SocialIcon = ({ href, title, children }: { href: string; title: string; children: React.ReactNode }) => (
   <a
     href={href}
     title={title}
@@ -16,7 +16,7 @@ const SocialIcon = ({ href, title, children }) => (
 );
 
 // Re-usable Footer Link component
-const FooterLink = ({ href, children }) => (
+const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <li>
     <a href={href} className="font-poppins text-foreground-subtle relative inline-block after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-accent-gold after:bottom-0 after:left-0 after:scale-x-0 after:origin-left hover:after:scale-x-100 after:transition-transform hover:text-accent-gold transition-colors duration-300">
       {children}
@@ -25,11 +25,11 @@ const FooterLink = ({ href, children }) => (
 );
 
 // A dedicated component for the link columns
-const FooterLinkGroup = ({ title, links }) => (
+const FooterLinkGroup = ({ title, links }: { title: string; links: string[] }) => (
   <div>
     <h3 className="font-playfair text-h4 text-foreground mb-6">{title}</h3>
     <ul className="space-y-4">
-      {links.map((link) => (
+      {links.map((link: string) => (
         <FooterLink key={link} href="#">{link}</FooterLink>
       ))}
     </ul>
@@ -68,13 +68,13 @@ function Footer() {
   }, []);
 
   // Helper function for staggered fade-in animations
-  const getAnimClass = (delay) => 
+  const getAnimClass = (_delay: number) => 
     `transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`;
 
   return (
     <>
       {/* CSS for responsive clip-path and custom pattern */}
-      <style jsx global>{`
+      <style>{`
         .heritage-pattern {
           background-image:
             linear-gradient(45deg, rgb(var(--color-border) / 0.1) 25%, transparent 25%),

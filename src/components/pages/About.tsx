@@ -9,7 +9,7 @@ const About = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const parallaxOffset = scrollY * 0.3;
+  const _parallaxOffset = scrollY * 0.3;
 
   // Public images
   const heroImage = "/images/Intro/intro3.webp";

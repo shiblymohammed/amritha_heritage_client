@@ -1,12 +1,11 @@
 // src/pages/Dining.tsx
 
-import React, { useState, useEffect, useMemo, memo } from 'react';
+import { useState, useEffect, useMemo, memo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { menuData, getFeaturedDishes, type MenuItem, type MenuCollection } from '../data/menuData';
 import { useDailySpecials } from '../hooks/useDailySpecials';
 import LazyImage from '../hooks/LazyImage';
-import LazyVideo from '../hooks/LazyVideo';
 
 // --- Helper Types ---
 interface DishCarouselProps {

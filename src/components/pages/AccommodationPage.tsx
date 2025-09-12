@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { CSSTransition } from 'react-transition-group';
 import { ChevronRight, Star, MapPin, Clock, Users, Wifi, Coffee, Car, Utensils, Dumbbell } from 'lucide-react';
+import MarzipanoViewer from '../ui/MarziPanoViewer'; // Make sure this path is correct
 
 interface RoomType {
   id: string;
@@ -13,6 +14,7 @@ interface RoomType {
   size: string;
   features: string[];
   amenities: string[];
+  panoSceneId: string; // Links room to a 360 scene
 }
 
 const roomTypes: RoomType[] = [
@@ -25,7 +27,8 @@ const roomTypes: RoomType[] = [
     capacity: 2,
     size: '450 sq ft',
     features: ['Colonial Style', 'Period Furniture', 'Natural Lighting', 'Complimentary Breakfast'],
-    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service']
+    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service'],
+    panoSceneId: '0-president-deluxe'
   },
   {
     id: 'magistrate-executive',
@@ -36,7 +39,8 @@ const roomTypes: RoomType[] = [
     capacity: 3,
     size: '520 sq ft',
     features: ['Extra Space', 'Work Area', 'Lounge Space', 'Premium Amenities'],
-    amenities: ['King Bed + Sofa Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Work Desk', 'Coffee Maker']
+    amenities: ['King Bed + Sofa Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Work Desk', 'Coffee Maker'],
+    panoSceneId: '1-magistrate-executive'
   },
   {
     id: 'collector-deluxe',
@@ -47,7 +51,8 @@ const roomTypes: RoomType[] = [
     capacity: 2,
     size: '480 sq ft',
     features: ['Classic Wooden Decor', 'City View', 'Traditional Artwork', 'Complimentary Breakfast'],
-    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar']
+    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar'],
+    panoSceneId: '2-collector-deluxe'
   },
   {
     id: 'residency-executive',
@@ -58,7 +63,8 @@ const roomTypes: RoomType[] = [
     capacity: 3,
     size: '520 sq ft',
     features: ['Spacious Layout', 'Quiet Wing', 'Premium Bedding', 'Desk & Seating Area'],
-    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service']
+    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service'],
+    panoSceneId: '0-president-deluxe' // Example: reusing a scene
   },
   {
     id: 'plantation-deluxe',
@@ -69,7 +75,8 @@ const roomTypes: RoomType[] = [
     capacity: 2,
     size: '460 sq ft',
     features: ['Heritage Design', 'Garden View', 'Natural Lighting', 'Complimentary Breakfast'],
-    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar']
+    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar'],
+    panoSceneId: '1-magistrate-executive' // Example: reusing a scene
   }
 ];
 
@@ -94,7 +101,8 @@ const AnimateOnScroll: React.FC<{ children: React.ReactNode; className?: string;
 const AccommodationPage: React.FC = () => {
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [showRoomDetails, setShowRoomDetails] = useState(false);
-  const modalRef = useRef(null); // Ref for CSSTransition
+  const [panoScene, setPanoScene] = useState<string | null>(null); // State for 360 viewer
+  const modalRef = useRef(null);
 
   const handleViewDetails = (room: RoomType) => {
     setSelectedRoom(room);
@@ -103,9 +111,11 @@ const AccommodationPage: React.FC = () => {
 
   const handleCloseDetails = () => {
     setShowRoomDetails(false);
-    // Let animation finish before clearing data
     setTimeout(() => setSelectedRoom(null), 300); 
   };
+  
+  const handleOpenPano = (sceneId: string) => setPanoScene(sceneId);
+  const handleClosePano = () => setPanoScene(null);
 
   return (
     <>
@@ -203,7 +213,7 @@ const AccommodationPage: React.FC = () => {
                           <ChevronRight className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => window.open(room.image, '_blank')}
+                          onClick={() => handleOpenPano(room.panoSceneId)}
                           className="w-full btn btn-secondary flex items-center justify-center gap-2"
                           title="Open 360° view"
                         >
@@ -332,7 +342,6 @@ const AccommodationPage: React.FC = () => {
             </AnimateOnScroll>
           </div>
         </section>
-
       </div>
 
       {/* Room Details Modal */}
@@ -341,10 +350,8 @@ const AccommodationPage: React.FC = () => {
           in={showRoomDetails}
           timeout={300}
           classNames={{
-            enter: 'modal-backdrop-enter',
-            enterActive: 'modal-backdrop-enter-active',
-            exit: 'modal-backdrop-exit',
-            exitActive: 'modal-backdrop-exit-active',
+            enter: 'modal-backdrop-enter', enterActive: 'modal-backdrop-enter-active',
+            exit: 'modal-backdrop-exit', exitActive: 'modal-backdrop-exit-active',
           }}
           unmountOnExit
           nodeRef={modalRef}
@@ -354,8 +361,17 @@ const AccommodationPage: React.FC = () => {
             room={selectedRoom}
             onClose={handleCloseDetails} 
             show={showRoomDetails}
+            onOpenPano={handleOpenPano}
           />
         </CSSTransition>
+      )}
+
+      {/* Marzipano 360 Viewer Modal */}
+      {panoScene && (
+        <MarzipanoViewer 
+          initialSceneId={panoScene} 
+          onClose={handleClosePano} 
+        />
       )}
     </>
   );
@@ -366,9 +382,10 @@ interface RoomDetailsModalProps {
   room: RoomType;
   onClose: () => void;
   show: boolean;
+  onOpenPano: (sceneId: string) => void;
 }
 
-const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>(({ room, onClose, show }, ref) => {
+const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>(({ room, onClose, show, onOpenPano }, ref) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const contentRef = useRef(null);
   
@@ -383,27 +400,12 @@ const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>
   const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + roomImages.length) % roomImages.length);
 
   return (
-    <div
-      ref={ref}
-      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto"
-      onClick={onClose}
-    >
-      <CSSTransition
-        in={show}
-        timeout={300}
-        classNames={{
-          enter: 'modal-content-enter',
-          enterActive: 'modal-content-enter-active',
-          exit: 'modal-content-exit',
-          exitActive: 'modal-content-exit-active',
-        }}
-        nodeRef={contentRef}
-      >
-        <div
-          ref={contentRef}
-          className="bg-background-tertiary rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-y-auto"
-          onClick={(e) => e.stopPropagation()}
-        >
+    <div ref={ref} className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto" onClick={onClose}>
+      <CSSTransition in={show} timeout={300} classNames={{
+          enter: 'modal-content-enter', enterActive: 'modal-content-enter-active',
+          exit: 'modal-content-exit', exitActive: 'modal-content-exit-active',
+        }} nodeRef={contentRef}>
+        <div ref={contentRef} className="bg-background-tertiary rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
           <div className="sticky top-0 bg-background-tertiary rounded-t-3xl p-6 border-b border-border-soft z-10">
             <div className="flex justify-between items-start">
               <div>
@@ -411,156 +413,99 @@ const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>
                 <p className="font-cormorant text-lg text-text-subtle">{room.description}</p>
               </div>
               <button onClick={onClose} className="text-text-subtle hover:text-text-heading transition-colors p-2">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
           </div>
-
           <div className="p-6">
-             {/* Image Carousel */}
             <div className="relative mb-8">
                 <div className="relative h-80 md:h-96 rounded-2xl overflow-hidden">
-                    <img 
-                    src={roomImages[currentImageIndex]} 
-                    alt={`${room.name} - Image ${currentImageIndex + 1}`}
-                    className="w-full h-full object-cover"
-                    />
-                
-                    <button
-                    onClick={prevImage}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
-                    >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
+                    <img src={roomImages[currentImageIndex]} alt={`${room.name} - Image ${currentImageIndex + 1}`} className="w-full h-full object-cover" />
+                    <button onClick={prevImage} className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                     </button>
-                    <button
-                    onClick={nextImage}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
-                    >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                    <button onClick={nextImage} className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                     </button>
                 </div>
                 <div className="flex justify-center mt-4 gap-2">
                     {roomImages.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setCurrentImageIndex(index)}
-                        className={`w-3 h-3 rounded-full transition-colors ${
-                        index === currentImageIndex ? 'bg-action-accent' : 'bg-border-soft'
-                        }`}
-                    />
+                    <button key={index} onClick={() => setCurrentImageIndex(index)} className={`w-3 h-3 rounded-full transition-colors ${ index === currentImageIndex ? 'bg-action-accent' : 'bg-border-soft' }`} />
                     ))}
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-8">
-                <div>
-                    <h3 className="font-playfair text-2xl text-text-heading mb-4">Room Description</h3>
-                    <p className="font-cormorant text-text-subtle leading-relaxed">
-                    Experience the perfect blend of colonial heritage and modern comfort in our {room.name.toLowerCase()}. 
-                    This thoughtfully designed space features {room.features.join(', ').toLowerCase()}, 
-                    creating an atmosphere that transports you to a bygone era while providing all the conveniences of today.
-                    </p>
-                </div>
-                <div>
-                    <h3 className="font-playfair text-2xl text-text-heading mb-4">Key Features</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {room.features.map((feature, index) => (
-                        <div key={index} className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-action-accent rounded-full"></div>
-                        <span className="font-cormorant text-text-subtle">{feature}</span>
-                        </div>
-                    ))}
+                    <div>
+                        <h3 className="font-playfair text-2xl text-text-heading mb-4">Room Description</h3>
+                        <p className="font-cormorant text-text-subtle leading-relaxed">
+                        Experience the perfect blend of colonial heritage and modern comfort in our {room.name.toLowerCase()}. 
+                        This thoughtfully designed space features {room.features.join(', ').toLowerCase()}, 
+                        creating an atmosphere that transports you to a bygone era while providing all the conveniences of today.
+                        </p>
                     </div>
-                </div>
-                <div>
-                    <h3 className="font-playfair text-2xl text-text-heading mb-4">Amenities & Services</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {room.amenities.map((amenity, index) => (
-                        <div key={index} className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-background-secondary rounded-lg flex items-center justify-center">
-                            <Wifi className="w-4 h-4 text-action-accent" />
+                    <div>
+                        <h3 className="font-playfair text-2xl text-text-heading mb-4">Key Features</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {room.features.map((feature, index) => (
+                            <div key={index} className="flex items-center gap-3">
+                            <div className="w-2 h-2 bg-action-accent rounded-full"></div>
+                            <span className="font-cormorant text-text-subtle">{feature}</span>
+                            </div>
+                        ))}
                         </div>
-                        <span className="font-cormorant text-text-subtle">{amenity}</span>
-                        </div>
-                    ))}
                     </div>
-                </div>
+                    <div>
+                        <h3 className="font-playfair text-2xl text-text-heading mb-4">Amenities & Services</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {room.amenities.map((amenity, index) => (
+                            <div key={index} className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-background-secondary rounded-lg flex items-center justify-center">
+                                <Wifi className="w-4 h-4 text-action-accent" />
+                            </div>
+                            <span className="font-cormorant text-text-subtle">{amenity}</span>
+                            </div>
+                        ))}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 className="font-playfair text-2xl text-text-heading mb-4">360° Room View</h3>
+                        <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft text-center">
+                            <p className="font-cormorant text-foreground-subtle mb-4">Explore this room in immersive 360°.</p>
+                            <button onClick={() => onOpenPano(room.panoSceneId)} className="btn btn-secondary">
+                                Open 360° View
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="space-y-6">
-                <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft">
-                    <h3 className="font-playfair text-2xl text-text-heading mb-4">Room Details</h3>
-                    
-                    <div className="space-y-4 mb-6">
-                    <div className="flex justify-between items-center">
-                        <span className="font-cormorant text-text-subtle">Price per night</span>
-                        <span className="font-poppins font-semibold text-action-accent text-xl">{room.price}</span>
+                    <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft">
+                        <h3 className="font-playfair text-2xl text-text-heading mb-4">Room Details</h3>
+                        <div className="space-y-4 mb-6">
+                            <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Price per night</span><span className="font-poppins font-semibold text-action-accent text-xl">{room.price}</span></div>
+                            <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Room size</span><span className="font-poppins text-text-heading">{room.size}</span></div>
+                            <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Capacity</span><span className="font-poppins text-text-heading">{room.capacity} guests</span></div>
+                        </div>
+                        <button className="w-full btn btn-primary py-4">Book Now</button>
                     </div>
-                    <div className="flex justify-between items-center">
-                        <span className="font-cormorant text-text-subtle">Room size</span>
-                        <span className="font-poppins text-text-heading">{room.size}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="font-cormorant text-text-subtle">Capacity</span>
-                        <span className="font-poppins text-text-heading">{room.capacity} guests</span>
-                    </div>
-                    </div>
-
-                    <button className="w-full btn btn-primary py-4">
-                    Book Now
-                    </button>
-                </div>
-
-                <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft">
-                    <h3 className="font-playfair text-xl text-text-heading mb-4">Check-in & Check-out</h3>
-                    
-                    <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                        <Clock className="w-5 h-5 text-action-accent" />
-                        <div>
-                        <p className="font-poppins font-medium text-text-heading">Check-in</p>
-                        <p className="font-cormorant text-sm text-text-subtle">2:00 PM onwards</p>
+                    <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft">
+                        <h3 className="font-playfair text-xl text-text-heading mb-4">Check-in & Check-out</h3>
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-3"><Clock className="w-5 h-5 text-action-accent" /><div><p className="font-poppins font-medium text-text-heading">Check-in</p><p className="font-cormorant text-sm text-text-subtle">2:00 PM onwards</p></div></div>
+                            <div className="flex items-center gap-3"><Clock className="w-5 h-5 text-action-accent" /><div><p className="font-poppins font-medium text-text-heading">Check-out</p><p className="font-cormorant text-sm text-text-subtle">11:00 AM</p></div></div>
                         </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <Clock className="w-5 h-5 text-action-accent" />
-                        <div>
-                        <p className="font-poppins font-medium text-text-heading">Check-out</p>
-                        <p className="font-cormorant text-sm text-text-subtle">11:00 AM</p>
+                    <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft">
+                        <h3 className="font-playfair text-xl text-text-heading mb-4">Hotel Services</h3>
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-3"><Coffee className="w-5 h-5 text-action-accent" /><span className="font-cormorant text-text-subtle">24/7 Room Service</span></div>
+                            <div className="flex items-center gap-3"><Car className="w-5 h-5 text-action-accent" /><span className="font-cormorant text-text-subtle">Valet Parking</span></div>
+                            <div className="flex items-center gap-3"><Utensils className="w-5 h-5 text-action-accent" /><span className="font-cormorant text-text-subtle">Restaurant</span></div>
+                            <div className="flex items-center gap-3"><Dumbbell className="w-5 h-5 text-action-accent" /><span className="font-cormorant text-text-subtle">Fitness Center</span></div>
                         </div>
                     </div>
-                    </div>
-                </div>
-
-                <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft">
-                    <h3 className="font-playfair text-xl text-text-heading mb-4">Hotel Services</h3>
-                    
-                    <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                        <Coffee className="w-5 h-5 text-action-accent" />
-                        <span className="font-cormorant text-text-subtle">24/7 Room Service</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Car className="w-5 h-5 text-action-accent" />
-                        <span className="font-cormorant text-text-subtle">Valet Parking</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Utensils className="w-5 h-5 text-action-accent" />
-                        <span className="font-cormorant text-text-subtle">Restaurant</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Dumbbell className="w-5 h-5 text-action-accent" />
-                        <span className="font-cormorant text-text-subtle">Fitness Center</span>
-                    </div>
-                    </div>
-                </div>
                 </div>
             </div>
           </div>

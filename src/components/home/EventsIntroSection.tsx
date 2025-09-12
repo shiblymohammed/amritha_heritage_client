@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, memo } from 'react';
+import { useCallback, useMemo, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LazyImage from '../hooks/LazyImage';
 

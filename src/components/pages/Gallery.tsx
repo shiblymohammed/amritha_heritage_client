@@ -1,14 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { X as CloseIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import LazyImage from '../hooks/LazyImage';
 
 // This is the main gallery page component.
 // It includes a hero section, a filterable image grid, and an expanded modal with navigation.
 const Gallery = () => {
   // State for the parallax offset of the hero image.
-  const [parallaxOffset, setParallaxOffset] = useState(0);
+  const [_parallaxOffset, setParallaxOffset] = useState(0);
 
   // State for the currently selected image and its index.
   const [selectedImage, setSelectedImage] = useState<any>(null);
