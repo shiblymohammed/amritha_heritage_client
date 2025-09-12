@@ -65,7 +65,7 @@ SectionHeader.displayName = 'SectionHeader';
 // =================================================================
 // == OPTIMIZED DESTINATION CARD (Refined for reuse)
 // =================================================================
-const DestinationCard = memo<{ destination: Destination; index: number }>(({ destination, index }) => {
+const DestinationCard = memo<{ destination: Destination }>(({ destination }) => {
   return (
     <div className="group h-full flex flex-col bg-background-secondary rounded-2xl lg:rounded-3xl shadow-soft-sunlight-lg overflow-hidden hover:shadow-golden-glow transition-all duration-300 lg:hover:-translate-y-2 will-change-transform">
       {/* Image Container */}
@@ -219,7 +219,7 @@ const DestinationSection: React.FC = () => {
           >
             {destinations.map((destination, index) => (
               <div key={destination.id} className="flex-shrink-0 w-[80vw] p-2">
-                <DestinationCard destination={destination} index={index} />
+                <DestinationCard destination={destination} />
               </div>
             ))}
           </div>

@@ -60,7 +60,7 @@ interface EventCategory {
 }
 
 // Optimized Event Card Component (Unchanged)
-const EventCard = memo<{ category: EventCategory; index: number; onNavigate: (id: string) => void }>(({ category, index, onNavigate }) => {
+const EventCard = memo<{ category: EventCategory; onNavigate: (id: string) => void }>(({ category, onNavigate }) => {
   const handleClick = useCallback(() => {
     onNavigate(category.id);
   }, [category.id, onNavigate]);
@@ -184,7 +184,6 @@ const EventsIntroSection: React.FC = () => {
             <div key={category.id} className="flex-shrink-0 w-[80vw] sm:w-[60vw] snap-center">
               <EventCard
                 category={category}
-                index={index}
                 onNavigate={handleCategoryNavigate}
               />
             </div>
@@ -199,7 +198,6 @@ const EventsIntroSection: React.FC = () => {
             <EventCard
               key={category.id}
               category={category}
-              index={index}
               onNavigate={handleCategoryNavigate}
             />
           ))}

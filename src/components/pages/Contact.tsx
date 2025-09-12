@@ -30,10 +30,7 @@ const Contact = () => {
     };
   }, []);
 
-  const getAnimClass = (_delay: number) =>
-    `transition-all duration-700 ease-out ${
-      isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-    }`;
+
 
   // --- Handlers ---
   const handleInputChange = (

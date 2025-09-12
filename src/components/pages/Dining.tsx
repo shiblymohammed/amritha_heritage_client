@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, memo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
+import 'swiper/css/bundle';
 import { menuData, getFeaturedDishes, type MenuItem, type MenuCollection } from '../data/menuData';
 import { useDailySpecials } from '../hooks/useDailySpecials';
 import LazyImage from '../hooks/LazyImage';
