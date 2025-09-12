@@ -142,6 +142,11 @@ export default {
       // == ANIMATION SYSTEM
       // =================================================================
       keyframes: {
+
+        scaleIn: {
+                '0%': { opacity: '0', transform: 'scale(0.95)' },
+                '100%': { opacity: '1', transform: 'scale(1)' },
+              },
         // Existing
         'fade-in': { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
         'fade-in-up': { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
@@ -197,6 +202,7 @@ export default {
         'tilt-3d': 'tilt-3d 4s ease-in-out infinite',
         'bounce-gentle': 'bounce-gentle 2s ease-in-out infinite',
         'scale-breath': 'scale-breath 3s ease-in-out infinite',
+        'scale-in': 'scaleIn 0.3s ease-out forwards',
       },
       // Required for gradient-flow animation
       backgroundSize: {
