@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useNavigate } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import { ChevronRight, Star, MapPin, Clock, Users, Wifi, Coffee, Car, Utensils, Dumbbell } from 'lucide-react';
 import MarzipanoViewer from '../ui/MarziPanoViewer'; // Make sure this path is correct
@@ -99,10 +100,10 @@ const AnimateOnScroll: React.FC<{ children: React.ReactNode; className?: string;
 };
 
 const AccommodationPage: React.FC = () => {
+  const navigate = useNavigate();
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [showRoomDetails, setShowRoomDetails] = useState(false);
   const [panoScene, setPanoScene] = useState<string | null>(null); // State for 360 viewer
-  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const modalRef = useRef(null);
 
   const handleViewDetails = (room: RoomType) => {
@@ -117,6 +118,16 @@ const AccommodationPage: React.FC = () => {
   
   const handleOpenPano = (sceneId: string) => setPanoScene(sceneId);
   const handleClosePano = () => setPanoScene(null);
+
+  const handleBookNow = (room: RoomType) => {
+    // Navigate to booking page with room pre-selected
+    navigate('/booking', { state: { selectedRoom: room } });
+  };
+
+  const handleExploreMore = () => {
+    // Navigate to facilities or gallery page
+    navigate('/facilities');
+  };
 
   return (
     <>
@@ -373,6 +384,7 @@ const AccommodationPage: React.FC = () => {
             onClose={handleCloseDetails} 
             show={showRoomDetails}
             onOpenPano={handleOpenPano}
+            onBookNow={handleBookNow}
           />
         </CSSTransition>
       )}
@@ -394,9 +406,10 @@ interface RoomDetailsModalProps {
   onClose: () => void;
   show: boolean;
   onOpenPano: (sceneId: string) => void;
+  onBookNow: (room: RoomType) => void;
 }
 
-const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>(({ room, onClose, show, onOpenPano }, ref) => {
+const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>(({ room, onClose, show, onOpenPano, onBookNow }, ref) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const contentRef = useRef(null);
   
@@ -499,7 +512,7 @@ const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>
                             <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Room size</span><span className="font-poppins text-text-heading">{room.size}</span></div>
                             <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Capacity</span><span className="font-poppins text-text-heading">{room.capacity} guests</span></div>
                         </div>
-                        <button className="w-full btn btn-primary py-4">Book Now</button>
+                        <button onClick={() => onBookNow(room)} className="w-full btn btn-primary py-4">Book Now</button>
                     </div>
                     <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft">
                         <h3 className="font-playfair text-xl text-text-heading mb-4">Check-in & Check-out</h3>
