@@ -11,5 +11,16 @@ export default defineConfig({
       '@': resolve(fileURLToPath(new URL('./src', import.meta.url)))
     }
   },
-  base: './',
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom']
+        }
+      }
+    }
+  }
 })

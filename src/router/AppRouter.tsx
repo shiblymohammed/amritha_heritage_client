@@ -38,7 +38,7 @@ function AppRouter() {
             } 
           />
 
-          About Page
+          {/* About Page */}
           <Route 
             path="/about" 
             element={
