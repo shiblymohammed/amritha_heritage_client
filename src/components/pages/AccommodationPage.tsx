@@ -18,66 +18,66 @@ interface RoomType {
 }
 
 const roomTypes: RoomType[] = [
-  {
-    id: 'president-deluxe',
-    name: "The President's Chamber — Deluxe",
-    description: 'A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts',
-    image: '/images/Accommodation/room (2).webp',
-    price: '₹8,500',
-    capacity: 2,
-    size: '450 sq ft',
-    features: ['Colonial Style', 'Period Furniture', 'Natural Lighting', 'Complimentary Breakfast'],
-    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service'],
+  {
+    id: 'president-deluxe',
+    name: "The President's Chamber — Deluxe",
+    description: 'A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts',
+    image: '/images/room1-desktop.webp',
+    price: '₹8,500',
+    capacity: 2,
+    size: '450 sq ft',
+    features: ['Colonial Style', 'Period Furniture', 'Natural Lighting', 'Complimentary Breakfast'],
+    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service'],
     panoSceneId: '0-president-deluxe'
-  },
-  {
-    id: 'magistrate-executive',
-    name: "The Magistrate's Chamber — Executive",
-    description: 'Executive class elegance with generous space and period details for a serene stay',
-    image: '/images/Accommodation/room (3).webp',
-    price: '₹10,500',
-    capacity: 3,
-    size: '520 sq ft',
-    features: ['Extra Space', 'Work Area', 'Lounge Space', 'Premium Amenities'],
-    amenities: ['King Bed + Sofa Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Work Desk', 'Coffee Maker'],
+  },
+  {
+    id: 'magistrate-executive',
+    name: "The Magistrate's Chamber — Executive",
+    description: 'Executive class elegance with generous space and period details for a serene stay',
+    image: '/images/room2-desktop.webp',
+    price: '₹10,500',
+    capacity: 3,
+    size: '520 sq ft',
+    features: ['Extra Space', 'Work Area', 'Lounge Space', 'Premium Amenities'],
+    amenities: ['King Bed + Sofa Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Work Desk', 'Coffee Maker'],
     panoSceneId: '1-magistrate-executive'
-  },
-  {
-    id: 'collector-deluxe',
-    name: "The Collector's Chamber — Deluxe",
-    description: 'Deluxe comfort with curated antique accents and a calm, sophisticated ambiance',
-    image: '/images/Accommodation/room (4).webp',
-    price: '₹7,500',
-    capacity: 2,
-    size: '480 sq ft',
-    features: ['Classic Wooden Decor', 'City View', 'Traditional Artwork', 'Complimentary Breakfast'],
-    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar'],
+  },
+  {
+    id: 'collector-deluxe',
+    name: "The Collector's Chamber — Deluxe",
+    description: 'Deluxe comfort with curated antique accents and a calm, sophisticated ambiance',
+    image: '/images/room3-desktop.webp',
+    price: '₹7,500',
+    capacity: 2,
+    size: '480 sq ft',
+    features: ['Classic Wooden Decor', 'City View', 'Traditional Artwork', 'Complimentary Breakfast'],
+    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar'],
     panoSceneId: '2-collector-deluxe'
-  },
-  {
-    id: 'residency-executive',
-    name: 'The Residency Room — Executive',
-    description: 'Executive refinement with heritage textures, ideal for business and leisure travelers',
-    image: '/images/Accommodation/room (5).webp',
-    price: '₹9,500',
-    capacity: 3,
-    size: '520 sq ft',
-    features: ['Spacious Layout', 'Quiet Wing', 'Premium Bedding', 'Desk & Seating Area'],
-    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service'],
+  },
+  {
+    id: 'residency-executive',
+    name: 'The Residency Room — Executive',
+    description: 'Executive refinement with heritage textures, ideal for business and leisure travelers',
+    image: '/images/room4-desktop.webp',
+    price: '₹9,500',
+    capacity: 3,
+    size: '520 sq ft',
+    features: ['Spacious Layout', 'Quiet Wing', 'Premium Bedding', 'Desk & Seating Area'],
+    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service'],
     panoSceneId: '0-president-deluxe' // Example: reusing a scene
-  },
-  {
-    id: 'plantation-deluxe',
-    name: 'The Plantation Room — Deluxe',
-    description: 'Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities',
-    image: '/images/Accommodation/room (6).webp',
-    price: '₹6,500',
-    capacity: 2,
-    size: '460 sq ft',
-    features: ['Heritage Design', 'Garden View', 'Natural Lighting', 'Complimentary Breakfast'],
-    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar'],
+  },
+  {
+    id: 'plantation-deluxe',
+    name: 'The Plantation Room — Deluxe',
+    description: 'Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities',
+    image: '/images/room5-desktop.webp',
+    price: '₹6,500',
+    capacity: 2,
+    size: '460 sq ft',
+    features: ['Heritage Design', 'Garden View', 'Natural Lighting', 'Complimentary Breakfast'],
+    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar'],
     panoSceneId: '1-magistrate-executive' // Example: reusing a scene
-  }
+  }
 ];
 
 // Helper component for scroll animations
@@ -102,6 +102,7 @@ const AccommodationPage: React.FC = () => {
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [showRoomDetails, setShowRoomDetails] = useState(false);
   const [panoScene, setPanoScene] = useState<string | null>(null); // State for 360 viewer
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const modalRef = useRef(null);
 
   const handleViewDetails = (room: RoomType) => {
@@ -137,17 +138,17 @@ const AccommodationPage: React.FC = () => {
               Amritha Heritage
             </p>
             <div className="opacity-0 animate-[fadeInUp_0.8s_ease-out_0.3s_forwards]">
-              <h1 className="font-cinzel text-5xl md:text-6xl lg:text-7xl mb-6 leading-tight text-foreground-on-color animate-float">
+              <h1 className="font-cinzel text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-4 sm:mb-6 leading-tight text-foreground-on-color animate-float">
                 Accommodation<br />
                 <span className="italic bg-gradient-to-r from-accent-gold to-accent bg-clip-text text-transparent">
                   Rooms & Suites
                 </span>
               </h1>
             </div>
-            <p className="font-cormorant text-lg md:text-xl mb-8 max-w-3xl mx-auto text-foreground-on-color/90 leading-relaxed opacity-0 animate-[fadeInUp_0.8s_ease-out_0.5s_forwards]">
+            <p className="font-cormorant text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-3xl mx-auto text-foreground-on-color/90 leading-relaxed opacity-0 animate-[fadeInUp_0.8s_ease-out_0.5s_forwards]">
               Experience the timeless elegance of our heritage rooms, thoughtfully designed with period charm and modern comfort.
             </p>
-            <button className="btn btn-primary text-lg px-8 py-4 shadow-golden-glow hover:shadow-golden-glow-sm transition-all duration-300 hover:scale-105 active:scale-95 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.7s_forwards]">
+            <button className="btn btn-primary text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 shadow-golden-glow hover:shadow-golden-glow-sm transition-all duration-300 hover:scale-105 active:scale-95 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.7s_forwards]">
               View Our Rooms
             </button>
           </div>
@@ -177,7 +178,7 @@ const AccommodationPage: React.FC = () => {
               {roomTypes.map((room, index) => (
                 <AnimateOnScroll key={room.id} delay={index * 100}>
                   <div className="card-base border border-border hover-lift hover-glow h-full flex flex-col">
-                    <div className="relative h-80 md:h-96 overflow-hidden rounded-t-2xl img-overlay">
+                    <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-2xl img-overlay">
                       <img 
                         src={room.image} 
                         alt={room.name}
@@ -187,14 +188,14 @@ const AccommodationPage: React.FC = () => {
                         {room.price}
                       </div>
                     </div>
-                    <div className="p-6 flex flex-col flex-grow">
-                      <h3 className="font-playfair text-2xl text-text-heading mb-3">
+                    <div className="p-4 md:p-5 flex flex-col flex-grow">
+                      <h3 className="font-playfair text-lg md:text-xl lg:text-2xl text-text-heading mb-2">
                         {room.name}
                       </h3>
-                      <p className="font-cormorant text-foreground-subtle mb-4 leading-relaxed flex-grow">
+                      <p className="font-cormorant text-sm md:text-base text-foreground-subtle mb-3 leading-relaxed flex-grow line-clamp-3">
                         {room.description}
                       </p>
-                      <div className="flex items-center gap-6 mb-6 text-sm text-foreground-subtle">
+                      <div className="flex items-center gap-4 mb-4 text-xs md:text-sm text-foreground-subtle">
                         <div className="flex items-center gap-2">
                           <Users className="w-5 h-5" />
                           <span>{room.capacity}</span>
@@ -207,17 +208,19 @@ const AccommodationPage: React.FC = () => {
                       <div className="grid grid-cols-2 gap-3 mt-auto">
                         <button
                           onClick={() => handleViewDetails(room)}
-                          className="w-full btn btn-primary flex items-center justify-center gap-2"
+                          className="w-full btn btn-primary flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-3"
                         >
-                          View Details
-                          <ChevronRight className="w-4 h-4" />
+                          <span className="hidden sm:inline">View Details</span>
+                          <span className="sm:hidden">Details</span>
+                          <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
                         </button>
                         <button
                           onClick={() => handleOpenPano(room.panoSceneId)}
-                          className="w-full btn btn-secondary flex items-center justify-center gap-2"
+                          className="w-full btn btn-secondary flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-3"
                           title="Open 360° view"
                         >
-                          View 360°
+                          <span className="hidden sm:inline">View 360°</span>
+                          <span className="sm:hidden">360°</span>
                         </button>
                       </div>
                     </div>
@@ -293,24 +296,26 @@ const AccommodationPage: React.FC = () => {
                     Take a visual journey through our heritage rooms and discover the elegance that awaits you
                 </p>
                 </AnimateOnScroll>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
                 {[
-                    '/images/Accommodation/room (1).webp', '/images/Accommodation/room (2).webp', '/images/Accommodation/room (3).webp',
-                    '/images/Accommodation/room (4).webp', '/images/Accommodation/room (5).webp', '/images/Accommodation/room (6).webp',
-                    '/images/Accommodation/room (7).webp', '/images/Accommodation/room (8).webp', '/images/Accommodation/room (9).webp',
-                    '/images/Accommodation/room (10).webp',
+                    '/images/Accommodation/roomgallery (1).webp', '/images/Accommodation/roomgallery (2).webp', '/images/Accommodation/roomgallery (3).webp',
+                    '/images/Accommodation/roomgallery (4).webp', '/images/Accommodation/roomgallery (5).webp', '/images/Accommodation/roomgallery (6).webp',
+                    '/images/Accommodation/roomgallery (7).webp', '/images/Accommodation/roomgallery (8).webp', '/images/Accommodation/roomgallery (9).webp',
+                    '/images/Accommodation/roomgallery (10).webp',
                 ].map((image, index) => (
-                    <AnimateOnScroll key={index} delay={index * 50} className="h-[90vh]">
-                        <div className="relative overflow-hidden cursor-pointer rounded-lg border border-border-soft h-full w-full">
+                    <AnimateOnScroll key={index} delay={index * 50}>
+                        <div 
+                            className="relative overflow-hidden cursor-pointer rounded-lg border border-border-soft w-full transition-transform duration-300 hover:scale-105"
+                            style={{ aspectRatio: '4/3' }}
+                            onClick={() => setFullscreenImage(image)}
+                        >
                         <img 
                             src={image} 
                             alt={`Accommodation ${index + 1}`}
                             className="w-full h-full object-cover rounded-lg"
-                            onError={(e) => { (e.target as HTMLImageElement).src = '/images/Accommodation/room (1).webp'; }}
+                            style={{ aspectRatio: '4/3' }}
+                            onError={(e) => { (e.target as HTMLImageElement).src = '/images/Accommodation/roomgallery (1).webp'; }}
                         />
-                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-                            <p className="text-foreground-on-color font-playfair text-xl">Room {index + 1}</p>
-                        </div>
                         </div>
                     </AnimateOnScroll>
                 ))}
@@ -336,8 +341,9 @@ const AccommodationPage: React.FC = () => {
               <p className="font-cormorant text-xl text-foreground-subtle mb-8 leading-relaxed">
                 Book your stay and immerse yourself in the colonial elegance of Amritha. Our team is ready to make your experience unforgettable.
               </p>
-              <button className="btn btn-primary px-10 py-4 text-lg shadow-soft-sunlight hover:shadow-golden-glow transition-transform duration-200 hover:scale-105 active:scale-95">
-                Book Your Stay
+              <button className="btn btn-primary px-4 sm:px-6 lg:px-10 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg shadow-soft-sunlight hover:shadow-golden-glow transition-transform duration-200 hover:scale-105 active:scale-95">
+                <span className="hidden sm:inline">Book Your Stay</span>
+                <span className="sm:hidden">Book Now</span>
               </button>
             </AnimateOnScroll>
           </div>
@@ -372,6 +378,29 @@ const AccommodationPage: React.FC = () => {
           initialSceneId={panoScene} 
           onClose={handleClosePano} 
         />
+      )}
+
+      {/* Fullscreen Image Modal */}
+      {fullscreenImage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+          onClick={() => setFullscreenImage(null)}
+        >
+          <div className="relative max-w-full max-h-full">
+            <img 
+              src={fullscreenImage}
+              alt="Fullscreen accommodation view"
+              className="max-w-full max-h-full object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button 
+              onClick={() => setFullscreenImage(null)}
+              className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition-all"
+            >
+              ×
+            </button>
+          </div>
+        </div>
       )}
     </>
   );

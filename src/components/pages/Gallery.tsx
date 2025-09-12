@@ -1,17 +1,14 @@
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import LazyImage from '../hooks/LazyImage';
 
-// This is the main gallery page component.
-// It includes a hero section, a filterable image grid, and an expanded modal with navigation.
-const Gallery = () => {
-  // State for the parallax offset of the hero image.
-  const [_parallaxOffset, setParallaxOffset] = useState(0);
+// Optimized gallery component with CSS animations and mobile-first design
+type GalleryItem = { id: number; url: string; alt: string; category: string };
 
+const Gallery = () => {
   // State for the currently selected image and its index.
-  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   
   // State for modal visibility.
@@ -22,7 +19,7 @@ const Gallery = () => {
   const [startPan, setStartPan] = useState<{ x: number; y: number } | null>(null);
 
   // State for the active filter category.
-  const [activeFilter, _setActiveFilter] = useState('All');
+  const [activeFilter, setActiveFilter] = useState('All');
 
   // Local public image paths (random sources across public/images)
   const sourcePool = [
@@ -59,8 +56,6 @@ const Gallery = () => {
 
   const categories = ['Interiors', 'Outdoors', 'Amenities', 'Dining', 'Events'] as const;
 
-  type GalleryItem = { id: number; url: string; alt: string; category: string };
-
   const [allImages, setAllImages] = useState<GalleryItem[]>([]);
 
   // Shuffle helper
@@ -94,88 +89,129 @@ const Gallery = () => {
     : allImages.filter(img => img.category === activeFilter);
 
   // Function to open the modal with a specific image and its index.
-  const handleImageClick = (image: any, index: number) => {
+  const handleImageClick = useCallback((image: GalleryItem, index: number) => {
     setSelectedImage(image);
     setSelectedIndex(index);
     setZoom(1);
     setPan({ x: 0, y: 0 });
     setIsModalOpen(true);
-  };
+  }, []);
 
   // Function to navigate to the next image in the filtered list.
-  const handleNext = (e: React.MouseEvent) => {
+  const handleNext = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedIndex === null) return;
     const nextIndex = (selectedIndex + 1) % filteredImages.length;
     setSelectedImage(filteredImages[nextIndex]);
     setSelectedIndex(nextIndex);
-  };
+  }, [selectedIndex, filteredImages]);
 
   // Function to navigate to the previous image.
-  const handlePrev = (e: React.MouseEvent) => {
+  const handlePrev = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedIndex === null) return;
     const prevIndex = (selectedIndex - 1 + filteredImages.length) % filteredImages.length;
     setSelectedImage(filteredImages[prevIndex]);
     setSelectedIndex(prevIndex);
-  };
+  }, [selectedIndex, filteredImages]);
 
   // Function to close the modal.
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setSelectedImage(null);
     setSelectedIndex(null);
-  };
+  }, []);
 
   // Zoom controls
-  const zoomIn = () => setZoom((z) => Math.min(z + 0.25, 4));
-  const zoomOut = () => setZoom((z) => Math.max(z - 0.25, 0.5));
-  const resetZoom = () => { setZoom(1); setPan({ x: 0, y: 0 }); };
+  const zoomIn = useCallback(() => setZoom((z) => Math.min(z + 0.25, 4)), []);
+  const zoomOut = useCallback(() => setZoom((z) => Math.max(z - 0.25, 0.5)), []);
+  const resetZoom = useCallback(() => { setZoom(1); setPan({ x: 0, y: 0 }); }, []);
 
   // Pan handlers
-  const onMouseDown = (e: React.MouseEvent) => {
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
     if (zoom <= 1) return;
     setIsPanning(true);
     setStartPan({ x: e.clientX - pan.x, y: e.clientY - pan.y });
-  };
-  const onMouseMove = (e: React.MouseEvent) => {
+  }, [zoom, pan]);
+  
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
     if (!isPanning || !startPan) return;
     setPan({ x: e.clientX - startPan.x, y: e.clientY - startPan.y });
-  };
-  const onMouseUp = () => setIsPanning(false);
-  const onMouseLeave = () => setIsPanning(false);
+  }, [isPanning, startPan]);
+  
+  const onMouseUp = useCallback(() => setIsPanning(false), []);
+  const onMouseLeave = useCallback(() => setIsPanning(false), []);
 
-  // Effect hook to handle parallax and disable body scrolling for the modal.
+  // Effect hook to disable body scrolling for the modal.
   useEffect(() => {
-    // Parallax scroll effect for the hero image.
-    const handleScroll = () => {
-      setParallaxOffset(window.scrollY * 0.5); // Adjust multiplier for effect intensity
-    };
-    window.addEventListener('scroll', handleScroll);
-
     // Disable body scroll when modal is open.
     document.body.style.overflow = isModalOpen ? 'hidden' : 'unset';
-
     return () => { 
-      window.removeEventListener('scroll', handleScroll);
       document.body.style.overflow = 'unset';
     };
   }, [isModalOpen]);
 
   return (
     <div className="bg-background min-h-screen">
+      {/* CSS Keyframes for animations */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          @keyframes slideInUp {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+          }
+          .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out forwards;
+          }
+          .animate-slideInUp {
+            animation: slideInUp 0.6s ease-out forwards;
+          }
+          .animate-delay-100 {
+            animation-delay: 0.1s;
+          }
+          .animate-delay-200 {
+            animation-delay: 0.2s;
+          }
+          .animate-delay-300 {
+            animation-delay: 0.3s;
+          }
+        `
+      }} />
+      
       {/* ===== Hero Section ===== */}
       <div className="w-full bg-background">
         {/* Hero Section */}
-        <section className="relative h-[70vh] overflow-hidden flex items-center justify-center">
+        <section className="relative h-[60vh] sm:h-[70vh] overflow-hidden flex items-center justify-center">
           {/* Background Image */}
           <div 
             className="absolute inset-0 w-full h-full"
             style={{
               backgroundImage: `url(${heroImage})`,
               backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundAttachment: 'fixed'
+              backgroundPosition: 'center'
             }}
           />
           
@@ -183,70 +219,95 @@ const Gallery = () => {
           <div className="absolute inset-0 bg-black/40" />
           
           {/* Content */}
-          <div className="relative z-10 text-center text-foreground-on-color px-6 animate-fadeInUp">
-            <p className="font-poppins text-xs tracking-widest text-accent-gold uppercase mb-4 font-medium opacity-0 animate-[fadeInUp_0.8s_ease-out_0.1s_forwards]">
+          <div className="relative z-10 text-center text-foreground-on-color px-4 sm:px-6">
+            <p className="font-poppins text-xs sm:text-sm tracking-widest text-accent-gold uppercase mb-4 font-medium opacity-0 animate-fadeInUp animate-delay-100">
               Visual Journey
             </p>
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="font-cinzel text-4xl md:text-5xl lg:text-6xl mb-6"
-            >
+            <h1 className="font-cinzel text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 sm:mb-6 opacity-0 animate-fadeInUp animate-delay-200">
               Gallery
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-cormorant text-lg md:text-xl mb-8 max-w-3xl mx-auto"
-            >
+            </h1>
+            <p className="font-cormorant text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-2xl sm:max-w-3xl mx-auto opacity-0 animate-fadeInUp animate-delay-300">
               Discover the beauty and elegance of our heritage property through stunning visuals
-            </motion.p>
+            </p>
           </div>
         </section>
 
         {/* Introduction Section */}
-        <section className="max-w-6xl mx-auto px-6 md:px-12 pt-20 pb-16">
-          <div className="text-center mb-16 animate-fade-in-up">
-            <p className="font-poppins text-sm tracking-[0.2em] text-action-accent uppercase mb-4 font-medium">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-12 pt-12 sm:pt-20 pb-8 sm:pb-16">
+          <div className="text-center mb-8 sm:mb-16">
+            <p className="font-poppins text-xs sm:text-sm tracking-[0.2em] text-action-accent uppercase mb-4 font-medium animate-slideInUp">
               Visual Stories
             </p>
-            <h1 className="text-h1 font-cinzel text-text-heading mb-6 relative animate-float">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-cinzel text-text-heading mb-4 sm:mb-6 relative animate-slideInUp animate-delay-100">
               Heritage Gallery & Visual Tales
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-action-accent to-transparent"></div>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 sm:w-24 h-0.5 bg-gradient-to-r from-transparent via-action-accent to-transparent"></div>
             </h1>
-            <p className="text-xl font-cormorant text-text-subtle max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl font-cormorant text-text-subtle max-w-3xl sm:max-w-4xl mx-auto leading-relaxed animate-slideInUp animate-delay-200">
               Where tradition meets celebration in an authentic Kerala setting.
             </p>
           </div>
         </section>
       </div>
 
-      {/* ===== Gallery Grid (Animated, Randomized) ===== */}
-      <div className="w-full px-2 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+      {/* ===== Mobile-Optimized Filter Buttons ===== */}
+      <div className="w-full px-4 sm:px-6 py-4 sm:py-8">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4 mb-6 sm:mb-8">
+          <button
+            onClick={() => setActiveFilter('All')}
+            className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-poppins text-xs sm:text-sm font-medium transition-all duration-200 ease-out transform hover:scale-105 opacity-0 animate-slideInUp ${
+              activeFilter === 'All'
+                ? 'bg-action-accent text-foreground-on-color shadow-lg scale-105'
+                : 'bg-background-secondary text-text-subtle hover:bg-action-accent/10 hover:text-action-accent'
+            }`}
+            style={{ animationDelay: '0ms' }}
+          >
+            All
+          </button>
+          {categories.map((category, index) => (
+            <button
+              key={category}
+              onClick={() => setActiveFilter(category)}
+              className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-poppins text-xs sm:text-sm font-medium transition-all duration-200 ease-out transform hover:scale-105 opacity-0 animate-slideInUp ${
+                activeFilter === category
+                  ? 'bg-action-accent text-foreground-on-color shadow-lg scale-105'
+                  : 'bg-background-secondary text-text-subtle hover:bg-action-accent/10 hover:text-action-accent'
+              }`}
+              style={{ animationDelay: `${(index + 1) * 100}ms` }}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ===== Optimized Mobile-First Gallery Grid ===== */}
+      <div className="w-full px-2 sm:px-4 py-4 sm:py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
           {filteredImages.map((image, index) => (
             <div 
               key={image.id} 
-              className="relative overflow-hidden cursor-pointer rounded-2xl border border-border card-base hover-lift hover-glow animate-fade-in-up group"
-              style={{ animationDelay: `${index * 50}ms`, height: '90vh' }}
+              className="relative overflow-hidden cursor-pointer rounded-xl sm:rounded-2xl border border-border bg-background-secondary group transform transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-lg opacity-0 animate-slideInUp"
+              style={{ 
+                animationDelay: `${index * 50}ms`,
+                aspectRatio: '4/3'
+              }}
               onClick={() => handleImageClick(image, index)}
             >
               <LazyImage 
                 src={image.url} 
                 alt={image.alt} 
-                className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-110"
+                className="absolute inset-0 w-full h-full object-cover rounded-xl sm:rounded-2xl transition-transform duration-500 ease-out group-hover:scale-105"
+                style={{ aspectRatio: '4/3' }}
                 quality={70}
               />
-              {/* Overlay with gradient, caption and hint */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <div className="w-full flex items-center justify-between">
-                  <p className="text-foreground-on-color font-playfair text-xl animate-fade-in">
+              {/* Mobile-optimized overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3 sm:p-4">
+                <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <p className="text-foreground-on-color font-playfair text-sm sm:text-lg lg:text-xl">
                     {image.alt}
                   </p>
-                  <span className="font-poppins text-xs text-foreground-on-color/80 bg-black/30 rounded-full px-3 py-1 animate-fade-in">
-                    Click to view
+                  <span className="font-poppins text-xs text-foreground-on-color/80 bg-black/40 rounded-full px-2 sm:px-3 py-1 self-start sm:self-auto">
+                    Tap to view
                   </span>
                 </div>
               </div>
@@ -255,35 +316,35 @@ const Gallery = () => {
         </div>
       </div>
 
-      {/* ===== Image Modal (Updated with Navigation & Zoom) ===== */}
+      {/* ===== Optimized Mobile Modal (Updated with Navigation & Zoom) ===== */}
       {isModalOpen && selectedImage && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-menu-overlay/90 animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/95 opacity-0 animate-fadeIn"
           onClick={handleCloseModal}
         >
           <div 
-            className="relative w-full max-w-6xl max-h-[90vh] rounded-2xl overflow-hidden shadow-heritage-lg transform animate-fade-in-up bg-background"
+            className="relative w-full max-w-6xl max-h-[95vh] sm:max-h-[90vh] rounded-xl sm:rounded-2xl overflow-hidden shadow-heritage-lg transform opacity-0 animate-slideInUp animate-delay-100 bg-background"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Toolbar */}
-            <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <button onClick={zoomOut} className="btn btn-secondary px-3 py-1 text-xs">-</button>
-                <button onClick={resetZoom} className="btn btn-secondary px-3 py-1 text-xs">Reset</button>
-                <button onClick={zoomIn} className="btn btn-secondary px-3 py-1 text-xs">+</button>
+            {/* Mobile-Optimized Toolbar */}
+            <div className="absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 z-20 flex items-center justify-between">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <button onClick={zoomOut} className="bg-black/60 hover:bg-black/80 text-white rounded-full px-2 sm:px-3 py-1 text-xs transition-colors">-</button>
+                <button onClick={resetZoom} className="bg-black/60 hover:bg-black/80 text-white rounded-full px-2 sm:px-3 py-1 text-xs transition-colors">Reset</button>
+                <button onClick={zoomIn} className="bg-black/60 hover:bg-black/80 text-white rounded-full px-2 sm:px-3 py-1 text-xs transition-colors">+</button>
               </div>
               <button 
                 onClick={handleCloseModal} 
-                className="btn btn-primary px-3 py-1 text-xs"
+                className="bg-action-primary hover:bg-action-primary-hover text-white rounded-full px-2 sm:px-3 py-1 text-xs transition-colors"
                 aria-label="Close"
               >
                 Close
               </button>
             </div>
 
-            {/* Image Stage */}
+            {/* Image Stage - Mobile Optimized */}
             <div 
-              className="relative w-full h-[80vh] bg-background-secondary cursor-move"
+              className="relative w-full h-[75vh] sm:h-[80vh] bg-background-secondary cursor-move touch-pan-x touch-pan-y"
               onMouseDown={onMouseDown}
               onMouseMove={onMouseMove}
               onMouseUp={onMouseUp}
@@ -303,21 +364,29 @@ const Gallery = () => {
               />
             </div>
 
-            {/* Modal Navigation Buttons */}
+            {/* Mobile-Optimized Navigation Buttons */}
             <button 
               onClick={handlePrev} 
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-action-primary text-text-on-color hover:bg-action-primary-hover transition-colors shadow-soft-sunlight"
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/60 hover:bg-black/80 text-white transition-all duration-200 shadow-soft-sunlight"
               aria-label="Previous image"
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={16} className="sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={handleNext} 
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-action-primary text-text-on-color hover:bg-action-primary-hover transition-colors shadow-soft-sunlight"
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/60 hover:bg-black/80 text-white transition-all duration-200 shadow-soft-sunlight"
               aria-label="Next image"
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={16} className="sm:w-5 sm:h-5" />
             </button>
+
+            {/* Mobile-Optimized Image Info */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-3 sm:p-4 rounded-b-xl sm:rounded-b-2xl">
+              <h3 className="text-white font-playfair text-sm sm:text-lg lg:text-xl mb-1 sm:mb-2">{selectedImage.alt}</h3>
+              <p className="text-white/80 font-poppins text-xs sm:text-sm">
+                {selectedIndex !== null ? selectedIndex + 1 : 1} of {filteredImages.length}
+              </p>
+            </div>
           </div>
         </div>
       )}
