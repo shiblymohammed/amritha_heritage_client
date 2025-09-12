@@ -23,7 +23,7 @@ const roomTypes: RoomType[] = [
     name: "The President's Chamber — Deluxe",
     description: 'A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts',
     image: '/images/room1-desktop.webp',
-    price: '₹8,500',
+    price: '₹5,000 - ₹7,000',
     capacity: 2,
     size: '450 sq ft',
     features: ['Colonial Style', 'Period Furniture', 'Natural Lighting', 'Complimentary Breakfast'],
@@ -35,7 +35,7 @@ const roomTypes: RoomType[] = [
     name: "The Magistrate's Chamber — Executive",
     description: 'Executive class elegance with generous space and period details for a serene stay',
     image: '/images/room2-desktop.webp',
-    price: '₹10,500',
+    price: '₹4,000 - ₹6,000',
     capacity: 3,
     size: '520 sq ft',
     features: ['Extra Space', 'Work Area', 'Lounge Space', 'Premium Amenities'],
@@ -47,7 +47,7 @@ const roomTypes: RoomType[] = [
     name: "The Collector's Chamber — Deluxe",
     description: 'Deluxe comfort with curated antique accents and a calm, sophisticated ambiance',
     image: '/images/room3-desktop.webp',
-    price: '₹7,500',
+    price: '₹5,000 - ₹7,000',
     capacity: 2,
     size: '480 sq ft',
     features: ['Classic Wooden Decor', 'City View', 'Traditional Artwork', 'Complimentary Breakfast'],
@@ -59,7 +59,7 @@ const roomTypes: RoomType[] = [
     name: 'The Residency Room — Executive',
     description: 'Executive refinement with heritage textures, ideal for business and leisure travelers',
     image: '/images/room4-desktop.webp',
-    price: '₹9,500',
+    price: '₹4,000 - ₹6,000',
     capacity: 3,
     size: '520 sq ft',
     features: ['Spacious Layout', 'Quiet Wing', 'Premium Bedding', 'Desk & Seating Area'],
@@ -71,7 +71,7 @@ const roomTypes: RoomType[] = [
     name: 'The Plantation Room — Deluxe',
     description: 'Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities',
     image: '/images/room5-desktop.webp',
-    price: '₹6,500',
+    price: '₹5,000 - ₹7,000',
     capacity: 2,
     size: '460 sq ft',
     features: ['Heritage Design', 'Garden View', 'Natural Lighting', 'Complimentary Breakfast'],
@@ -172,6 +172,11 @@ const AccommodationPage: React.FC = () => {
               <p className="font-cormorant text-xl text-foreground-subtle max-w-2xl mx-auto">
                 Our rooms are more than just places to sleep — they are a journey into history. Each room is uniquely designed with period furniture, natural lighting, and modern amenities.
               </p>
+              <div className="mt-6 p-4 bg-background-secondary rounded-lg border border-border max-w-2xl mx-auto">
+                <p className="font-poppins text-sm text-foreground-subtle text-center">
+                  <span className="font-semibold text-accent">Pricing:</span> Single Bed (₹4,000-₹5,000) • Double Bed (₹6,000-₹7,000) • Extra Person (+₹2,000)
+                </p>
+              </div>
             </AnimateOnScroll>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -378,29 +383,6 @@ const AccommodationPage: React.FC = () => {
           initialSceneId={panoScene} 
           onClose={handleClosePano} 
         />
-      )}
-
-      {/* Fullscreen Image Modal */}
-      {fullscreenImage && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
-          onClick={() => setFullscreenImage(null)}
-        >
-          <div className="relative max-w-full max-h-full">
-            <img 
-              src={fullscreenImage}
-              alt="Fullscreen accommodation view"
-              className="max-w-full max-h-full object-contain"
-              onClick={(e) => e.stopPropagation()}
-            />
-            <button 
-              onClick={() => setFullscreenImage(null)}
-              className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition-all"
-            >
-              ×
-            </button>
-          </div>
-        </div>
       )}
     </>
   );
