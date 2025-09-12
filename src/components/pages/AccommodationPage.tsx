@@ -124,10 +124,7 @@ const AccommodationPage: React.FC = () => {
     navigate('/booking', { state: { selectedRoom: room } });
   };
 
-  const handleExploreMore = () => {
-    // Navigate to facilities or gallery page
-    navigate('/facilities');
-  };
+
 
   return (
     <>
@@ -323,7 +320,7 @@ const AccommodationPage: React.FC = () => {
                         <div 
                             className="relative overflow-hidden cursor-pointer rounded-lg border border-border-soft w-full transition-transform duration-300 hover:scale-105"
                             style={{ aspectRatio: '4/3' }}
-                            onClick={() => setFullscreenImage(image)}
+                            onClick={() => {}}
                         >
                         <img 
                             src={image} 
