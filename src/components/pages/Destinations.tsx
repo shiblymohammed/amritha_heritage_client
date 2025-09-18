@@ -111,6 +111,7 @@ const allDestinations: Destination[] = [
         title: "Lulu Mall",
         tagline: "Shopping Paradise",
         description: "One of India's largest shopping malls offering world-class shopping, dining, and entertainment experiences.",
+        longDescription: "Lulu Mall stands as one of India's largest and most impressive shopping destinations, offering an unparalleled retail and entertainment experience. Spanning over 1.7 million square feet, this architectural marvel houses more than 225 international and domestic brands, making it a shopper's paradise. The mall features multiple floors of diverse shopping options, from high-end fashion boutiques to electronics stores, home décor, and specialty shops. Beyond shopping, Lulu Mall offers world-class dining experiences with its expansive food court and fine dining restaurants serving cuisines from around the globe. The entertainment zone includes a state-of-the-art multiplex cinema, gaming arcade, and family entertainment areas, making it a complete destination for leisure and recreation.",
         gallery: [
             "/images/lulu-mall-1.jpg",
             "/images/lulu-mall-2.jpg",
