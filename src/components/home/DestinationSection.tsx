@@ -133,7 +133,7 @@ const DestinationSection: React.FC = () => {
         desktop: "/images/padmanabhaswamy-desktop.jpg",
         mobile: "/images/padmanabhaswamy-mobile.jpg"
       },
-      distance: "5 km", 
+      distance: "2.5 km", 
       category: "Heritage" 
     },
     { 

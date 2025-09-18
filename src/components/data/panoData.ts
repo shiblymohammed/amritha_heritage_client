@@ -17,7 +17,7 @@ export const panoData = {
   "scenes": [
     {
       "id": "0-president-deluxe",
-      "name": "The President's Chamber — Bedroom",
+      "name": "Royal's Chamber — Bedroom",
       "levels": [/* Add level data from Marzipano tool */],
       "faceSize": 1642,
       "initialViewParameters": { "pitch": 0, "yaw": 0, "fov": 1.57 },

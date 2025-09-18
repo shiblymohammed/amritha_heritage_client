@@ -69,7 +69,7 @@ export const rooms: Room[] = [
   {
     id: 1,
     type: 'Deluxe',
-    title: "The President's Chamber",
+    title: "Royal's Chamber",
     description: 'A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts.',
     size: '450 sq ft',
     features: ['Colonial Style', 'Complimentary Breakfast', 'Air Conditioned', 'Room Service', 'Free Wi-Fi', 'Mini Bar'],
@@ -80,10 +80,12 @@ export const rooms: Room[] = [
   },
   {
     id: 2,
-    type: 'Executive',
+    type: 'Deluxe',
     title: "The Magistrate's Chamber",
-    description: 'Executive class elegance with generous space and period details for a serene stay.',
+    description: 'Deluxe class elegance with generous space and period details for a serene stay.',
     size: '500 sq ft',
+    price: 7000,
+    doublePrice: 9000,
     features: ['Classic Wooden Decor', 'Complimentary Breakfast', 'Air Conditioned', 'Room Service', 'Free Wi-Fi', 'Mini Bar'],
     images: {
       desktop: '/images/room2-desktop.webp',
@@ -96,7 +98,9 @@ export const rooms: Room[] = [
     title: "The Collector's Chamber",
     description: 'Deluxe comfort with curated antique accents and a calm, sophisticated ambiance.',
     size: '480 sq ft',
-    features: ['Extra Space & Style', 'Complimentary Breakfast', 'Air Conditioned', 'Room Service', 'Free Wi-Fi', 'Mini Bar'],
+    price: 7000,
+    doublePrice: 9000,
+    features: ['King Bed', 'Extra Space & Style', 'Complimentary Breakfast', 'Air Conditioned', 'Room Service', 'Free Wi-Fi', 'Mini Bar'],
     images: {
       desktop: '/images/room3-desktop.webp',
       mobile: '/images/room3-mobile.webp'
@@ -104,9 +108,9 @@ export const rooms: Room[] = [
   },
   {
     id: 4,
-    type: 'Executive',
+    type: 'Deluxe',
     title: 'The Residency Room',
-    description: 'Executive refinement with heritage textures, ideal for business and leisure travelers.',
+    description: 'Deluxe refinement with heritage textures, ideal for business and leisure travelers.',
     size: '520 sq ft',
     features: ['Wheelchair Friendly Access', 'Roll-in Shower (on request)', 'Enhanced Space', 'Safety Features'],
     images: {
@@ -116,9 +120,9 @@ export const rooms: Room[] = [
   },
   {
     id: 5,
-    type: 'Deluxe',
+    type: 'Executive',
     title: 'The Plantation Room',
-    description: 'Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities.',
+    description: 'Executive room inspired by plantation-era charm with tranquil tones and modern amenities.',
     size: '460 sq ft',
     features: ['Heritage Design', 'Complimentary Breakfast', 'Air Conditioned', 'Room Service', 'Free Wi-Fi', 'Mini Bar'],
     images: {

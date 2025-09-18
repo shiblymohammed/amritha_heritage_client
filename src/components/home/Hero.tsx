@@ -19,7 +19,7 @@ import React, { useEffect, useRef, useCallback, memo } from "react";
  * 4.  **Memoization:** The component remains wrapped in `React.memo` to prevent unnecessary re-renders from parent
  * components, ensuring it only re-renders if its props were to change.
  */
-const Hero: React.FC = () => {
+const Hero: React.FC<{ onScrollDown: () => void }> = ({ onScrollDown }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const ticking = useRef(false);
@@ -102,6 +102,7 @@ const Hero: React.FC = () => {
         </p>
 
         <button
+          onClick={onScrollDown}
           className="btn btn-secondary shadow-golden-glow text-lg px-8 py-4 hover:shadow-golden-glow hover:animate-hover-pulse hover:text-accent-gold"
         >
           Explore Heritage

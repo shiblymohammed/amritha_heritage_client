@@ -28,7 +28,7 @@ export const rooms: Room[] = [
   {
     id: 1,
     type: 'Deluxe',
-    title: "The President's Chamber",
+    title: "Royal's Chamber",
     description: 'A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts.',
     size: '450 sq ft',
     features: ['Colonial Style', 'Complimentary Breakfast', 'Air Conditioned', 'Room Service', 'Free Wi-Fi', 'Mini Bar'],
@@ -54,18 +54,18 @@ export const rooms: Room[] = [
   },
   {
     id: 4,
-    type: 'Executive',
+    type: 'Deluxe',
     title: 'The Residency Room',
-    description: 'Executive refinement with heritage textures, ideal for business and leisure travelers.',
+    description: 'Deluxe refinement with heritage textures, ideal for business and leisure travelers.',
     size: '520 sq ft',
     features: ['Wheelchair Friendly Access', 'Roll-in Shower (on request)', 'Enhanced Space', 'Safety Features'],
     images: ['/images/room4.webp']
   },
   {
     id: 5,
-    type: 'Deluxe',
+    type: 'Executive',
     title: 'The Plantation Room',
-    description: 'Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities.',
+    description: 'Executive room inspired by plantation-era charm with tranquil tones and modern amenities.',
     size: '460 sq ft',
     features: ['Heritage Design', 'Complimentary Breakfast', 'Air Conditioned', 'Room Service', 'Free Wi-Fi', 'Mini Bar'],
     images: ['/images/room5.webp']

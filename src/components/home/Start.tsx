@@ -1,9 +1,17 @@
 import React, { memo } from 'react';
 import LazyImage from '../hooks/LazyImage';
+import { useNavigate } from 'react-router-dom';
 
 // Simplified component without intersection observer for better performance
 
-const TextContent = () => (
+const TextContent = () => {
+  const navigate = useNavigate();
+
+  const handleBookingClick = () => {
+    navigate('/booking');
+  };
+
+  return (
   <div className="space-y-8 flex flex-col items-center">
     {/* Elegant Subtitle */}
     <div className="flex items-center justify-center gap-3">
@@ -96,12 +104,12 @@ const TextContent = () => (
       </div>
       
       {/* Book Button */}
-      <button className="btn btn-primary text-lg px-8 py-4 shadow-soft-sunlight-lg hover:shadow-golden-glow hover:animate-hover-pulse hover:text-accent-gold transition-all duration-300 mt-6">
+      <button onClick={handleBookingClick} className="btn btn-primary text-lg px-8 py-4 shadow-soft-sunlight-lg hover:shadow-golden-glow hover:animate-hover-pulse hover:text-accent-gold transition-all duration-300 mt-6">
         Book Your Stay
       </button>
     </div>
   </div>
-);
+);};
 
 const ImageGallery = () => (
   <div className="relative w-full hidden md:block">

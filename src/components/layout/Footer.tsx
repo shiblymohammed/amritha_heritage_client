@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 // =================================================================
 // == ATOMIC COMPONENTS for a Cleaner Structure
@@ -16,21 +17,21 @@ const SocialIcon = ({ href, title, children }: { href: string; title: string; ch
 );
 
 // Re-usable Footer Link component
-const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+const FooterLink = ({ to, children }: { to: string; children: React.ReactNode }) => (
   <li>
-    <a href={href} className="font-poppins text-foreground-subtle relative inline-block after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-accent-gold after:bottom-0 after:left-0 after:scale-x-0 after:origin-left hover:after:scale-x-100 after:transition-transform hover:text-accent-gold transition-colors duration-300">
+    <Link to={to} className="font-poppins text-foreground-subtle relative inline-block after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-accent-gold after:bottom-0 after:left-0 after:scale-x-0 after:origin-left hover:after:scale-x-100 after:transition-transform hover:text-accent-gold transition-colors duration-300">
       {children}
-    </a>
+    </Link>
   </li>
 );
 
 // A dedicated component for the link columns
-const FooterLinkGroup = ({ title, links }: { title: string; links: string[] }) => (
+const FooterLinkGroup = ({ title, links }: { title: string; links: { name: string; path: string }[] }) => (
   <div>
     <h3 className="font-playfair text-h4 text-foreground mb-6">{title}</h3>
     <ul className="space-y-4">
-      {links.map((link: string) => (
-        <FooterLink key={link} href="#">{link}</FooterLink>
+      {links.map((link) => (
+        <FooterLink key={link.name} to={link.path}>{link.name}</FooterLink>
       ))}
     </ul>
   </div>
@@ -117,10 +118,10 @@ function Footer() {
               {/* Column 1: Brand & Ethos */}
               <div className="md:col-span-2 lg:col-span-1" style={{ transitionDelay: '100ms' }}>
                 <div className={getAnimClass(100)}>
-                  <a href="#" className="inline-block mb-6 animate-float">
+                  <Link to="/" className="inline-block mb-6 animate-float">
                     <h2 className="text-3xl font-cinzel tracking-widest text-foreground text-glow-gold">AMRITHA HERITAGE</h2>
                     <p className="text-sm font-poppins tracking-wider text-accent uppercase">THIRUVANANTHAPURAM</p>
-                  </a>
+                  </Link>
                   <p className="font-cormorant text-foreground-subtle leading-relaxed max-w-sm mx-auto md:mx-0">
                     A sanctuary of timeless elegance, preserving rich colonial history for the modern discerning traveler.
                   </p>
@@ -129,10 +130,20 @@ function Footer() {
               
               {/* Column 2 & 3: Navigation Links */}
               <div style={{ transitionDelay: '200ms' }} className={getAnimClass(200)}>
-                <FooterLinkGroup title="Explore" links={['Heritage', 'Rooms', 'Dining', 'Gallery']} />
+                <FooterLinkGroup title="Explore" links={[
+                  { name: 'Accommodations', path: '/accommodations' },
+                  { name: 'Dining', path: '/dining' },
+                  { name: 'Destinations', path: '/destinations' },
+                  { name: 'Gallery', path: '/gallery' }
+                ]} />
               </div>
               <div style={{ transitionDelay: '300ms' }} className={getAnimClass(300)}>
-                <FooterLinkGroup title="Company" links={['About Us', 'Events', 'Contact', 'Location']} />
+                <FooterLinkGroup title="Company" links={[
+                  { name: 'About Us', path: '/about' },
+                  { name: 'Events', path: '/events' },
+                  { name: 'Contact', path: '/contact' },
+                  { name: 'Booking', path: '/booking' }
+                ]} />
               </div>
 
               {/* Column 4: Newsletter */}

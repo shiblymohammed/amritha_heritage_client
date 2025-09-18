@@ -106,6 +106,101 @@ const allDestinations: Destination[] = [
         ],
         conciergeTip: "Request a silent, early morning boat tour. The tranquility and the sound of waking birds in the mangroves is pure bliss."
     },
+    {
+        id: 4,
+        title: "Lulu Mall",
+        tagline: "Shopping Paradise",
+        description: "One of India's largest shopping malls offering world-class shopping, dining, and entertainment experiences.",
+        gallery: [
+            "/images/lulu-mall-1.jpg",
+            "/images/lulu-mall-2.jpg",
+            "/images/lulu-mall-3.jpg"
+        ],
+        category: "Shopping",
+        coordinates: { lat: 8.5241, lng: 76.9366 },
+        details: [
+            { icon: ClockIcon, label: "Opening Hours", value: "10 AM to 10 PM" },
+            { icon: ShirtIcon, label: "Dress Code", value: "Casual" },
+            { icon: InfoIcon, label: "Facilities", value: "Food Court, Cinema, Gaming" },
+        ],
+        conciergeTip: "Visit during weekdays for a more relaxed shopping experience. The food court offers excellent local and international cuisine."
+    },
+    {
+        id: 5,
+        title: "Ponmudi",
+        tagline: "Hill Station Retreat",
+        description: "A picturesque hill station known for its winding pathways, tea gardens, and breathtaking mountain views.",
+        gallery: [
+            "/images/ponmudi-1.jpg",
+            "/images/ponmudi-2.jpg",
+            "/images/ponmudi-3.jpg"
+        ],
+        category: "Nature",
+        coordinates: { lat: 8.7642, lng: 77.1077 },
+        details: [
+            { icon: ClockIcon, label: "Best Time to Visit", value: "Oct to March" },
+            { icon: ShirtIcon, label: "What to Wear", value: "Light Jacket, Comfortable Shoes" },
+            { icon: InfoIcon, label: "Activities", value: "Trekking, Photography" },
+        ],
+        conciergeTip: "Start early morning to catch the sunrise from the viewpoint. The winding roads offer spectacular views but can be challenging."
+    },
+    {
+        id: 6,
+        title: "Kanyakumari",
+        tagline: "Land's End",
+        description: "The southernmost tip of India where three seas meet, famous for its stunning sunrises and sunsets.",
+        gallery: [
+            "/images/kanyakumari-1.jpg",
+            "/images/kanyakumari-2.jpg",
+            "/images/kanyakumari-3.jpg"
+        ],
+        category: "Heritage",
+        coordinates: { lat: 8.0883, lng: 77.5385 },
+        details: [
+            { icon: ClockIcon, label: "Best Time to Visit", value: "Oct to March" },
+            { icon: ShirtIcon, label: "What to Wear", value: "Light Cotton, Sun Hat" },
+            { icon: InfoIcon, label: "Must See", value: "Vivekananda Rock, Thiruvalluvar Statue" },
+        ],
+        conciergeTip: "Book ferry tickets in advance for Vivekananda Rock. The sunset view from the beach is absolutely magical."
+    },
+    {
+        id: 7,
+        title: "Varkala",
+        tagline: "Cliff Beach Paradise",
+        description: "A stunning coastal town with dramatic red cliffs, pristine beaches, and vibrant beach culture.",
+        gallery: [
+            "/images/varkala-1.jpg",
+            "/images/varkala-2.jpg",
+            "/images/varkala-3.jpg"
+        ],
+        category: "Beach",
+        coordinates: { lat: 8.7379, lng: 76.7163 },
+        details: [
+            { icon: ClockIcon, label: "Best Time to Visit", value: "Nov to March" },
+            { icon: ShirtIcon, label: "What to Wear", value: "Beachwear, Sunscreen" },
+            { icon: InfoIcon, label: "Activities", value: "Surfing, Yoga, Ayurveda" },
+        ],
+        conciergeTip: "Try the cliff-top restaurants for sunset dining. The natural spring at Papanasam Beach is believed to have healing properties."
+    },
+    {
+        id: 8,
+        title: "Padmanabhapuram Palace",
+        tagline: "Wooden Architecture Marvel",
+        description: "An exquisite example of traditional Kerala architecture, this wooden palace showcases intricate craftsmanship.",
+        gallery: [
+            "/images/padmanabhapuram-1.jpg",
+            "/images/padmanabhapuram-2.jpg",
+            "/images/padmanabhapuram-3.jpg"
+        ],
+        category: "Heritage",
+        coordinates: { lat: 8.2441, lng: 77.3274 },
+        details: [
+            { icon: ClockIcon, label: "Visiting Hours", value: "9 AM to 5 PM" },
+            { icon: ShirtIcon, label: "Dress Code", value: "Modest Clothing" },
+            { icon: InfoIcon, label: "Highlights", value: "Wooden Architecture, Museum" },
+        ],
+        conciergeTip: "Hire a guide to fully appreciate the intricate woodwork and historical significance. Photography inside may be restricted."
+    },
 ];
 
 // =================================================================

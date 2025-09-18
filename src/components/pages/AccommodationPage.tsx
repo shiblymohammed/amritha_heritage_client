@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useNavigate } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
@@ -25,7 +25,7 @@ interface RoomType {
 const roomTypes: RoomType[] = [
   {
     id: 'president-deluxe',
-    name: "The President's Chamber",
+    name: "Royal's Chamber",
     description: 'A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts',
     image: '/images/room1-desktop.webp',
     category: 'Deluxe',
@@ -33,21 +33,21 @@ const roomTypes: RoomType[] = [
     capacity: 2,
     size: '450 sq ft',
     features: ['Colonial Style', 'Period Furniture', 'Natural Lighting', 'Complimentary Breakfast'],
-    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service'],
+    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi'],
     panoSceneId: '0-president-deluxe'
   },
   {
-    id: 'magistrate-executive',
+    id: 'magistrate-deluxe',
     name: "The Magistrate's Chamber",
-    description: 'Executive class elegance with generous space and period details for a serene stay',
+    description: 'Deluxe class elegance with generous space and period details for a serene stay',
     image: '/images/room2-desktop.webp',
-    category: 'Executive',
-    pricing: { single: 4000, double: 6000 },
+    category: 'Deluxe',
+    pricing: { single: 7000, double: 9000 },
     capacity: 3,
     size: '520 sq ft',
     features: ['Extra Space', 'Work Area', 'Lounge Space', 'Premium Amenities'],
     amenities: ['King Bed + Sofa Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Work Desk', 'Coffee Maker'],
-    panoSceneId: '1-magistrate-executive'
+    panoSceneId: '1-magistrate-deluxe'
   },
   {
     id: 'collector-deluxe',
@@ -55,37 +55,37 @@ const roomTypes: RoomType[] = [
     description: 'Deluxe comfort with curated antique accents and a calm, sophisticated ambiance',
     image: '/images/room3-desktop.webp',
     category: 'Deluxe',
-    pricing: { single: 5000, double: 7000 },
+    pricing: { single: 7000, double: 9000 },
     capacity: 2,
     size: '480 sq ft',
     features: ['Classic Wooden Decor', 'City View', 'Traditional Artwork', 'Complimentary Breakfast'],
-    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar'],
+    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar'],
     panoSceneId: '2-collector-deluxe'
   },
   {
-    id: 'residency-executive',
+    id: 'residency-deluxe',
     name: 'The Residency Room',
-    description: 'Executive refinement with heritage textures, ideal for business and leisure travelers',
+    description: 'Deluxe refinement with heritage textures, ideal for business and leisure travelers',
     image: '/images/room4-desktop.webp',
-    category: 'Executive',
-    pricing: { single: 4000, double: 6000 },
+    category: 'Deluxe',
+    pricing: { single: 7000, double: 9000 },
     capacity: 3,
     size: '520 sq ft',
     features: ['Spacious Layout', 'Quiet Wing', 'Premium Bedding', 'Desk & Seating Area'],
-    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service'],
+    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi'],
     panoSceneId: '0-president-deluxe' // Example: reusing a scene
   },
   {
-    id: 'plantation-deluxe',
+    id: 'plantation-executive',
     name: 'The Plantation Room',
-    description: 'Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities',
+    description: 'Executive room inspired by plantation-era charm with tranquil tones and modern amenities',
     image: '/images/room5-desktop.webp',
-    category: 'Deluxe',
-    pricing: { single: 5000, double: 7000 },
+    category: 'Executive',
+    pricing: { single: 6000, double: 8000 },
     capacity: 2,
     size: '460 sq ft',
     features: ['Heritage Design', 'Garden View', 'Natural Lighting', 'Complimentary Breakfast'],
-    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar'],
+    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar'],
     panoSceneId: '1-magistrate-executive' // Example: reusing a scene
   }
 ];
@@ -109,6 +109,9 @@ const AnimateOnScroll: React.FC<{ children: React.ReactNode; className?: string;
 };
 
 const AccommodationPage: React.FC = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const navigate = useNavigate();
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [showRoomDetails, setShowRoomDetails] = useState(false);
@@ -527,10 +530,10 @@ const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>
                     <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft">
                         <h3 className="font-playfair text-xl text-text-heading mb-4">Hotel Services</h3>
                         <div className="space-y-3">
-                            <div className="flex items-center gap-3"><Coffee className="w-5 h-5 text-action-accent" /><span className="font-cormorant text-text-subtle">24/7 Room Service</span></div>
+
                             <div className="flex items-center gap-3"><Car className="w-5 h-5 text-action-accent" /><span className="font-cormorant text-text-subtle">Valet Parking</span></div>
                             <div className="flex items-center gap-3"><Utensils className="w-5 h-5 text-action-accent" /><span className="font-cormorant text-text-subtle">Restaurant</span></div>
-                            <div className="flex items-center gap-3"><Dumbbell className="w-5 h-5 text-action-accent" /><span className="font-cormorant text-text-subtle">Fitness Center</span></div>
+                            <div className="flex items-center gap-3"><Dumbbell className="w-5 h-5 text-action-accent" /><span className="font-cormorant text-text-subtle">Lawn</span></div>
                         </div>
                     </div>
                 </div>

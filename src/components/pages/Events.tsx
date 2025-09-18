@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Calendar, Users, MapPin, Phone, Mail, Star, Heart, Camera, Music, Utensils, Gift, Clock, IndianRupee } from 'lucide-react';
 import { motion } from 'framer-motion'
 
 const Events = () => {
+  const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -25,8 +27,8 @@ const Events = () => {
       icon: Heart,
       description: 'Transform your special day into an unforgettable celebration with our authentic Kerala heritage backdrop. Our traditional architecture, lush gardens, and elegant interiors create the perfect ambiance for your wedding ceremony and reception.',
       features: ['Traditional Kerala Architecture with Authentic Wooden Pillars', 'Beautiful Garden Ceremonies with Tropical Landscaping', 'Indoor & Outdoor Venue Options Available', 'Professional Catering with Kerala & Multi-cuisine', 'Bridal Suite for Pre-wedding Preparations', 'Decorated Mandap Setup Arrangements'],
-      capacity: '50-300 guests',
-      duration: 'Full day events',
+      capacity: '50-200 guests',
+      duration: 'Half Day & Full Day',
       priceRange: '₹2,00,000 - ₹8,00,000',
       image: '/images/Events/SAJAN-31.webp',
       color: 'from-action-primary to-action-accent',
@@ -39,7 +41,7 @@ const Events = () => {
       description: 'Capture your love story against our stunning heritage architecture and scenic landscapes. Multiple photogenic locations within the property offer diverse backdrops for your pre-wedding shoot, from traditional courtyards to romantic garden settings.',
       features: ['Multiple Scenic Photography Locations Available', 'Traditional Heritage Backdrops & Courtyards', 'Lush Garden Settings with Natural Lighting', 'Authentic Kerala Interiors with Wooden Details', 'Professional Photography Coordination Support', 'Costume Change Areas and Makeup Facilities'],
       capacity: 'Intimate couple sessions',
-      duration: '4-8 hours',
+      duration: 'Half Day & Full Day',
       priceRange: '₹15,000 - ₹50,000',
       image: '/images/Events/SAJAN-33.webp',
       color: 'from-action-accent to-action-primary',
@@ -52,7 +54,7 @@ const Events = () => {
       description: 'Celebrate your commitment in an elegant heritage setting that combines tradition with sophistication. Our intimate venues provide the perfect atmosphere for ring ceremonies, with beautifully decorated spaces and personalized service.',
       features: ['Intimate Decorated Venues with Traditional Elements', 'Customized Floral Arrangements & Decorations', 'Professional Photography & Videography Support', 'Welcome Drinks & Traditional Refreshments', 'Music System & Lighting Arrangements', 'Personalized Setup Based on Your Preferences'],
       capacity: '20-100 guests',
-      duration: '3-5 hours',
+      duration: 'Half Day & Full Day',
       priceRange: '₹50,000 - ₹2,00,000',
       image: '/images/Events/SAJAN-34.webp',
       color: 'from-action-primary to-text-heading',
@@ -65,7 +67,7 @@ const Events = () => {
       description: 'Make birthdays truly memorable with our charming celebration spaces and personalized party planning. From children\'s themed parties to milestone birthday celebrations, we create magical experiences for all ages.',
       features: ['Themed Party Decorations & Balloon Arrangements', 'Customized Birthday Cake & Dessert Options', 'Entertainment Options for All Age Groups', 'Custom Catering Menus & Snack Counters', 'Photography Services for Special Moments', 'Party Games & Activity Coordination'],
       capacity: '15-150 guests',
-      duration: '3-6 hours',
+      duration: '3–4 hours',
       priceRange: '₹25,000 - ₹1,50,000',
       image: '/images/Events/SAJAN-37.webp',
       color: 'from-action-accent to-action-primary',
@@ -78,7 +80,7 @@ const Events = () => {
       description: 'Host professional gatherings in a unique heritage environment that impresses clients and motivates teams. Our facilities combine modern amenities with traditional charm for memorable corporate experiences.',
       features: ['Professional Conference Facilities with Modern Tech', 'Team Building Activities in Natural Settings', 'Business Lunch & Dinner Arrangements', 'Private Meeting Rooms with Audio-Visual Support', 'Welcome Reception & Networking Areas', 'Accommodation Packages for Outstation Guests'],
       capacity: '10-200 attendees',
-      duration: 'Half day to multi-day',
+      duration: 'Half Day & Full Day',
       priceRange: '₹30,000 - ₹3,00,000',
       image: '/images/Events/SAJAN-38.webp',
       color: 'from-text-heading to-action-primary',
@@ -90,8 +92,8 @@ const Events = () => {
       icon: Music,
       description: 'Showcase traditional performances and cultural celebrations in an authentic heritage setting. Our venues provide the perfect ambiance for classical music concerts, dance performances, and cultural festivals.',
       features: ['Traditional Performance Stages with Proper Acoustics', 'Authentic Cultural Settings & Backdrops', 'Professional Audio-Visual & Lighting Support', 'Seating Arrangements for Various Audience Sizes', 'Artist Green Rooms & Preparation Areas', 'Cultural Ambiance with Heritage Architecture'],
-      capacity: '30-250 guests',
-      duration: '2-6 hours',
+      capacity: '30-200 guests',
+      duration: 'Half Day & Full Day',
       priceRange: '₹40,000 - ₹2,50,000',
       image: '/images/Events/SAJAN-39.webp',
       color: 'from-action-primary to-action-accent',
@@ -257,7 +259,7 @@ const Events = () => {
                         </div>
 
                         {/* Quick Info */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="flex items-center p-4 bg-background-secondary rounded-xl">
                             <Users className="w-5 h-5 text-action-accent mr-3 flex-shrink-0" />
                             <div>
@@ -270,13 +272,6 @@ const Events = () => {
                             <div>
                               <p className="font-poppins text-xs text-text-subtle uppercase tracking-wide">Duration</p>
                               <p className="font-poppins text-sm font-medium text-text-heading">{event.duration}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center p-4 bg-background-secondary rounded-xl">
-                            <IndianRupee className="w-5 h-5 text-action-accent mr-3 flex-shrink-0" />
-                            <div>
-                              <p className="font-poppins text-xs text-text-subtle uppercase tracking-wide">Starting</p>
-                              <p className="font-poppins text-sm font-medium text-text-heading">{event.priceRange.split(' - ')[0]}</p>
                             </div>
                           </div>
                         </div>
@@ -306,8 +301,11 @@ const Events = () => {
                           <button className="bg-action-primary hover:bg-action-primary-hover text-text-on-color font-poppins font-medium py-4 px-8 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
                             Get Custom Quote
                           </button>
-                          <button className="bg-background-secondary hover:bg-background-tertiary text-action-primary border-2 border-action-primary/20 hover:border-action-primary font-poppins font-medium py-4 px-8 rounded-xl transition-all duration-300 hover:shadow-lg">
-                            View Gallery & Details
+                          <button 
+                            onClick={() => navigate('/gallery')}
+                            className="bg-background-secondary hover:bg-background-tertiary text-action-primary border-2 border-action-primary/20 hover:border-action-primary font-poppins font-medium py-4 px-8 rounded-xl transition-all duration-300 hover:shadow-lg"
+                          >
+                            View Gallery
                           </button>
                         </div>
                       </div>

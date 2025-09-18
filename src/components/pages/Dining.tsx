@@ -565,6 +565,7 @@ const DiningPage: React.FC = () => {
   const { dailySpecials, loading: dailySpecialsLoading } = useDailySpecials();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setFeaturedDishes(getFeaturedDishes());
   }, []);
 
