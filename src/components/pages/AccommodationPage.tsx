@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useNavigate } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { ChevronRight, Star, MapPin, Clock, Users, Wifi, Coffee, Car, Utensils, Dumbbell } from 'lucide-react';
+import { ChevronRight, Star, Clock, Wifi, Car, Utensils, Dumbbell } from 'lucide-react';
 import MarzipanoViewer from '../ui/MarziPanoViewer'; // Make sure this path is correct
 
 interface RoomType {

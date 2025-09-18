@@ -58,6 +58,8 @@ export interface Room {
   };
   features: string[];
   size: string;
+  price?: number;
+  doublePrice?: number;
 }
 
 export interface Facility {

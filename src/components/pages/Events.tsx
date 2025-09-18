@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Users, MapPin, Phone, Mail, Star, Heart, Camera, Music, Utensils, Gift, Clock, IndianRupee } from 'lucide-react';
+import { Calendar, Users, MapPin, Phone, Mail, Star, Heart, Camera, Music, Utensils, Gift, Clock } from 'lucide-react';
 import { motion } from 'framer-motion'
 
 const Events = () => {

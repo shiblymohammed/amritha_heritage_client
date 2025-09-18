@@ -116,7 +116,7 @@ const allDestinations: Destination[] = [
             "/images/lulu-mall-2.jpg",
             "/images/lulu-mall-3.jpg"
         ],
-        category: "Shopping",
+        category: "Adventure",
         coordinates: { lat: 8.5241, lng: 76.9366 },
         details: [
             { icon: ClockIcon, label: "Opening Hours", value: "10 AM to 10 PM" },
@@ -130,6 +130,7 @@ const allDestinations: Destination[] = [
         title: "Ponmudi",
         tagline: "Hill Station Retreat",
         description: "A picturesque hill station known for its winding pathways, tea gardens, and breathtaking mountain views.",
+        longDescription: "Nestled in the Western Ghats at an altitude of 1,100 meters, Ponmudi is a serene hill station that offers a perfect escape from the tropical heat. The name 'Ponmudi' literally means 'golden peak', and true to its name, this destination is crowned with mist-covered peaks and lush green valleys. The winding roads leading to Ponmudi are an adventure in themselves, offering spectacular views of tea plantations, spice gardens, and dense forests. The cool climate, pristine nature, and tranquil atmosphere make it an ideal destination for nature lovers, trekkers, and those seeking peace and rejuvenation.",
         gallery: [
             "/images/ponmudi-1.jpg",
             "/images/ponmudi-2.jpg",
@@ -149,6 +150,7 @@ const allDestinations: Destination[] = [
         title: "Kanyakumari",
         tagline: "Land's End",
         description: "The southernmost tip of India where three seas meet, famous for its stunning sunrises and sunsets.",
+        longDescription: "Kanyakumari, formerly known as Cape Comorin, holds the unique distinction of being the southernmost point of mainland India where the Arabian Sea, Bay of Bengal, and Indian Ocean converge. This sacred town is not only a geographical marvel but also a spiritual center dedicated to Goddess Kanyakumari. The iconic Vivekananda Rock Memorial, standing majestically in the sea, commemorates Swami Vivekananda's meditation here. The 133-foot tall Thiruvalluvar Statue honors the great Tamil poet and philosopher. Visitors are mesmerized by the spectacular sunrise and sunset views, making it one of the few places on earth where you can witness both phenomena over the ocean.",
         gallery: [
             "/images/kanyakumari-1.jpg",
             "/images/kanyakumari-2.jpg",
@@ -168,6 +170,7 @@ const allDestinations: Destination[] = [
         title: "Varkala",
         tagline: "Cliff Beach Paradise",
         description: "A stunning coastal town with dramatic red cliffs, pristine beaches, and vibrant beach culture.",
+        longDescription: "Varkala is a mesmerizing coastal paradise that perfectly blends natural beauty with spiritual significance. The town is famous for its dramatic red laterite cliffs that rise majestically from the Arabian Sea, creating one of India's most spectacular coastlines. The main beach, known as Papanasam Beach, is believed to have holy waters that wash away sins. The cliff-top area has evolved into a vibrant hub with restaurants, cafes, and shops offering stunning ocean views. Varkala is also renowned as a center for Ayurvedic treatments and yoga, attracting wellness seekers from around the world. The natural spring at the beach, combined with the therapeutic sea breeze and pristine environment, makes it a perfect destination for relaxation and rejuvenation.",
         gallery: [
             "/images/varkala-1.jpg",
             "/images/varkala-2.jpg",
@@ -187,6 +190,7 @@ const allDestinations: Destination[] = [
         title: "Padmanabhapuram Palace",
         tagline: "Wooden Architecture Marvel",
         description: "An exquisite example of traditional Kerala architecture, this wooden palace showcases intricate craftsmanship.",
+        longDescription: "Padmanabhapuram Palace stands as a magnificent testament to the architectural brilliance of ancient Kerala. Built in the 16th century, this wooden palace complex was once the seat of the former Travancore rulers. The palace is renowned for its intricate woodwork, elaborate carvings, and traditional Kerala architectural elements that have been preserved for over 400 years. The complex includes several buildings with unique features like the four-storied mansion with its famous council chamber, the ornate dance hall with polished black floors, and the meditation chamber with its rosewood ceiling. The palace museum houses an impressive collection of antique furniture, paintings, and artifacts that provide insights into the royal lifestyle and cultural heritage of the region. The craftsmanship displayed in every corner reflects the skill and artistry of ancient Kerala artisans.",
         gallery: [
             "/images/padmanabhapuram-1.jpg",
             "/images/padmanabhapuram-2.jpg",
