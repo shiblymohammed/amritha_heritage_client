@@ -44,15 +44,15 @@ const DishCard = memo<DishCardProps>(({ dish, onClick, onOrderNow, className = '
           {dish.description}
         </p>
 
-        <span className="font-poppins font-semibold text-accent text-lg md:text-xl my-2 lg:my-3">
+        <div className="font-poppins font-semibold text-accent text-lg md:text-xl my-2 lg:my-3">
           {dish.price}
-        </span>
+        </div>
         
         <button
           onClick={handleOrderClick}
-          className="btn btn-primary text-sm px-6 py-2 shadow-soft-sunlight hover:shadow-golden-glow transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent"
+          className="btn btn-primary text-sm px-6 py-2 shadow-soft-sunlight hover:shadow-golden-glow transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent animate-text-shimmer"
         >
-          <span className="animate-text-shimmer">Order Now</span>
+          Order Now
         </button>
       </div>
     </div>

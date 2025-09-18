@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 // =================================================================
 // == 1. TYPE DEFINITIONS
@@ -10,7 +10,11 @@ interface Room {
     description: string;
     amenities: string[];
     capacity: number;
-    price: number;
+    category: 'Deluxe' | 'Executive';
+    pricing: {
+        single: number;
+        double: number;
+    };
     image: string;
 }
 
@@ -55,11 +59,11 @@ const CheckCircleIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24"
 // == 3. DUMMY DATA (Simulating API response for rooms)
 // =================================================================
 const roomsData: Room[] = [
-    { id: 1, name: "The President's Chamber — Deluxe", description: "A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts.", amenities: ["King Bed", "Garden View", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar", "Flat-screen TV"], capacity: 2, price: 8500, image: "/images/Accommodation/room (2).webp" },
-    { id: 2, name: "The Magistrate's Chamber — Executive", description: "Executive class elegance with generous space and period details for a serene stay.", amenities: ["King Bed + Sofa Bed", "Work Desk", "Wi-Fi", "Air Conditioned", "Room Service", "Coffee Maker", "Flat-screen TV"], capacity: 3, price: 10500, image: "/images/Accommodation/room (3).webp" },
-    { id: 3, name: "The Collector's Chamber — Deluxe", description: "Deluxe comfort with curated antique accents and a calm, sophisticated ambiance.", amenities: ["Queen Bed", "Traditional Artwork", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar"], capacity: 2, price: 7500, image: "/images/Accommodation/room (4).webp" },
-    { id: 4, name: "The Residency Room — Executive", description: "Executive refinement with heritage textures, ideal for business and leisure travelers.", amenities: ["King Bed", "Quiet Wing", "Wi-Fi", "Air Conditioned", "Room Service", "Flat-screen TV"], capacity: 3, price: 9500, image: "/images/Accommodation/room (5).webp" },
-    { id: 5, name: "The Plantation Room — Deluxe", description: "Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities.", amenities: ["Queen Bed", "Garden View", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar"], capacity: 2, price: 6500, image: "/images/Accommodation/room (6).webp" },
+    { id: 1, name: "The President's Chamber", description: "A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts.", amenities: ["King Bed", "Garden View", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar", "Flat-screen TV"], capacity: 2, category: 'Deluxe', pricing: { single: 5000, double: 7000 }, image: "/images/room1-desktop.webp" },
+    { id: 2, name: "The Magistrate's Chamber", description: "Executive class elegance with generous space and period details for a serene stay.", amenities: ["King Bed + Sofa Bed", "Work Desk", "Wi-Fi", "Air Conditioned", "Room Service", "Coffee Maker", "Flat-screen TV"], capacity: 3, category: 'Executive', pricing: { single: 4000, double: 6000 }, image: "/images/room2-desktop.webp" },
+    { id: 3, name: "The Collector's Chamber", description: "Deluxe comfort with curated antique accents and a calm, sophisticated ambiance.", amenities: ["Queen Bed", "Traditional Artwork", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar"], capacity: 2, category: 'Deluxe', pricing: { single: 5000, double: 7000 }, image: "/images/room3-desktop.webp" },
+    { id: 4, name: "The Residency Room", description: "Executive refinement with heritage textures, ideal for business and leisure travelers.", amenities: ["King Bed", "Quiet Wing", "Wi-Fi", "Air Conditioned", "Room Service", "Flat-screen TV"], capacity: 3, category: 'Executive', pricing: { single: 4000, double: 6000 }, image: "/images/room4-desktop.webp" },
+    { id: 5, name: "The Plantation Room", description: "Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities.", amenities: ["Queen Bed", "Garden View", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar"], capacity: 2, category: 'Deluxe', pricing: { single: 5000, double: 7000 }, image: "/images/room5-desktop.webp" },
 ];
 
 const whyBookWithUs = [
@@ -91,9 +95,9 @@ const RoomShowcaseCard = memo<{ room: Room; }>(({ room }) => (
         {/* Enhanced Content Overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
             <div className="flex items-center gap-2 mb-3">
-                <span className="glassmorphic px-3 py-1 rounded-full text-xs font-poppins font-medium border border-accent-gold/40 animate-float">
-                    ✨ Heritage Suite
-                </span>
+                <div className="glass-card px-3 py-1 rounded-full text-xs font-poppins font-medium border border-accent-gold/40 animate-float">
+                    ✨ {room.category}
+                </div>
             </div>
             <div className="animate-float" style={{ animationDelay: '0.2s' }}>
                 <h3 className="font-playfair text-xl font-semibold mb-2 group-hover:text-accent-gold transition-colors duration-300 text-glow-gold">
@@ -106,15 +110,20 @@ const RoomShowcaseCard = memo<{ room: Room; }>(({ room }) => (
             <div className="flex justify-between items-center">
                 <div className="flex gap-2">
                     {room.amenities.slice(0, 2).map((amenity) => (
-                        <span key={amenity} className="text-xs glassmorphic px-2 py-1 rounded-full border border-white/20 hover:border-accent-gold/40 transition-colors duration-300">
+                        <div key={amenity} className="text-xs glass-card px-2 py-1 rounded-full border border-white/20 hover:border-accent-gold/40 transition-colors duration-300">
                             {amenity}
-                        </span>
+                        </div>
                     ))}
                 </div>
                 <div className="text-right">
-                    <p className="font-poppins font-bold text-accent-gold text-lg group-hover:scale-105 transition-transform duration-300 text-glow-gold animate-text-shimmer">
-                        ₹{room.price.toLocaleString()}
-                    </p>
+                    <div className="space-y-1">
+                        <p className="font-poppins font-bold text-accent-gold text-sm group-hover:scale-105 transition-transform duration-300 text-glow-gold animate-text-shimmer">
+                            Single: ₹{room.pricing.single.toLocaleString()}
+                        </p>
+                        <p className="font-poppins font-bold text-accent-gold text-sm group-hover:scale-105 transition-transform duration-300 text-glow-gold animate-text-shimmer">
+                            Double: ₹{room.pricing.double.toLocaleString()}
+                        </p>
+                    </div>
                     <p className="text-xs opacity-75">per night</p>
             </div>
         </div>
@@ -133,38 +142,68 @@ const RoomDropdownOption = memo<{ room: Room; onSelect: () => void; }>(({ room, 
     >
         <img src={room.image} alt={room.name} className="w-16 h-16 rounded-lg object-cover" loading="lazy" />
         <div className="flex-1">
-            <h4 className="font-playfair font-semibold text-foreground">{room.name}</h4>
+            <div className="flex items-center gap-2 mb-1">
+                <h4 className="font-playfair font-semibold text-foreground">{room.name}</h4>
+                <div className="text-xs bg-accent/10 text-accent px-2 py-1 rounded-full font-medium">{room.category}</div>
+            </div>
             <p className="text-sm text-foreground-subtle">{room.amenities.slice(0, 2).join(', ')}</p>
-            <p className="font-poppins font-bold text-accent">₹{room.price.toLocaleString()}/night</p>
+            <div className="flex gap-4 mt-1">
+                <p className="font-poppins font-bold text-accent text-sm">Single: ₹{room.pricing.single.toLocaleString()}</p>
+                <p className="font-poppins font-bold text-accent text-sm">Double: ₹{room.pricing.double.toLocaleString()}</p>
+            </div>
                 </div>
     </div>
 ));
 
 // Enhanced Selected Room Card
-const SelectedRoomCard = memo<{ room: Room; quantity: number; onRemove: () => void; }>(({ room, quantity, onRemove }) => (
-    <div className="card-interactive flex items-center gap-3 glassmorphic border border-accent/20 rounded-xl p-4 hover-lift animate-fade-in-up">
-        <img src={room.image} alt={room.name} className="w-14 h-14 rounded-lg object-cover img-overlay" loading="lazy" />
-        <div className="flex-1">
-            <h5 className="font-playfair font-semibold text-sm text-foreground">{room.name}</h5>
-            <p className="text-xs text-foreground-subtle">Quantity: <span className="text-accent font-medium">{quantity}</span></p>
-        </div>
-        <div className="text-right">
-            <p className="font-poppins font-bold text-accent text-sm text-glow-primary">₹{(room.price * quantity).toLocaleString()}</p>
-            <button onClick={onRemove} className="text-xs text-red-500 hover:text-red-700 transition-colors hover-bounce font-medium">
-                ✕ Remove
-            </button>
+const SelectedRoomCard = memo<{ room: Room; quantity: number; occupancy: 'single' | 'double'; onRemove: () => void; onOccupancyChange: (occupancy: 'single' | 'double') => void; }>(({ room, quantity, occupancy, onRemove, onOccupancyChange }) => (
+    <div className="card-interactive glass-card border border-accent/20 rounded-xl p-4 hover-lift animate-fade-in-up">
+        <div className="flex items-center gap-3 mb-3">
+            <img src={room.image} alt={room.name} className="w-14 h-14 rounded-lg object-cover img-overlay" loading="lazy" />
+            <div className="flex-1">
+                <h5 className="font-playfair font-semibold text-sm text-foreground">{room.name}</h5>
+                <p className="text-xs text-foreground-subtle">Quantity: <strong className="text-accent font-medium">{quantity}</strong></p>
+            </div>
+            <div className="text-right">
+                <p className="font-poppins font-bold text-accent text-sm text-glow-primary">₹{(room.pricing[occupancy] * quantity).toLocaleString()}</p>
+                <button onClick={onRemove} className="text-xs text-red-500 hover:text-red-700 transition-colors hover-bounce font-medium">
+                    ✕ Remove
+                </button>
             </div>
         </div>
+        <div className="flex gap-2">
+            <button
+                onClick={() => onOccupancyChange('single')}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                    occupancy === 'single' 
+                        ? 'bg-accent text-white' 
+                        : 'bg-accent/10 text-accent hover:bg-accent/20'
+                }`}
+            >
+                Single (₹{room.pricing.single.toLocaleString()})
+            </button>
+            <button
+                onClick={() => onOccupancyChange('double')}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                    occupancy === 'double' 
+                        ? 'bg-accent text-white' 
+                        : 'bg-accent/10 text-accent hover:bg-accent/20'
+                }`}
+            >
+                Double (₹{room.pricing.double.toLocaleString()})
+            </button>
+        </div>
+    </div>
 ));
 
 const ConfirmationModal = memo<{ bookingDetails: GuestInfo & BookingDetails & PriceSummary; onClose: () => void; }>(({ bookingDetails, onClose }) => (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
-        <div className="card-base glassmorphic w-full max-w-lg p-8 text-center hover-glow animate-fade-in-up">
+        <div className="card-base glass-card w-full max-w-lg p-8 text-center hover-glow animate-fade-in-up">
             <div className="animate-float">
                 <h2 className="font-playfair text-h2 text-accent mb-4 text-glow-gold">🎉 Booking Confirmed!</h2>
             </div>
             <p className="text-body text-foreground mb-6">Thank you, <span className="text-accent-gold font-semibold">{bookingDetails.name}</span>. Your heritage stay is confirmed. A confirmation email has been sent to <span className="text-accent">{bookingDetails.email}</span>.</p>
-            <div className="text-left glassmorphic p-4 rounded-lg border border-accent/20 mb-6 space-y-2">
+            <div className="text-left glass-card p-4 rounded-lg border border-accent/20 mb-6 space-y-2">
                 <p className="text-foreground"><strong className="text-foreground">Check-in:</strong> {new Date(bookingDetails.checkIn).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                 <p className="text-foreground"><strong className="text-foreground">Check-out:</strong> {new Date(bookingDetails.checkOut).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                 <p className="text-foreground"><strong className="text-foreground">Total Paid:</strong> <span className="text-accent-gold font-bold text-glow-gold">₹{bookingDetails.total.toLocaleString()}</span></p>
@@ -181,13 +220,16 @@ const ConfirmationModal = memo<{ bookingDetails: GuestInfo & BookingDetails & Pr
 // =================================================================
 const BookingPage = memo(() => {
     const [selectedRooms, setSelectedRooms] = useState<Record<number, number>>({});
+    const [roomOccupancy, setRoomOccupancy] = useState<Record<number, 'single' | 'double'>>({});
     const [bookingDetails, setBookingDetails] = useState<BookingDetails>({ checkIn: '', checkOut: '', adults: 2, children: 0 });
     const [guestInfo, setGuestInfo] = useState<GuestInfo>({ name: '', email: '', phone: '', requests: '' });
     const [priceSummary, setPriceSummary] = useState<PriceSummary>({ nights: 0, roomTotal: 0, taxes: 0, total: 0 });
     const [errors, setErrors] = useState<Errors>({});
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string>('');
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [isRoomDropdownOpen, setIsRoomDropdownOpen] = useState(false);
     const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -206,23 +248,26 @@ const BookingPage = memo(() => {
     const calculatedPriceSummary = useMemo(() => {
         const { checkIn, checkOut } = bookingDetails;
         if (checkIn && checkOut && new Date(checkOut) > new Date(checkIn) && Object.keys(selectedRooms).length > 0) {
-            const date1 = new Date(checkIn);
-            const date2 = new Date(checkOut);
+            // Use UTC dates to avoid timezone issues
+            const date1 = new Date(checkIn + 'T00:00:00.000Z');
+            const date2 = new Date(checkOut + 'T00:00:00.000Z');
             const timeDiff = date2.getTime() - date1.getTime();
-            const nights = Math.max(1, Math.ceil(timeDiff / (1000 * 3600 * 24)));
+            const nights = Math.max(1, Math.floor(timeDiff / (1000 * 3600 * 24)));
             
             const roomTotal = Object.entries(selectedRooms).reduce((total, [roomId, quantity]) => {
                 const room = roomsData.find(r => r.id === parseInt(roomId));
-                return total + (room ? room.price * quantity : 0);
+                const occupancy = roomOccupancy[parseInt(roomId)] || 'single';
+                const price = room ? room.pricing[occupancy] : 0;
+                return total + (price * quantity);
             }, 0) * nights;
 
-            const taxes = roomTotal * 0.18;
+            const taxes = roomTotal * 0.05;
             const total = roomTotal + taxes;
             return { nights, roomTotal, taxes, total };
         } else {
             return { nights: 0, roomTotal: 0, taxes: 0, total: 0 };
         }
-    }, [bookingDetails, selectedRooms]);
+    }, [bookingDetails, selectedRooms, roomOccupancy]);
 
     // Update price summary when calculated values change
     useEffect(() => {
@@ -232,6 +277,7 @@ const BookingPage = memo(() => {
     // Memoized handlers for performance
     const handleAddRoom = useCallback((roomId: number, quantity: number = 1) => {
         setSelectedRooms(prev => ({ ...prev, [roomId]: quantity }));
+        setRoomOccupancy(prev => ({ ...prev, [roomId]: 'single' }));
         setIsRoomDropdownOpen(false);
     }, []);
     
@@ -240,6 +286,11 @@ const BookingPage = memo(() => {
             const newRooms = { ...prev };
             delete newRooms[roomId];
             return newRooms;
+        });
+        setRoomOccupancy(prev => {
+            const newOccupancy = { ...prev };
+            delete newOccupancy[roomId];
+            return newOccupancy;
         });
     }, []);
     
@@ -251,16 +302,59 @@ const BookingPage = memo(() => {
         setGuestInfo(prev => ({ ...prev, [e.target.name]: e.target.value }));
     }, []);
 
+    const handleOccupancyChange = useCallback((roomId: number, occupancy: 'single' | 'double') => {
+        setRoomOccupancy(prev => ({ ...prev, [roomId]: occupancy }));
+    }, []);
+
     // Memoized form validation
     const validateForm = useCallback(() => {
         const newErrors: Errors = {};
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
+        
+        // Room selection validation
         if (Object.keys(selectedRooms).length === 0) newErrors.room = 'Please select at least one room.';
-        if (!bookingDetails.checkIn) newErrors.checkIn = 'Check-in date is required.';
-        if (!bookingDetails.checkOut) newErrors.checkOut = 'Check-out date is required.';
-        if (new Date(bookingDetails.checkOut) <= new Date(bookingDetails.checkIn)) newErrors.checkOut = 'Check-out must be after check-in.';
+        
+        // Date validations
+        if (!bookingDetails.checkIn) {
+            newErrors.checkIn = 'Check-in date is required.';
+        } else {
+            // Use UTC dates to avoid timezone issues
+            const checkInDate = new Date(bookingDetails.checkIn + 'T00:00:00.000Z');
+            const todayUTC = new Date(new Date().toISOString().split('T')[0] + 'T00:00:00.000Z');
+            if (checkInDate < todayUTC) {
+                newErrors.checkIn = 'Check-in date cannot be in the past.';
+            }
+        }
+        
+        if (!bookingDetails.checkOut) {
+            newErrors.checkOut = 'Check-out date is required.';
+        } else if (bookingDetails.checkIn) {
+            // Use UTC dates to avoid timezone issues
+            const checkInDate = new Date(bookingDetails.checkIn + 'T00:00:00.000Z');
+            const checkOutDate = new Date(bookingDetails.checkOut + 'T00:00:00.000Z');
+            
+            if (checkOutDate <= checkInDate) {
+                newErrors.checkOut = 'Check-out must be at least 1 day after check-in.';
+            }
+        }
+        
+        // Room capacity validation
+        const totalGuests = bookingDetails.adults + bookingDetails.children;
+        const totalCapacity = Object.entries(selectedRooms).reduce((total, [roomId, quantity]) => {
+            const room = roomsData.find(r => r.id === parseInt(roomId));
+            return total + (room ? room.capacity * quantity : 0);
+        }, 0);
+        
+        if (totalGuests > totalCapacity) {
+            newErrors.room = `Selected rooms can accommodate ${totalCapacity} guests, but you have ${totalGuests} guests.`;
+        }
+        
+        // Guest info validations
         if (!guestInfo.name.trim()) newErrors.name = 'Full name is required.';
         if (!guestInfo.email || !/\S+@\S+\.\S+/.test(guestInfo.email)) newErrors.email = 'A valid email is required.';
         if (!guestInfo.phone.trim()) newErrors.phone = 'Phone number is required.';
+        
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     }, [selectedRooms, bookingDetails, guestInfo]);
@@ -268,6 +362,8 @@ const BookingPage = memo(() => {
     // Memoized submit handler
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
+        setSubmitError(''); // Clear previous errors
+        
         if (!validateForm()) {
             document.getElementById('booking-summary')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
@@ -298,13 +394,24 @@ const BookingPage = memo(() => {
             });
 
             if (!response.ok) {
-                throw new Error('Booking failed. Please try again later.');
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.message || errorData.error || 
+                    `Booking failed with status ${response.status}. Please try again later.`;
+                throw new Error(errorMessage);
             }
 
             setIsConfirmed(true);
 
         } catch (error: any) {
-            alert(error.message);
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                setSubmitError('Unable to connect to the booking service. Please check your internet connection and try again.');
+            } else {
+                setSubmitError(error.message || 'An unexpected error occurred. Please try again.');
+            }
+            // Scroll to error message
+            setTimeout(() => {
+                document.getElementById('submit-error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
         } finally {
             setIsSubmitting(false);
         }
@@ -370,12 +477,18 @@ const BookingPage = memo(() => {
                             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
                         >
                             <div className="animate-float" style={{ animationDelay: '0.3s' }}>
-                                <button className="btn btn-primary hover-glow shadow-golden-glow">
+                                <button 
+                                    onClick={() => document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                                    className="btn btn-primary hover-glow shadow-golden-glow"
+                                >
                                     ✨ Begin Your Journey
                                 </button>
                             </div>
                             <div className="animate-float" style={{ animationDelay: '0.4s' }}>
-                                <button className="btn btn-ghost text-white border-white/30 hover:border-accent-gold hover:text-accent-gold">
+                                <button 
+                                    onClick={() => navigate('/accommodation')}
+                                    className="btn btn-ghost text-white border-white/30 hover:border-accent-gold hover:text-accent-gold"
+                                >
                                     View Suites
                                 </button>
                             </div>
@@ -464,7 +577,7 @@ const BookingPage = memo(() => {
                 </section>
 
                 {/* Enhanced Booking Form Section */}
-                <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+                <section id="booking-form" className="py-16 md:py-24 bg-background relative overflow-hidden">
                     {/* Background Decorative Elements */}
                     <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-accent/5 to-transparent rounded-full blur-3xl animate-scale-breath" />
                     <div className="absolute bottom-10 right-10 w-64 h-64 bg-gradient-to-tl from-accent-gold/8 to-transparent rounded-full blur-2xl animate-float" />
@@ -472,7 +585,7 @@ const BookingPage = memo(() => {
                     <div className="container mx-auto px-6 md:px-12 relative z-10">
                         <div className="max-w-4xl mx-auto">
                         <div 
-                            className="card-base glassmorphic p-10 rounded-3xl shadow-heritage-lg border-2 border-accent/20 relative overflow-hidden hover-glow"
+                            className="card-base glass-card p-10 rounded-3xl shadow-heritage-lg border-2 border-accent/20 relative overflow-hidden hover-glow"
                         >
                             {/* Enhanced Decorative elements */}
                             <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-accent/10 to-transparent rounded-bl-full animate-pulse" />
@@ -510,7 +623,7 @@ const BookingPage = memo(() => {
                                             <div>
                                                 <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">Check-in Date</label>
                                             <div className="relative">
-                                                <input type="date" name="checkIn" value={bookingDetails.checkIn} onChange={handleBookingChange} className="w-full p-4 pl-12 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 text-base text-foreground"/>
+                                                <input type="date" name="checkIn" value={bookingDetails.checkIn} onChange={handleBookingChange} className="w-full p-4 pl-12 glass-card border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 text-base text-foreground"/>
                                                 <CalendarIcon />
                                             </div>
                                             {errors.checkIn && <p className="text-red-500 text-sm mt-2">{errors.checkIn}</p>}
@@ -528,7 +641,7 @@ const BookingPage = memo(() => {
                                             <div>
                                                 <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">Adults</label>
                                             <div className="relative">
-                                                <select name="adults" value={bookingDetails.adults} onChange={handleBookingChange} className="w-full p-4 pl-12 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 appearance-none text-base text-foreground">
+                                                <select name="adults" value={bookingDetails.adults} onChange={handleBookingChange} className="w-full p-4 pl-12 glass-card border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 appearance-none text-base text-foreground">
                                                     <option>1</option><option>2</option><option>3</option><option>4</option>
                                                 </select>
                                                 <UserIcon />
@@ -537,7 +650,7 @@ const BookingPage = memo(() => {
                                             <div>
                                                 <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">Children</label>
                                             <div className="relative">
-                                                <select name="children" value={bookingDetails.children} onChange={handleBookingChange} className="w-full p-4 pl-12 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 appearance-none text-base text-foreground">
+                                                <select name="children" value={bookingDetails.children} onChange={handleBookingChange} className="w-full p-4 pl-12 glass-card border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 appearance-none text-base text-foreground">
                                                     <option>0</option><option>1</option><option>2</option>
                                                 </select>
                                                 <UserIcon />
@@ -554,7 +667,7 @@ const BookingPage = memo(() => {
                                                 <button
                                                     type="button"
                                                     onClick={toggleRoomDropdown}
-                                                    className="w-full p-4 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 text-left flex justify-between items-center hover-lift"
+                                                    className="w-full p-4 glass-card border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 text-left flex justify-between items-center hover-lift"
                                                 >
                                                     <span className="text-foreground">
                                                         {Object.keys(selectedRooms).length > 0 
@@ -568,7 +681,7 @@ const BookingPage = memo(() => {
                                                 {/* Room Dropdown */}
                                                 {isRoomDropdownOpen && (
                                                     <div
-                                                        className="absolute top-full left-0 right-0 mt-2 glassmorphic border-2 border-accent/20 rounded-xl shadow-heritage-lg z-50 max-h-80 overflow-y-auto"
+                                                        className="absolute top-full left-0 right-0 mt-2 glass-card border-2 border-accent/20 rounded-xl shadow-heritage-lg z-50 max-h-80 overflow-y-auto"
                                                     >
                                                         {roomsData.map(room => (
                                                             <div key={room.id} className="border-b border-accent/10 last:border-b-0">
@@ -601,7 +714,9 @@ const BookingPage = memo(() => {
                                                             key={roomId}
                                                             room={room}
                                                             quantity={quantity}
+                                                            occupancy={roomOccupancy[parseInt(roomId)] || 'single'}
                                                             onRemove={() => handleRemoveRoom(parseInt(roomId))}
+                                                            onOccupancyChange={(occupancy) => handleOccupancyChange(parseInt(roomId), occupancy)}
                                                         />
                                                     ) : null;
                                                 })}
@@ -618,10 +733,11 @@ const BookingPage = memo(() => {
                                         <h4 className="font-playfair text-h4 text-foreground-heading text-center mb-4 text-glow-gold">Booking Summary</h4>
                                         {Object.entries(selectedRooms).map(([roomId, quantity]) => {
                                             const room = roomsData.find(r => r.id === parseInt(roomId));
+                                            const occupancy = roomOccupancy[parseInt(roomId)] || 'single';
                                             return room ? (
                                                 <div key={roomId} className="flex justify-between items-center py-3 border-b border-accent/10 last:border-b-0 hover-lift">
                                                     <span className="font-cormorant text-foreground-subtle">{quantity} x {room.name}</span>
-                                                    <span className="font-poppins font-semibold text-accent text-glow-primary">₹{(room.price * quantity).toLocaleString()}</span>
+                                                    <span className="font-poppins font-semibold text-accent text-glow-primary">₹{(room.pricing[occupancy] * quantity).toLocaleString()}</span>
                                                 </div>
                                             ) : null;
                                         })}
@@ -630,7 +746,7 @@ const BookingPage = memo(() => {
                                             <span className="font-poppins font-semibold">₹{priceSummary.roomTotal.toLocaleString()}</span>
                                         </div>
                                         <div className="flex justify-between text-base">
-                                            <span className="font-cormorant text-foreground-subtle">Taxes & Fees (18%)</span>
+                                            <span className="font-cormorant text-foreground-subtle">Taxes & Fees (5%)</span>
                                             <span className="font-poppins font-semibold">₹{priceSummary.taxes.toLocaleString()}</span>
                                         </div>
                                         <div className="flex justify-between text-xl font-bold pt-4 border-t border-accent/20 hover-lift">
@@ -639,7 +755,7 @@ const BookingPage = memo(() => {
                                         </div>
                                     </div>
                                 )}
-                                {errors.room && <p className="text-red-500 text-sm mt-2 text-center glassmorphic border border-red-200 rounded-lg p-3 animate-bounce-gentle" id="booking-summary">{errors.room}</p>}
+                                {errors.room && <p className="text-red-500 text-sm mt-2 text-center glass-card border border-red-200 rounded-lg p-3 animate-bounce-gentle" id="booking-summary">{errors.room}</p>}
                                 
                                 <div className="pt-6 border-t border-accent/20">
                                     <div className="text-center mb-6">
@@ -650,22 +766,33 @@ const BookingPage = memo(() => {
                                     </div>
                                     <div className="space-y-4">
                                         <div>
-                                            <input type="text" name="name" placeholder="Full Name" value={guestInfo.name} onChange={handleGuestInfoChange} className="w-full p-4 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 placeholder:text-foreground-subtle text-foreground hover-lift"/>
+                                            <input type="text" name="name" placeholder="Full Name" value={guestInfo.name} onChange={handleGuestInfoChange} className="w-full p-4 glass-card border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 placeholder:text-foreground-subtle text-foreground hover-lift"/>
                                             {errors.name && <p className="text-red-500 text-sm mt-2">{errors.name}</p>}
                                         </div>
                                         <div>
-                                            <input type="email" name="email" placeholder="Email Address" value={guestInfo.email} onChange={handleGuestInfoChange} className="w-full p-4 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 placeholder:text-foreground-subtle text-foreground hover-lift"/>
-                                            {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email}</p>}
-                                        </div>
-                                        <div>
-                                            <input type="tel" name="phone" placeholder="Phone Number" value={guestInfo.phone} onChange={handleGuestInfoChange} className="w-full p-4 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 placeholder:text-foreground-subtle text-foreground hover-lift"/>
+                                            <input type="email" name="email" placeholder="Email Address" value={guestInfo.email} onChange={handleGuestInfoChange} className="w-full p-4 glass-card border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 placeholder:text-foreground-subtle text-foreground hover-lift"/>
+                                {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email}</p>}
+                            </div>
+                            <div>
+                                <input type="tel" name="phone" placeholder="Phone Number" value={guestInfo.phone} onChange={handleGuestInfoChange} className="w-full p-4 glass-card border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 placeholder:text-foreground-subtle text-foreground hover-lift"/>
                                             {errors.phone && <p className="text-red-500 text-sm mt-2">{errors.phone}</p>}
                                         </div>
                                         <div>
-                                            <textarea name="requests" placeholder="Special Requests (optional)" value={guestInfo.requests} onChange={handleGuestInfoChange} className="w-full p-4 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 placeholder:text-foreground-subtle text-foreground h-24 resize-none hover-lift"></textarea>
+                                            <textarea name="requests" placeholder="Special Requests (optional)" value={guestInfo.requests} onChange={handleGuestInfoChange} className="w-full p-4 glass-card border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 placeholder:text-foreground-subtle text-foreground h-24 resize-none hover-lift"></textarea>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                {submitError && (
+                                    <div id="submit-error" className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm animate-fade-in-up">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                            </svg>
+                                            <span>{submitError}</span>
+                                        </div>
+                                    </div>
+                                )}
                                 
                                 <button 
                                     type="submit" 
@@ -700,7 +827,7 @@ const BookingPage = memo(() => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                             {whyBookWithUs.map((item, index) => (
                                 <div key={index} className="card-tilt hover-lift animate-float" style={{ animationDelay: `${index * 0.2}s` }}>
-                                     <div className="bg-accent/10 p-4 inline-block rounded-full mb-4 hover-pulse glassmorphic shadow-soft-sunlight"><CheckCircleIcon /></div>
+                                     <div className="bg-accent/10 p-4 inline-block rounded-full mb-4 hover-pulse glass-card shadow-soft-sunlight"><CheckCircleIcon /></div>
                                      <div className="animate-float" style={{ animationDelay: `${index * 0.3}s` }}>
                                          <h3 className="font-playfair text-h4 text-foreground text-glow-gold">{item.title}</h3>
                                      </div>

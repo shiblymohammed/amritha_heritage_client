@@ -412,27 +412,32 @@ export default {
           },
         },
         '.card-tilt': {
-          backgroundColor: theme('colors.background-secondary'),
-          borderRadius: theme('borderRadius.xl'),
-          boxShadow: theme('boxShadow.soft-sunlight'),
-          transition: 'all 0.6s cubic-bezier(0.23, 1, 0.320, 1)',
-          overflow: 'hidden',
-          transformStyle: 'preserve-3d',
-          '&:hover': {
-            transform: 'translateY(-6px) scale(1.02) rotateX(10deg) rotateY(-5deg) rotateZ(2deg)',
-            boxShadow: theme('boxShadow.golden-glow-sm'),
-          },
-        },
+          backgroundColor: theme('colors.background-secondary'),
+          borderRadius: theme('borderRadius.xl'),
+          boxShadow: theme('boxShadow.soft-sunlight'),
+          transition: 'all 0.6s cubic-bezier(0.23, 1, 0.320, 1)',
+          overflow: 'hidden',
+          '&:hover': {
+            transform: 'translateY(-6px) scale(1.02) rotateZ(2deg)',
+            boxShadow: theme('boxShadow.golden-glow-sm'),
+          },
+        },
         '.card-bordered': {
             border: `1px solid ${theme('colors.border')}`,
         },
         // Glassmorphism
-        '.glassmorphic': {
-            backgroundColor: 'rgb(var(--color-background-secondary) / 0.5)',
-            backdropFilter: 'blur(10px)',
-            border: `1px solid rgb(var(--color-border) / 0.2)`,
-            boxShadow: theme('boxShadow.soft-sunlight'),
-        },
+        '.glassmorphic': {
+            backgroundColor: 'rgb(var(--color-background-secondary) / 0.5)',
+            backdropFilter: 'blur(10px)',
+            border: `1px solid rgb(var(--color-border) / 0.2)`,
+            boxShadow: theme('boxShadow.soft-sunlight'),
+        },
+        // Glass effect without blur for form elements
+        '.glass-card': {
+            backgroundColor: 'rgb(var(--color-background-secondary) / 0.8)',
+            border: `1px solid rgb(var(--color-border) / 0.3)`,
+            boxShadow: theme('boxShadow.soft-sunlight'),
+        },
         // Image overlay with enhanced hover effects
         '.img-overlay': {
             position: 'relative',
@@ -477,13 +482,12 @@ export default {
             }
         },
         '.hover-3d': {
-            transition: 'all 0.5s cubic-bezier(0.23, 1, 0.320, 1)',
-            transformStyle: 'preserve-3d',
-            '&:hover': {
-                transform: 'translateY(-8px) rotateX(15deg) rotateY(5deg) scale(1.03)',
-                boxShadow: theme('boxShadow.golden-glow'),
-            }
-        },
+            transition: 'all 0.5s cubic-bezier(0.23, 1, 0.320, 1)',
+            '&:hover': {
+                transform: 'translateY(-8px) scale(1.03) rotateZ(1deg)',
+                boxShadow: theme('boxShadow.golden-glow'),
+            }
+        },
         '.hover-bounce': {
             transition: 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
             '&:hover': {

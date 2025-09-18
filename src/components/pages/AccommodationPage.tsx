@@ -10,7 +10,11 @@ interface RoomType {
   name: string;
   description: string;
   image: string;
-  price: string;
+  category: 'Deluxe' | 'Executive';
+  pricing: {
+    single: number;
+    double: number;
+  };
   capacity: number;
   size: string;
   features: string[];
@@ -21,10 +25,11 @@ interface RoomType {
 const roomTypes: RoomType[] = [
   {
     id: 'president-deluxe',
-    name: "The President's Chamber — Deluxe",
+    name: "The President's Chamber",
     description: 'A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts',
     image: '/images/room1-desktop.webp',
-    price: '₹5,000 - ₹7,000',
+    category: 'Deluxe',
+    pricing: { single: 5000, double: 7000 },
     capacity: 2,
     size: '450 sq ft',
     features: ['Colonial Style', 'Period Furniture', 'Natural Lighting', 'Complimentary Breakfast'],
@@ -33,10 +38,11 @@ const roomTypes: RoomType[] = [
   },
   {
     id: 'magistrate-executive',
-    name: "The Magistrate's Chamber — Executive",
+    name: "The Magistrate's Chamber",
     description: 'Executive class elegance with generous space and period details for a serene stay',
     image: '/images/room2-desktop.webp',
-    price: '₹4,000 - ₹6,000',
+    category: 'Executive',
+    pricing: { single: 4000, double: 6000 },
     capacity: 3,
     size: '520 sq ft',
     features: ['Extra Space', 'Work Area', 'Lounge Space', 'Premium Amenities'],
@@ -45,10 +51,11 @@ const roomTypes: RoomType[] = [
   },
   {
     id: 'collector-deluxe',
-    name: "The Collector's Chamber — Deluxe",
+    name: "The Collector's Chamber",
     description: 'Deluxe comfort with curated antique accents and a calm, sophisticated ambiance',
     image: '/images/room3-desktop.webp',
-    price: '₹5,000 - ₹7,000',
+    category: 'Deluxe',
+    pricing: { single: 5000, double: 7000 },
     capacity: 2,
     size: '480 sq ft',
     features: ['Classic Wooden Decor', 'City View', 'Traditional Artwork', 'Complimentary Breakfast'],
@@ -57,10 +64,11 @@ const roomTypes: RoomType[] = [
   },
   {
     id: 'residency-executive',
-    name: 'The Residency Room — Executive',
+    name: 'The Residency Room',
     description: 'Executive refinement with heritage textures, ideal for business and leisure travelers',
     image: '/images/room4-desktop.webp',
-    price: '₹4,000 - ₹6,000',
+    category: 'Executive',
+    pricing: { single: 4000, double: 6000 },
     capacity: 3,
     size: '520 sq ft',
     features: ['Spacious Layout', 'Quiet Wing', 'Premium Bedding', 'Desk & Seating Area'],
@@ -69,10 +77,11 @@ const roomTypes: RoomType[] = [
   },
   {
     id: 'plantation-deluxe',
-    name: 'The Plantation Room — Deluxe',
+    name: 'The Plantation Room',
     description: 'Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities',
     image: '/images/room5-desktop.webp',
-    price: '₹5,000 - ₹7,000',
+    category: 'Deluxe',
+    pricing: { single: 5000, double: 7000 },
     capacity: 2,
     size: '460 sq ft',
     features: ['Heritage Design', 'Garden View', 'Natural Lighting', 'Complimentary Breakfast'],
@@ -180,11 +189,6 @@ const AccommodationPage: React.FC = () => {
               <p className="font-cormorant text-xl text-foreground-subtle max-w-2xl mx-auto">
                 Our rooms are more than just places to sleep — they are a journey into history. Each room is uniquely designed with period furniture, natural lighting, and modern amenities.
               </p>
-              <div className="mt-6 p-4 bg-background-secondary rounded-lg border border-border max-w-2xl mx-auto">
-                <p className="font-poppins text-sm text-foreground-subtle text-center">
-                  <span className="font-semibold text-accent">Pricing:</span> Single Bed (₹4,000-₹5,000) • Double Bed (₹6,000-₹7,000) • Extra Person (+₹2,000)
-                </p>
-              </div>
             </AnimateOnScroll>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -198,7 +202,7 @@ const AccommodationPage: React.FC = () => {
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       />
                       <div className="absolute top-4 right-4 bg-accent text-foreground-on-color px-3 py-1 rounded-full text-sm font-poppins font-semibold shadow-golden-glow-sm">
-                        {room.price}
+                        {room.category}
                       </div>
                     </div>
                     <div className="p-4 md:p-5 flex flex-col flex-grow">
@@ -208,14 +212,14 @@ const AccommodationPage: React.FC = () => {
                       <p className="font-cormorant text-sm md:text-base text-foreground-subtle mb-3 leading-relaxed flex-grow line-clamp-3">
                         {room.description}
                       </p>
-                      <div className="flex items-center gap-4 mb-4 text-xs md:text-sm text-foreground-subtle">
-                        <div className="flex items-center gap-2">
-                          <Users className="w-5 h-5" />
-                          <span>{room.capacity}</span>
+                      <div className="mb-4 space-y-2">
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="font-cormorant text-foreground-subtle">Single Occupancy:</span>
+                          <span className="font-poppins font-semibold text-accent">₹{room.pricing.single.toLocaleString()}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-5 h-5" />
-                          <span>{room.size}</span>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="font-cormorant text-foreground-subtle">Double Occupancy:</span>
+                          <span className="font-poppins font-semibold text-accent">₹{room.pricing.double.toLocaleString()}</span>
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-3 mt-auto">
@@ -505,7 +509,9 @@ const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>
                     <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft">
                         <h3 className="font-playfair text-2xl text-text-heading mb-4">Room Details</h3>
                         <div className="space-y-4 mb-6">
-                            <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Price per night</span><span className="font-poppins font-semibold text-action-accent text-xl">{room.price}</span></div>
+                            <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Category</span><span className="font-poppins font-semibold text-action-accent text-xl">{room.category}</span></div>
+                            <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Single Occupancy</span><span className="font-poppins text-text-heading">₹{room.pricing.single.toLocaleString()}</span></div>
+                            <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Double Occupancy</span><span className="font-poppins text-text-heading">₹{room.pricing.double.toLocaleString()}</span></div>
                             <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Room size</span><span className="font-poppins text-text-heading">{room.size}</span></div>
                             <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Capacity</span><span className="font-poppins text-text-heading">{room.capacity} guests</span></div>
                         </div>
@@ -514,7 +520,7 @@ const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>
                     <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft">
                         <h3 className="font-playfair text-xl text-text-heading mb-4">Check-in & Check-out</h3>
                         <div className="space-y-3">
-                            <div className="flex items-center gap-3"><Clock className="w-5 h-5 text-action-accent" /><div><p className="font-poppins font-medium text-text-heading">Check-in</p><p className="font-cormorant text-sm text-text-subtle">2:00 PM onwards</p></div></div>
+                            <div className="flex items-center gap-3"><Clock className="w-5 h-5 text-action-accent" /><div><p className="font-poppins font-medium text-text-heading">Check-in</p><p className="font-cormorant text-sm text-text-subtle">12:00 PM onwards</p></div></div>
                             <div className="flex items-center gap-3"><Clock className="w-5 h-5 text-action-accent" /><div><p className="font-poppins font-medium text-text-heading">Check-out</p><p className="font-cormorant text-sm text-text-subtle">11:00 AM</p></div></div>
                         </div>
                     </div>
