@@ -515,7 +515,7 @@ const RoomDetailsModal = React.forwardRef<HTMLDivElement, RoomDetailsModalProps>
                             <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Category</span><span className="font-poppins font-semibold text-action-accent text-xl">{room.category}</span></div>
                             <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Single Occupancy</span><span className="font-poppins text-text-heading">₹{room.pricing.single.toLocaleString()}</span></div>
                             <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Double Occupancy</span><span className="font-poppins text-text-heading">₹{room.pricing.double.toLocaleString()}</span></div>
-                            <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Room size</span><span className="font-poppins text-text-heading">{room.size}</span></div>
+                            
                             <div className="flex justify-between items-center"><span className="font-cormorant text-text-subtle">Capacity</span><span className="font-poppins text-text-heading">{room.capacity} guests</span></div>
                         </div>
                         <button onClick={() => onBookNow(room)} className="w-full btn btn-primary py-4">Book Now</button>

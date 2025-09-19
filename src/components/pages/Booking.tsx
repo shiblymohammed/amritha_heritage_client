@@ -669,8 +669,11 @@ const BookingPage = memo(() => {
       };
 
       try {
+        // Use environment variable for API base URL, fallback to localhost for development
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+        
         const response = await fetch(
-          "http://127.0.0.1:8000/api/room-bookings/",
+          `${API_BASE_URL}/room-bookings/`,
           {
             method: "POST",
             headers: {

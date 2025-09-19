@@ -23,9 +23,12 @@ export const useDailySpecials = () => {
       setError(null);
       setIsRetrying(false);
 
+      // Use environment variable for API base URL, fallback to localhost for development
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+      
       // Try to fetch from API
       const response = await fetch(
-        "http://127.0.0.1:8000/api/menu/daily-specials/active/",
+        `${API_BASE_URL}/menu/daily-specials/active/`,
         {
           headers: {
             "Content-Type": "application/json",
