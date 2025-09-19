@@ -509,9 +509,12 @@ const Events = () => {
                 <h4 className="font-playfair text-text-heading mb-2">
                   Call Us
                 </h4>
-                <p className="font-poppins text-sm text-text-subtle">
-                  +91 123 456 7890
-                </p>
+                <a 
+                  href="tel:+918714653336"
+                  className="inline-block font-poppins text-sm text-action-primary hover:text-action-accent transition-colors duration-300"
+                >
+                  +91 87146 53336
+                </a>
               </div>
               <div className="text-center">
                 <div className="bg-action-accent/10 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
@@ -519,7 +522,7 @@ const Events = () => {
                 </div>
                 <h4 className="font-playfair text-text-heading mb-2">Email</h4>
                 <p className="font-poppins text-sm text-text-subtle">
-                  events@amrithaheritage.com
+                  info@amrithaheritage.com
                 </p>
               </div>
               <div className="text-center">
@@ -536,11 +539,9 @@ const Events = () => {
             </div>
 
             <div className="text-center">
-              <button className="bg-action-primary hover:bg-action-primary-hover text-text-on-color font-poppins font-medium py-4 px-8 rounded-lg transition-colors duration-300 mr-4 mb-4">
-                Get Quote
-              </button>
+              
               <button className="bg-background hover:bg-background-secondary text-action-primary border-2 border-action-primary font-poppins font-medium py-4 px-8 rounded-lg transition-colors duration-300 mb-4">
-                Schedule Visit
+                Contact us
               </button>
             </div>
           </div>
