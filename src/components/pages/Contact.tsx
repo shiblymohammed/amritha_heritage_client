@@ -1,16 +1,35 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const Contact = () => {
+  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     contactNumber: "",
     message: "",
+    specialOccasion: "",
   });
 
   // --- Animation Logic ---
   const sectionRef = useRef(null);
+
+  // --- Scroll to top when component mounts ---
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // --- Auto-select occasion from URL parameters ---
+  useEffect(() => {
+    const occasionParam = searchParams.get('occasion');
+    if (occasionParam) {
+      setFormData(prev => ({
+        ...prev,
+        specialOccasion: decodeURIComponent(occasionParam)
+      }));
+    }
+  }, [searchParams]);
 
 
 
@@ -33,6 +52,7 @@ const Contact = () => {
       email: "",
       contactNumber: "",
       message: "",
+      specialOccasion: "",
     });
   };
 
@@ -414,6 +434,33 @@ const Contact = () => {
                     placeholder="Enter your phone number"
                   />
                 </div>
+              </div>
+
+              {/* Special Occasion */}
+              <div>
+                <label
+                  htmlFor="specialOccasion"
+                  className="block font-poppins font-medium text-text-heading mb-2"
+                >
+                  Special Occasion (Optional)
+                </label>
+                <select
+                  id="specialOccasion"
+                  name="specialOccasion"
+                  value={formData.specialOccasion}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-background-secondary focus:outline-none focus:ring-2 focus:ring-action-accent focus:border-transparent text-text-heading"
+                >
+                  <option value="">Select an occasion (optional)</option>
+                  <option value="Candlelight Dinner">Candlelight Dinner</option>
+                  <option value="Private Dining Room">Private Dining Room</option>
+                  <option value="Chef's Table Experience">Chef's Table Experience</option>
+                  <option value="Wedding Reception">Wedding Reception</option>
+                  <option value="Anniversary Celebration">Anniversary Celebration</option>
+                  <option value="Birthday Party">Birthday Party</option>
+                  <option value="Corporate Event">Corporate Event</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
 
               {/* Message */}

@@ -1,6 +1,7 @@
 // src/pages/Dining.tsx
 
 import { useState, useEffect, useMemo, memo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
 import {
@@ -481,6 +482,8 @@ const VideoHighlightsSection = memo(() => {
 
 // --- Section Component: Special Occasions ---
 const SpecialOccasionsSection = memo(() => {
+  const navigate = useNavigate();
+  
   const occasions = [
     {
       title: "Candlelight Dinner",
@@ -504,6 +507,10 @@ const SpecialOccasionsSection = memo(() => {
       price: "From ₹3,500 per person",
     },
   ];
+
+  const handleContactClick = (occasionTitle: string) => {
+    navigate(`/contact?occasion=${encodeURIComponent(occasionTitle)}`);
+  };
 
   return (
     <div className="relative">
@@ -543,8 +550,11 @@ const SpecialOccasionsSection = memo(() => {
                     <span className="text-accent font-semibold text-glow-gold">
                       {occasion.price}
                     </span>
-                    <button className="btn btn-primary px-6 py-2 floating-btn-sm">
-                      Book Now
+                    <button 
+                      onClick={() => handleContactClick(occasion.title)}
+                      className="btn btn-primary px-6 py-2 floating-btn-sm"
+                    >
+                      Contact us
                     </button>
                   </div>
                 </div>
