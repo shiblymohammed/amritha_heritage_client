@@ -7,6 +7,10 @@ import Footer from '../components/layout/Footer';
 // Import the loading spinner for Suspense fallback
 import LoadingSpinner from '../components/loadingspinner/LoadingSpinner';
 
+// Import cart components
+import { CartProvider } from '../contexts/CartContext';
+import StickyCart from '../components/cart/StickyCart';
+
 interface MainLayoutProps {
   children: React.ReactNode;
 }
@@ -31,24 +35,29 @@ interface MainLayoutProps {
  */
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      {/* Header section with the Navbar */}
-      <header>
-        <NavBar />
-      </header>
+    <CartProvider>
+      <div className="flex flex-col min-h-screen bg-background text-foreground">
+        {/* Header section with the Navbar */}
+        <header>
+          <NavBar />
+        </header>
 
-      {/* Main content area that grows to fill available space */}
-      <main className="flex-grow">
-        <Suspense fallback={<LoadingSpinner />}>
-          {children}
-        </Suspense>
-      </main>
+        {/* Main content area that grows to fill available space */}
+        <main className="flex-grow">
+          <Suspense fallback={<LoadingSpinner />}>
+            {children}
+          </Suspense>
+        </main>
 
-      {/* Footer section */}
-      <footer>
-        <Footer />
-      </footer>
-    </div>
+        {/* Footer section */}
+        <footer>
+          <Footer />
+        </footer>
+
+        {/* Sticky Cart Component */}
+        <StickyCart />
+      </div>
+    </CartProvider>
   );
 };
 
