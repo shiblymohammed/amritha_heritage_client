@@ -174,7 +174,7 @@ const allDestinations: Destination[] = [
       "An ethereal estuary where the river, lake, and sea converge, creating a rare and serene ecosystem of backwaters.",
     longDescription:
       "Poovar is a rare gem—a tranquil estuary where the Neyyar River meets the Arabian Sea. This beautiful expanse of backwaters is a network of lakes, rivers, and canals, fringed by lush mangrove forests and coconut groves. Accessible only by boat, it's a secluded paradise perfect for bird watching, exploring the golden sand beach that separates the backwater from the sea, and staying in unique floating cottages.",
-    gallery: ["/images/poovar-desktop.jpg"],
+    gallery: ["/images/poovar1.jpg"],
     category: "Nature",
     coordinates: { lat: 8.3151, lng: 77.0731 },
     details: [
