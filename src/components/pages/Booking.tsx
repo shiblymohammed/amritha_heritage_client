@@ -142,7 +142,7 @@ const roomsData: Room[] = [
     ],
     capacity: 3,
     category: "Deluxe",
-    pricing: { single: 7000, double: 9000 },
+    pricing: { single: 5000, double: 7000 },
     image: "/images/room2-desktop.webp",
   },
   {
@@ -159,7 +159,7 @@ const roomsData: Room[] = [
     ],
     capacity: 2,
     category: "Deluxe",
-    pricing: { single: 7000, double: 9000 },
+    pricing: { single: 5000, double: 7000 },
     image: "/images/room3-desktop.webp",
   },
   {
@@ -176,7 +176,7 @@ const roomsData: Room[] = [
     ],
     capacity: 3,
     category: "Deluxe",
-    pricing: { single: 7000, double: 9000 },
+    pricing: { single: 5000, double: 7000 },
     image: "/images/room4-desktop.webp",
   },
   {
@@ -193,7 +193,7 @@ const roomsData: Room[] = [
     ],
     capacity: 2,
     category: "Executive",
-    pricing: { single: 6000, double: 8000 },
+    pricing: { single: 4000, double: 6000 },
     image: "/images/room5-desktop.webp",
   },
 ];
