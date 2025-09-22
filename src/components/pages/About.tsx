@@ -3,9 +3,9 @@ const About = () => {
 
 
   // Public images
-  const heroImage = "/images/Intro/intro3.webp";
-  const storyImage = "/images/Intro/intro4.jpg";
-  const visionImage = "/images/home2.webp";
+  const heroImage = "/images/Gallery/about.jpg";
+  const storyImage = "/images/Gallery/intro4.jpg";
+  const visionImage = "/images/Gallery/intro5.jpg";
 
   return (
     <div className="w-full bg-background">

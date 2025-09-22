@@ -4,6 +4,7 @@ import React, { useMemo, useCallback, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SignatureDishesSlider from './SignatureDishSlider'; // Import the new slider
 import LazyImage from '../../hooks/LazyImage';
+import { getFeaturedDishes } from '../../data/menuData';
 
 // Local SectionHeader component
 const SectionHeader = ({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) => (
@@ -27,7 +28,7 @@ const SectionHeader = ({ title, subtitle, children }: { title: string; subtitle:
 
 // Interface can be shared or defined here
 export interface Dish {
-  id: number;
+  id: string;
   name: string;
   description: string;
   price: string;
@@ -37,14 +38,16 @@ export interface Dish {
 const DiningSection: React.FC = () => {
   const navigate = useNavigate();
 
-  const signatureDishes = useMemo<Dish[]>(() => [
-    // ... your dish data remains unchanged
-    { id: 1, name: "Chicken Mushroom Varutharathathu", description: "A classic Keralan curry with toasted coconut.", price: "₹420", image: "/images/chickenmushroom.jpg" },
-    { id: 2, name: "Niagara Chicken", description: "A fiery and tangy dry chicken preparation.", price: "₹380", image: "/images/niagrachicken.jpg" },
-    { id: 3, name: "Beef Ularthiyathu", description: "Slow-roasted beef with fried coconut slivers.", price: "₹450", image: "/images/beefularthiyathu.jpg" },
-    { id: 4, name: "Meen Pollichathu", description: "Spiced fish wrapped in banana leaf and pan-fried.", price: "₹520", image: "/images/meenpollichathu.jpg" },
-    { id: 5, name: "Prawn Mango Curry", description: "A coastal curry balancing sweet and tangy flavors.", price: "₹480", image: "/images/prawnmango.jpg" },
-  ], []);
+  const signatureDishes = useMemo<Dish[]>(() => {
+    // Map dining page featured dishes to home section dish type with formatted price
+    return getFeaturedDishes().map((item) => ({
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      price: `₹${item.price}`,
+      image: item.image,
+    }));
+  }, []);
 
   const handleOrderNow = useCallback((dish: Dish) => {
     navigate('/dining', { state: { preSelectedDish: dish, fromSection: 'signature-dishes' } });
@@ -70,7 +73,7 @@ const DiningSection: React.FC = () => {
         <div className="absolute inset-0">
           {/* Desktop Image */}
           <LazyImage
-            src="/images/dining-hero-desktop.webp"
+            src="/images/Gallery/dininghall.webp"
             alt="Heritage dining experience at Amritha Heritage"
             className="hidden md:block w-full h-full object-cover"
             width={1920}
