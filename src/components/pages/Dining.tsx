@@ -736,21 +736,21 @@ const SpecialOccasionsSection = memo(() => {
       title: "Candlelight Dinner",
       description:
         "Romantic dining experience with soft candlelight and intimate ambiance.",
-      image: "/images/Dining/varanda1.jpg",
+      image: "/images/Gallery/candle.png",
       price: "From ₹2,500 per couple",
     },
     {
       title: "Private Dining Room",
       description:
         "Exclusive private dining for special celebrations and business meetings.",
-      image: "/images/Dining/hall2.jpg",
+      image: "/images/Gallery/privateDining.jpg",
       price: "From ₹5,000 for 8 people",
     },
     {
       title: "Chef's Table Experience",
       description:
         "Interactive dining experience with our master chef preparing dishes live.",
-      image: "/images/Dining/kitcheninside.jpg",
+      image: "/images/Gallery/kitchen.webp",
       price: "From ₹3,500 per person",
     },
   ];

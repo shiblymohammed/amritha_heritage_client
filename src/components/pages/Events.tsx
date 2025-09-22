@@ -72,7 +72,7 @@ const Events = () => {
       capacity: "Intimate couple sessions",
       duration: "Half Day & Full Day",
       priceRange: "₹15,000 - ₹50,000",
-      image: "/images/Events/SAJAN-33.webp",
+      image: "/images/prewedding.webp",
       color: "from-action-accent to-action-primary",
       highlights: [
         "Multiple Locations",
@@ -118,7 +118,7 @@ const Events = () => {
       capacity: "maximum 200 guests",
       duration: "3–4 hours",
       priceRange: "₹25,000 - ₹1,50,000",
-      image: "/images/wedding-desktop.webp",
+      image: "/images/birthday.webp",
       color: "from-action-accent to-action-primary",
       highlights: ["All Ages Welcome", "Themed Parties", "Entertainment"],
     },
@@ -160,7 +160,7 @@ const Events = () => {
       capacity: "maximum 200 guests",
       duration: "Half Day & Full Day",
       priceRange: "₹40,000 - ₹2,50,000",
-      image: "/images/Events/SAJAN-39.webp",
+      image: "/images/cultural.webp",
       color: "from-action-primary to-action-accent",
       highlights: [
         "Traditional Stages",
@@ -211,7 +211,7 @@ const Events = () => {
         <div
           className="absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-300 ease-out"
           style={{
-            backgroundImage: "url('/images/Events/SAJAN-40.webp')",
+            backgroundImage: "url('/images/Gallery/walkway.webp')",
             transform: `translateY(${parallaxOffset * 0.2}px)`,
           }}
         />
@@ -310,7 +310,7 @@ const Events = () => {
         </section>
 
         {/* Event Types - Alternating Layout */}
-        <section className="max-w-7xl mx-auto px-6 md:px-12 pb-20">
+        <section id="event-types" className="max-w-7xl mx-auto px-6 md:px-12 pb-20">
           <div className="space-y-20">
             {eventTypes.map((event, index) => {
               const isEven = index % 2 === 0;
@@ -510,10 +510,10 @@ const Events = () => {
                   Call Us
                 </h4>
                 <a 
-                  href="tel:+918714653336"
+                  href="tel:+919633555199"
                   className="inline-block font-poppins text-sm text-action-primary hover:text-action-accent transition-colors duration-300"
                 >
-                  +91 87146 53336
+                  +91 96335 55199
                 </a>
               </div>
               <div className="text-center">
@@ -540,7 +540,10 @@ const Events = () => {
 
             <div className="text-center">
               
-              <button className="bg-background hover:bg-background-secondary text-action-primary border-2 border-action-primary font-poppins font-medium py-4 px-8 rounded-lg transition-colors duration-300 mb-4">
+              <button
+                onClick={() => navigate("/contact")}
+                className="bg-background hover:bg-background-secondary text-action-primary border-2 border-action-primary font-poppins font-medium py-4 px-8 rounded-lg transition-colors duration-300 mb-4"
+              >
                 Contact us
               </button>
             </div>

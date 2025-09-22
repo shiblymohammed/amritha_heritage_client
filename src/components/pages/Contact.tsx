@@ -89,7 +89,7 @@ const Contact = () => {
           </p>
           <div className="flex items-center justify-center gap-3 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.7s_forwards]">
             <motion.a
-              href="tel:+914712220024"
+              href="tel:+919633555199"
               className="btn btn-primary px-6 py-3"
               aria-label="Call Now"
             >
@@ -201,10 +201,10 @@ const Contact = () => {
                       Phone
                     </h3>
                     <p className="font-cormorant text-lg text-text-subtle leading-relaxed whitespace-pre-line">
-                      +91 471 2220024 / 2220025 +91 471
+                      +91 96335 55199
                     </p>
                     <a
-                      href="tel:+914712220024"
+                      href="tel:+919633555199"
                       className="btn btn-primary mt-3 inline-flex"
                     >
                       Call Now
