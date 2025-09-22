@@ -270,11 +270,6 @@ const RoomShowcaseCard = memo<{ room: Room }>(({ room }) => (
                             {amenity}
                         </span>
                     ))}
-                    {room.amenities.length > 4 && (
-                        <span className="text-gray-500 text-xs px-2 py-1">
-                            +{room.amenities.length - 4} more
-                        </span>
-                    )}
                 </div>
             </div>
             

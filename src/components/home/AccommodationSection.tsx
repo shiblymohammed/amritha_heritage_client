@@ -35,7 +35,7 @@ const RoomSlide = memo<{ room: Room; isCurrent: boolean }>(({ room, isCurrent })
     }, [navigate, room.id]);
     
     const handleViewDetails = useCallback(() => {
-        navigate(`/accommodation-details/${room.id}`);
+        navigate(`/accommodation?roomId=${room.id}`);
     }, [navigate, room.id]);
     
     return (
@@ -76,7 +76,7 @@ RoomSlide.displayName = 'RoomSlide';
 const MobileRoomSlider = memo(({ rooms }: { rooms: Room[] }) => {
   const navigate = useNavigate();
   const handleBooking = useCallback((id: number) => navigate(`/booking?room=${id}`), [navigate]);
-  const handleViewDetails = useCallback((id: number) => navigate(`/accommodation-details/${id}`), [navigate]);
+  const handleViewDetails = useCallback((id: number) => navigate(`/accommodation?roomId=${id}`), [navigate]);
   return (
     <div className="lg:hidden">
       <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory px-4 pb-2 hide-scrollbar">

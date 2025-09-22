@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import {
   ChevronRight,
@@ -182,10 +182,37 @@ const AccommodationPage: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [showRoomDetails, setShowRoomDetails] = useState(false);
   const [panoScene, setPanoScene] = useState<string | null>(null); // State for 360 viewer
   const modalRef = useRef(null);
+  const roomTypesRef = useRef<HTMLElement>(null);
+
+  // Mapping between numeric room IDs (from AccommodationSection) and string room IDs (AccommodationPage)
+  const roomIdMapping: { [key: string]: string } = {
+    '1': 'president-deluxe',
+    '2': 'magistrate-deluxe', 
+    '3': 'collector-deluxe',
+    '4': 'residency-deluxe',
+    '5': 'plantation-executive'
+  };
+
+  // Handle room ID from URL parameters
+  useEffect(() => {
+    const roomId = searchParams.get('roomId');
+    if (roomId) {
+      // Map numeric ID to string ID if needed
+      const mappedRoomId = roomIdMapping[roomId] || roomId;
+      const room = roomTypes.find(r => r.id === mappedRoomId);
+      if (room) {
+        setSelectedRoom(room);
+        setShowRoomDetails(true);
+        // Remove the roomId parameter from URL after opening modal
+        setSearchParams({});
+      }
+    }
+  }, [searchParams, setSearchParams]);
 
   const handleViewDetails = (room: RoomType) => {
     setSelectedRoom(room);
@@ -205,6 +232,10 @@ const AccommodationPage: React.FC = () => {
     navigate("/booking", { state: { selectedRoom: room } });
   };
 
+  const scrollToRooms = () => {
+    roomTypesRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <>
       <div className="min-h-screen bg-background">
@@ -213,7 +244,7 @@ const AccommodationPage: React.FC = () => {
           <div
             className="absolute inset-0 w-full h-full"
             style={{
-              backgroundImage: "url('/images/Accommodation/room (1).webp')",
+              backgroundImage: "url('/images/hero.webp')",
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundAttachment: "fixed",
@@ -237,14 +268,17 @@ const AccommodationPage: React.FC = () => {
               Experience the timeless elegance of our heritage rooms,
               thoughtfully designed with period charm and modern comfort.
             </p>
-            <button className="btn btn-primary text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 shadow-golden-glow hover:shadow-golden-glow-sm transition-all duration-300 hover:scale-105 active:scale-95 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.7s_forwards]">
+            <button 
+              onClick={scrollToRooms}
+              className="btn btn-primary text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 shadow-golden-glow hover:shadow-golden-glow-sm transition-all duration-300 hover:scale-105 active:scale-95 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.7s_forwards]"
+            >
               View Our Rooms
             </button>
           </div>
         </section>
 
         {/* Room Types Section */}
-        <section className="py-24 bg-background">
+        <section ref={roomTypesRef} className="py-24 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
             <AnimateOnScroll className="text-center mb-16 space-y-6">
               <div className="flex items-center justify-center gap-3">

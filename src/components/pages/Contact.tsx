@@ -64,8 +64,7 @@ const Contact = () => {
         <div
           className="absolute inset-0 w-full h-full"
           style={{
-            backgroundImage:
-              "url(https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80)",
+            backgroundImage: "url('/images/hero.webp')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundAttachment: "fixed",
