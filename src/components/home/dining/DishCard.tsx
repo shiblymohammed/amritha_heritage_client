@@ -52,7 +52,7 @@ const DishCard = memo<DishCardProps>(({ dish, onClick, onOrderNow, className = '
           onClick={handleOrderClick}
           className="btn btn-primary text-sm px-6 py-2 shadow-soft-sunlight hover:shadow-golden-glow transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent animate-text-shimmer"
         >
-          Order Now
+          Reserve Your Table
         </button>
       </div>
     </div>

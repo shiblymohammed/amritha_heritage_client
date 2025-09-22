@@ -1,7 +1,9 @@
 export interface MenuItem {
+    id?: string;
     name: string;
     price: number | string;
     description?: string;
+    image?: string;
     variants?: {
       name: string;
       price: number;
@@ -908,58 +910,7 @@ export interface MenuItem {
     return collection ? collection.categories : [];
   };
   
-  export const getFeaturedDishes = (): MenuItem[] => {
-    // Define featured dishes with their image paths
-    const featuredDishes = [
-        {
-            name: "Prawns Pepper Fry",
-            image: "/images/Dining/menu/prawns-pepper-fry.jpg"
-        },
-        {
-            name: "Kuttanadan Fish Pops",
-            image: "/images/Dining/menu/kuttanadan-fish-pops.jpg"
-        },
-        {
-            name: "Beef Coconut Fry",
-            image: "/images/Dining/menu/beef-coconut-fry.jpg"
-        },
-        {
-            name: "Achari Malai Paneer Tikka",
-            image: "/images/Dining/menu/aachari-malai-paneer-tikka.jpg"
-        },
-        {
-            name: "Chemmeen Thengapaal Soup",
-            image: "/images/Dining/menu/chemmeen-thengapaal-soup.jpg"
-        },
-        {
-            name: "Kohinoor Special Salad",
-            image: "/images/Dining/menu/kohinoor-special-salad.jpg"
-        },
-        {
-            name: "Nigara Chicken",
-            image: "/images/Dining/menu/niagra-chicken.webp"
-        },
-        {
-            name: "Talay Krok",
-            image: "/images/Dining/menu/talay-krok.jpg"
-        }
-    ];
 
-    const allItems: MenuItem[] = [];
-    
-    // Flatten all menu items
-    menuData.forEach(collection => {
-        collection.categories.forEach(category => {
-            allItems.push(...category.items);
-        });
-    });
-    
-    // Map featured dishes with their images
-    return featuredDishes.map(featuredDish => {
-        const item = allItems.find(item => item.name === featuredDish.name);
-        return item ? { ...item, image: featuredDish.image } : null;
-    }).filter(Boolean) as MenuItem[];
-  };
   
   export const getVegetarianItems = (): MenuItem[] => {
     const vegetarianKeywords = ['veg', 'paneer', 'mushroom', 'vegetable', 'aloo', 'gobi', 'palak'];
@@ -1002,4 +953,101 @@ export interface MenuItem {
       itemsWithVariants,
       averageItemsPerCategory: Math.round(totalItems / totalCategories)
     };
+  };
+
+  // Featured Dishes Data
+  export const featuredDishes = [
+    {
+      id: "featured-1",
+      name: "Beef with Onion",
+      description: "Tenderloin cuts stir-fried with caramelized onions in semi-gravy",
+      price: 420,
+      image: "/images/Dining/featured/BEEF WITH ONION copy.jpg",
+      category: "Heritage Special"
+    },
+    {
+      id: "featured-2",
+      name: "Chemeen Thengapal Soup",
+      description: "Traditional Kerala prawn soup with coconut milk and spices",
+      price: 380,
+      image: "/images/Dining/featured/Chemeen Thengapal Soup copy.jpg",
+      category: "Soup"
+    },
+    {
+      id: "featured-3",
+      name: "Chicken Mushroom Varutharachathu",
+      description: "Chicken and mushroom cooked in roasted & ground gravy",
+      price: 380,
+      image: "/images/Dining/featured/Chicken Mushroom Varutharachathu copy.jpg",
+      category: "Kerala Special"
+    },
+    {
+      id: "featured-4",
+      name: "Fish Malabari",
+      description: "Sea-fresh seer fish tempered and simmered in coconut milk gravy",
+      price: 600,
+      image: "/images/Dining/featured/amritha FISH MALABARI copy.jpg",
+      category: "Heritage Signature"
+    },
+    {
+      id: "featured-5",
+      name: "Amritha Roast Chicken",
+      description: "Old-hotel Amritha-style roast served with potato lyonnaise",
+      price: 450,
+      image: "/images/Dining/featured/amritha roast chicken copy.jpg",
+      category: "Heritage Signature"
+    },
+    {
+      id: "featured-6",
+      name: "Bami Goreng",
+      description: "Indonesian noodles with chicken, egg and prawns",
+      price: 370,
+      image: "/images/Dining/featured/bamee goreng copy.jpg",
+      category: "Oriental"
+    },
+    {
+      id: "featured-7",
+      name: "Broccoli Almond Soup",
+      description: "Creamy broccoli soup with roasted almonds",
+      price: 280,
+      image: "/images/Dining/featured/broccoli almond soup copy.jpg",
+      category: "Soup"
+    },
+    {
+      id: "featured-8",
+      name: "Caramel Bread Butter Pudding",
+      description: "Bread pudding with caramel sauce and butter",
+      price: 320,
+      image: "/images/Dining/featured/caramel bread butter pudding copy.jpg",
+      category: "Dessert"
+    },
+    {
+      id: "featured-9",
+      name: "Kuttanadan Fish Pops",
+      description: "Marinated king fish chunks coated with panko crumbs & corn flakes",
+      price: 580,
+      image: "/images/Dining/featured/kuttanadan fish pops copy.jpg",
+      category: "Appetizer"
+    },
+    {
+      id: "featured-10",
+      name: "Nasi Goreng",
+      description: "Indonesian fried rice with chicken, egg and prawn",
+      price: 350,
+      image: "/images/Dining/featured/nasi goreng copy.jpg",
+      category: "Oriental"
+    },
+    {
+      id: "featured-11",
+      name: "Niagra Chicken",
+      description: "Chef's special chicken preparation with exotic spices",
+      price: 380,
+      image: "/images/Dining/featured/nigara chicken copy.jpg",
+      category: "Special"
+    }
+  ];
+
+  // Export function to get featured dishes
+  export const getFeaturedDishes = () => {
+    return featuredDishes;
   };

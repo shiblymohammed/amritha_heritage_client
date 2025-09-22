@@ -262,9 +262,9 @@ const RoomShowcaseCard = memo<{ room: Room }>(({ room }) => (
             {/* Amenities */}
             <div className="mb-6">
                 <div className="flex flex-wrap gap-2">
-                    {room.amenities.slice(0, 4).map((amenity, index) => (
+                    {room.amenities.slice(0, 4).map((amenity) => (
                         <span 
-                            key={index}
+                            key={amenity}
                             className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-xs font-medium"
                         >
                             {amenity}

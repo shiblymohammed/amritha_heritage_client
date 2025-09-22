@@ -51,6 +51,10 @@ const DiningSection: React.FC = () => {
   }, [navigate]);
 
   const handleViewMenu = useCallback(() => {
+    navigate('/dining?menu=open');
+  }, [navigate]);
+
+  const handleExploreDining = useCallback(() => {
     navigate('/dining');
   }, [navigate]);
 
@@ -138,7 +142,7 @@ const DiningSection: React.FC = () => {
         <div className="text-center mt-16 relative z-10">
           <div className="animate-float" style={{ animationDelay: '0.8s' }}>
             <button 
-              onClick={handleViewMenu} 
+              onClick={handleExploreDining} 
               className="btn btn-secondary shadow-golden-glow text-lg px-8 py-4 hover:shadow-golden-glow hover:animate-hover-pulse hover:text-accent-gold transition-all duration-300"
             >
               Explore Dining

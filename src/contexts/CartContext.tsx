@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, type ReactNode } from 'react';
 
 export interface CartItem {
   id: string;
@@ -7,7 +7,7 @@ export interface CartItem {
   quantity: number;
   description?: string;
   image?: string;
-  type: 'menu' | 'special' | 'featured';
+  type: 'menu' | 'special';
 }
 
 export interface ReservationDetails {
