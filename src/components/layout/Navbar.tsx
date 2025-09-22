@@ -1,4 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 // =================================================================
 // == SVG ICONS (Unchanged)
@@ -59,6 +60,10 @@ const NavBar: React.FC = () => {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const location = useLocation();
+  
+  // Check if current page is booking page
+  const isBookingPage = location.pathname === '/booking';
 
   // Switched to useLayoutEffect for smoother scroll-based DOM updates.
   useLayoutEffect(() => {
@@ -164,16 +169,18 @@ const NavBar: React.FC = () => {
               </a>
             </div>
 
-            <a
-              href="booking"
-              className={`shadow-soft-sunlight hover:shadow-golden-glow-sm transform hover:scale-105 text-xs px-4 py-2 md:text-sm md:px-6 md:py-2.5 animate-float ${
-                hasScrolled
-                  ? "btn btn-primary"
-                  : "btn bg-transparent border-2 border-white text-white hover:bg-white/10"
-              }`}
-            >
-              Book Now
-            </a>
+            {!isBookingPage && (
+              <a
+                href="booking"
+                className={`shadow-soft-sunlight hover:shadow-golden-glow-sm transform hover:scale-105 text-xs px-4 py-2 md:text-sm md:px-6 md:py-2.5 animate-float ${
+                  hasScrolled
+                    ? "btn btn-primary"
+                    : "btn bg-transparent border-2 border-white text-white hover:bg-white/10"
+                }`}
+              >
+                Book Now
+              </a>
+            )}
           </div>
         </div>
       </nav>
@@ -204,15 +211,17 @@ const NavBar: React.FC = () => {
               </a>
             ))}
 
-            <div className="mt-8 lg:hidden">
-              <a
-                href="booking"
-                onClick={() => setIsMenuOpen(false)}
-                className="btn btn-primary w-full text-center animate-float"
-              >
-                Book Now
-              </a>
-            </div>
+            {!isBookingPage && (
+              <div className="mt-8 lg:hidden">
+                <a
+                  href="booking"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="btn btn-primary w-full text-center animate-float"
+                >
+                  Book Now
+                </a>
+              </div>
+            )}
           </nav>
 
           <div

@@ -795,7 +795,7 @@ const BookingPage = memo(() => {
                   onClick={() => navigate("/accommodation")}
                   className="btn btn-ghost text-white border-white/30 hover:border-accent-gold hover:text-accent-gold"
                 >
-                  View Suites
+                  View Rooms
                 </button>
               </div>
             </div>
@@ -814,7 +814,7 @@ const BookingPage = memo(() => {
               <div className="flex items-center justify-center gap-3 mb-6">
                 <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-accent" />
                 <p className="font-poppins text-sm tracking-widest text-accent uppercase font-medium">
-                  Heritage Suites
+                  Heritage Rooms
                 </p>
                 <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-accent" />
               </div>
