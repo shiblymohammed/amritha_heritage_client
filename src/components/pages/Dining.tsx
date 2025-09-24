@@ -612,7 +612,6 @@ const TestimonialsSection = memo(() => {
 
 // --- Section Component: Video Highlights ---
 const VideoHighlightsSection = memo(() => {
-  const { addItem } = useCart();
 
   // Google Drive video IDs with correct prices from menu data
   const videoData = [
@@ -651,16 +650,7 @@ const VideoHighlightsSection = memo(() => {
     },
   ];
 
-  const handleAddToCart = (video: typeof videoData[0]) => {
-    addItem({
-      id: video.id,
-      name: video.title,
-      price: video.price,
-      image: video.image,
-      description: video.description,
-      type: 'special'
-    });
-  };
+
 
   return (
     <section className="py-20 bg-background">
@@ -700,10 +690,10 @@ const VideoHighlightsSection = memo(() => {
                     ₹{video.price}
                   </span>
                   <button 
-                    onClick={() => handleAddToCart(video)}
+                    onClick={() => window.open('tel:+919876543210', '_self')}
                     className="btn btn-primary px-6 py-3 floating-btn"
                   >
-                    Add to Cart
+                    Reserve Your Table
                   </button>
                 </div>
               </div>
