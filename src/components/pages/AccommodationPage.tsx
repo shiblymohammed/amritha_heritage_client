@@ -561,22 +561,17 @@ const RoomDetailsModal = React.forwardRef<
   HTMLDivElement,
   RoomDetailsModalProps
 >(({ room, onClose, show, onOpenPano, onBookNow }, ref) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const contentRef = useRef(null);
 
-  const roomImages = [
-    room.image,
-    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop",
-  ];
+  const roomImages = [room.image];
 
-  const nextImage = () =>
-    setCurrentImageIndex((prev) => (prev + 1) % roomImages.length);
-  const prevImage = () =>
-    setCurrentImageIndex(
-      (prev) => (prev - 1 + roomImages.length) % roomImages.length
-    );
+  // Remove image navigation since we only have one image
+  // const nextImage = () =>
+  //   setCurrentImageIndex((prev) => (prev + 1) % roomImages.length);
+  // const prevImage = () =>
+  //   setCurrentImageIndex(
+  //     (prev) => (prev - 1 + roomImages.length) % roomImages.length
+  //   );
 
   return (
     <div
@@ -634,59 +629,10 @@ const RoomDetailsModal = React.forwardRef<
             <div className="relative mb-8">
               <div className="relative h-80 md:h-96 rounded-2xl overflow-hidden">
                 <img
-                  src={roomImages[currentImageIndex]}
-                  alt={`${room.name} - Image ${currentImageIndex + 1}`}
+                  src={room.image}
+                  alt={room.name}
                   className="w-full h-full object-cover"
                 />
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="flex justify-center mt-4 gap-2">
-                {roomImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-colors ${
-                      index === currentImageIndex
-                        ? "bg-action-accent"
-                        : "bg-border-soft"
-                    }`}
-                  />
-                ))}
               </div>
             </div>
 
