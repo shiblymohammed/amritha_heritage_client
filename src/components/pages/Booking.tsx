@@ -143,7 +143,7 @@ const roomsData: Room[] = [
     capacity: 3,
     category: "Deluxe",
     pricing: { single: 5000, double: 7000 },
-    image: "/images/room2-desktop.webp",
+    image: "/images/Accommodation/magistratechamber.jpeg",
   },
   {
     id: 3,
@@ -177,7 +177,7 @@ const roomsData: Room[] = [
     capacity: 3,
     category: "Deluxe",
     pricing: { single: 5000, double: 7000 },
-    image: "/images/room4-desktop.webp",
+    image: "/images/Accommodation/residencyroom.jpeg",
   },
   {
     id: 5,
@@ -221,71 +221,79 @@ const whyBookWithUs = [
 // =================================================================
 // Enhanced Room Showcase Card
 const RoomShowcaseCard = memo<{ room: Room }>(({ room }) => (
-    <div
-        className="group relative overflow-hidden rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white dark:bg-gray-800 min-h-[600px] w-full max-w-lg mx-auto"
-        style={{ animationDelay: `${room.id * 0.1}s` }}
-    >
-        <div className="relative h-80 overflow-hidden">
-            <img 
-                src={room.image} 
-                alt={room.name} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                loading="lazy" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-            
-            {/* Category Badge */}
-            <div className="absolute top-4 left-4">
-                <span className="bg-accent-gold/90 text-white px-3 py-1 rounded-full text-sm font-semibold backdrop-blur-sm">
-                    {room.category}
-                </span>
-            </div>
-            
-            {/* Capacity Badge */}
-            <div className="absolute top-4 right-4">
-                <span className="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
-                    Up to {room.capacity} guests
-                </span>
-            </div>
-        </div>
-        
-        <div className="p-8">
-            <div className="mb-6">
-                <h3 className="font-playfair text-3xl font-bold text-gray-800 dark:text-white mb-3 leading-tight">
-                    {room.name}
-                </h3>
-                <p className="font-cormorant text-base text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {room.description}
-                </p>
-            </div>
-            
-            {/* Amenities */}
-            <div className="mb-6">
-                <div className="flex flex-wrap gap-2">
-                    {room.amenities.slice(0, 4).map((amenity) => (
-                        <span 
-                            key={amenity}
-                            className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-xs font-medium"
-                        >
-                            {amenity}
-                        </span>
-                    ))}
-                </div>
-            </div>
-            
-            {/* Pricing Section - Accommodation Page Style */}
-            <div className="mb-4 space-y-2">
-                <div className="flex justify-between items-center text-sm">
-                    <span className="font-cormorant text-foreground-subtle">Single Occupancy:</span>
-                    <span className="font-poppins font-semibold text-accent">₹{room.pricing.single.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                    <span className="font-cormorant text-foreground-subtle">Double Occupancy:</span>
-                    <span className="font-poppins font-semibold text-accent">₹{room.pricing.double.toLocaleString()}</span>
-                </div>
-            </div>
-        </div>
+  <div
+    className="group relative overflow-hidden rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white dark:bg-gray-800 min-h-[600px] w-full max-w-lg mx-auto"
+    style={{ animationDelay: `${room.id * 0.1}s` }}
+  >
+    <div className="relative h-80 overflow-hidden">
+      <img
+        src={room.image}
+        alt={room.name}
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        loading="lazy"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+      {/* Category Badge */}
+      <div className="absolute top-4 left-4">
+        <span className="bg-accent-gold/90 text-white px-3 py-1 rounded-full text-sm font-semibold backdrop-blur-sm">
+          {room.category}
+        </span>
+      </div>
+
+      {/* Capacity Badge */}
+      <div className="absolute top-4 right-4">
+        <span className="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
+          Up to {room.capacity} guests
+        </span>
+      </div>
     </div>
+
+    <div className="p-8">
+      <div className="mb-6">
+        <h3 className="font-playfair text-3xl font-bold text-gray-800 dark:text-white mb-3 leading-tight">
+          {room.name}
+        </h3>
+        <p className="font-cormorant text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+          {room.description}
+        </p>
+      </div>
+
+      {/* Amenities */}
+      <div className="mb-6">
+        <div className="flex flex-wrap gap-2">
+          {room.amenities.slice(0, 4).map((amenity) => (
+            <span
+              key={amenity}
+              className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-xs font-medium"
+            >
+              {amenity}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Pricing Section - Accommodation Page Style */}
+      <div className="mb-4 space-y-2">
+        <div className="flex justify-between items-center text-sm">
+          <span className="font-cormorant text-foreground-subtle">
+            Single Occupancy:
+          </span>
+          <span className="font-poppins font-semibold text-accent">
+            ₹{room.pricing.single.toLocaleString()}
+          </span>
+        </div>
+        <div className="flex justify-between items-center text-sm">
+          <span className="font-cormorant text-foreground-subtle">
+            Double Occupancy:
+          </span>
+          <span className="font-poppins font-semibold text-accent">
+            ₹{room.pricing.double.toLocaleString()}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
 ));
 
 // Room Dropdown Option
@@ -456,7 +464,7 @@ const BookingPage = memo(() => {
   const [bookingDetails, setBookingDetails] = useState<BookingDetails>({
     checkIn: "",
     checkOut: "",
-    adults: 2,
+    adults: 0,
     children: 0,
   });
   const [guestInfo, setGuestInfo] = useState<GuestInfo>({
@@ -665,18 +673,16 @@ const BookingPage = memo(() => {
 
       try {
         // Use environment variable for API base URL, fallback to localhost for development
-        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
-        
-        const response = await fetch(
-          `${API_BASE_URL}/room-bookings/`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(bookingData),
-          }
-        );
+        const API_BASE_URL =
+          import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
+
+        const response = await fetch(`${API_BASE_URL}/room-bookings/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bookingData),
+        });
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
@@ -744,8 +750,7 @@ const BookingPage = memo(() => {
           <div
             className="absolute inset-0 w-full h-full"
             style={{
-              backgroundImage:
-                "url(/images/Gallery/walkway.webp)",
+              backgroundImage: "url(/images/Gallery/walkway.webp)",
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundAttachment: "fixed",
@@ -840,7 +845,10 @@ const BookingPage = memo(() => {
                   style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                 >
                   {roomsData.map((room) => (
-                    <div key={room.id} className="w-full flex-shrink-0 px-4 md:px-6">
+                    <div
+                      key={room.id}
+                      className="w-full flex-shrink-0 px-4 md:px-6"
+                    >
                       <div className="flex justify-center">
                         <RoomShowcaseCard room={room} />
                       </div>
@@ -855,8 +863,18 @@ const BookingPage = memo(() => {
                 className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/95 dark:bg-gray-800/95 p-4 rounded-full shadow-xl hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 dark:border-gray-700"
                 aria-label="Previous room"
               >
-                <svg className="w-6 h-6 text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <svg
+                  className="w-6 h-6 text-gray-800 dark:text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
               <button
@@ -864,8 +882,18 @@ const BookingPage = memo(() => {
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/95 dark:bg-gray-800/95 p-4 rounded-full shadow-xl hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 dark:border-gray-700"
                 aria-label="Next room"
               >
-                <svg className="w-6 h-6 text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-6 h-6 text-gray-800 dark:text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
 
@@ -1007,6 +1035,7 @@ const BookingPage = memo(() => {
                               onChange={handleBookingChange}
                               className="w-full p-4 pl-12 glass-card border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 appearance-none text-base text-foreground"
                             >
+                              <option>0</option>
                               <option>1</option>
                               <option>2</option>
                               <option>3</option>

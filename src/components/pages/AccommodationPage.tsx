@@ -60,7 +60,7 @@ const roomTypes: RoomType[] = [
     name: "The Magistrate's Chamber",
     description:
       "Deluxe class elegance with generous space and period details for a serene stay",
-    image: "/images/room2-desktop.webp",
+    image: "/images/Accommodation/magistratechamber.jpg",
     category: "Deluxe",
     pricing: { single: 5000, double: 7000 },
     capacity: 3,
@@ -106,7 +106,7 @@ const roomTypes: RoomType[] = [
     name: "The Residency Room",
     description:
       "Deluxe refinement with heritage textures, ideal for business and leisure travelers",
-    image: "/images/room4-desktop.webp",
+    image: "/images/Accommodation/residencyroom.jpg",
     category: "Deluxe",
     pricing: { single: 5000, double: 7000 },
     capacity: 3,

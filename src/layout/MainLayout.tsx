@@ -1,15 +1,15 @@
-import React, { Suspense } from 'react';
+import React, { Suspense } from "react";
 
 // Import shared layout components
-import NavBar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
+import NavBar from "../components/layout/Navbar";
+import Footer from "../components/layout/Footer";
 
 // Import the loading spinner for Suspense fallback
-import LoadingSpinner from '../components/loadingspinner/LoadingSpinner';
+import LoadingSpinner from "../components/loadingspinner/LoadingSpinner";
 
 // Import cart components
-import { CartProvider } from '../contexts/CartContext';
-import StickyCart from '../components/cart/StickyCart';
+import { CartProvider } from "../contexts/CartContext";
+import StickyCart from "../components/cart/StickyCart";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -44,7 +44,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
         {/* Main content area that grows to fill available space */}
         <main className="flex-grow">
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspense
+            fallback={
+              <LoadingSpinner
+                fullScreen={true}
+                size="lg"
+                color="gold"
+                backdrop="blur"
+              />
+            }
+          >
             {children}
           </Suspense>
         </main>

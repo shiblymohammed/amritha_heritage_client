@@ -90,8 +90,8 @@ export const rooms: Room[] = [
     doublePrice: 9000,
     features: ['Classic Wooden Decor', 'Complimentary Breakfast', 'Air Conditioned', 'Room Service', 'Free Wi-Fi', 'Mini Bar'],
     images: {
-      desktop: '/images/room2-desktop.webp',
-      mobile: '/images/room2-mobile.webp'
+      desktop: '/images/Accommodation/magistratechamber.jpeg',
+      mobile: '/images/Accommodation/magistratechamber.jpeg'
     }
   },
   {
@@ -116,8 +116,8 @@ export const rooms: Room[] = [
     size: '520 sq ft',
     features: ['Wheelchair Friendly Access', 'Roll-in Shower (on request)', 'Enhanced Space', 'Safety Features'],
     images: {
-      desktop: '/images/room4-desktop.webp',
-      mobile: '/images/room4-mobile.webp'
+      desktop: '/images/Accommodation/residencyroom.jpeg',
+      mobile: '/images/Accommodation/residencyroom.jpeg'
     }
   },
   {
