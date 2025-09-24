@@ -37,7 +37,6 @@ const FacebookIcon = () => (
   </svg>
 );
 
-
 // =================================================================
 // == OPTIMIZED NAVBAR COMPONENT
 // =================================================================
@@ -47,9 +46,9 @@ const NavBar: React.FC = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
   const lastScrollY = useRef(0);
   const location = useLocation();
-  
+
   // Check if current page is booking page
-  const isBookingPage = location.pathname === '/booking';
+  const isBookingPage = location.pathname === "/booking";
 
   // Switched to useLayoutEffect for smoother scroll-based DOM updates.
   useLayoutEffect(() => {
@@ -226,10 +225,20 @@ const NavBar: React.FC = () => {
             </p>
             <div className="w-24 h-px bg-text-on-color/20 mb-6"></div>
             <div className="flex justify-center space-x-6 text-text-on-color/70">
-              <a href="https://www.instagram.com/amrithaheritage/" className="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.instagram.com/amrithaheritage/"
+                className="hover:text-white transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <InstagramIcon />
               </a>
-              <a href="https://www.facebook.com/amrithaheritagetvm" className="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.facebook.com/amrithaheritagetvm"
+                className="hover:text-white transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <FacebookIcon />
               </a>
             </div>

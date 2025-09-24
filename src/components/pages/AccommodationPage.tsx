@@ -60,7 +60,7 @@ const roomTypes: RoomType[] = [
     name: "The Magistrate's Chamber",
     description:
       "Deluxe class elegance with generous space and period details for a serene stay",
-    image: "/images/Accommodation/magistratechamber.jpg",
+    image: "/images/Accommodation/magistratechamber.jpeg",
     category: "Deluxe",
     pricing: { single: 5000, double: 7000 },
     capacity: 3,
@@ -106,7 +106,7 @@ const roomTypes: RoomType[] = [
     name: "The Residency Room",
     description:
       "Deluxe refinement with heritage textures, ideal for business and leisure travelers",
-    image: "/images/Accommodation/residencyroom.jpg",
+    image: "/images/Accommodation/residencyroom.jpeg",
     category: "Deluxe",
     pricing: { single: 5000, double: 7000 },
     capacity: 3,
@@ -191,20 +191,20 @@ const AccommodationPage: React.FC = () => {
 
   // Mapping between numeric room IDs (from AccommodationSection) and string room IDs (AccommodationPage)
   const roomIdMapping: { [key: string]: string } = {
-    '1': 'president-deluxe',
-    '2': 'magistrate-deluxe', 
-    '3': 'collector-deluxe',
-    '4': 'residency-deluxe',
-    '5': 'plantation-executive'
+    "1": "president-deluxe",
+    "2": "magistrate-deluxe",
+    "3": "collector-deluxe",
+    "4": "residency-deluxe",
+    "5": "plantation-executive",
   };
 
   // Handle room ID from URL parameters
   useEffect(() => {
-    const roomId = searchParams.get('roomId');
+    const roomId = searchParams.get("roomId");
     if (roomId) {
       // Map numeric ID to string ID if needed
       const mappedRoomId = roomIdMapping[roomId] || roomId;
-      const room = roomTypes.find(r => r.id === mappedRoomId);
+      const room = roomTypes.find((r) => r.id === mappedRoomId);
       if (room) {
         setSelectedRoom(room);
         setShowRoomDetails(true);
@@ -233,7 +233,7 @@ const AccommodationPage: React.FC = () => {
   };
 
   const scrollToRooms = () => {
-    roomTypesRef.current?.scrollIntoView({ behavior: 'smooth' });
+    roomTypesRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -268,7 +268,7 @@ const AccommodationPage: React.FC = () => {
               Experience the timeless elegance of our heritage rooms,
               thoughtfully designed with period charm and modern comfort.
             </p>
-            <button 
+            <button
               onClick={scrollToRooms}
               className="btn btn-primary text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 shadow-golden-glow hover:shadow-golden-glow-sm transition-all duration-300 hover:scale-105 active:scale-95 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.7s_forwards]"
             >
@@ -562,16 +562,6 @@ const RoomDetailsModal = React.forwardRef<
   RoomDetailsModalProps
 >(({ room, onClose, show, onOpenPano, onBookNow }, ref) => {
   const contentRef = useRef(null);
-
-  const roomImages = [room.image];
-
-  // Remove image navigation since we only have one image
-  // const nextImage = () =>
-  //   setCurrentImageIndex((prev) => (prev + 1) % roomImages.length);
-  // const prevImage = () =>
-  //   setCurrentImageIndex(
-  //     (prev) => (prev - 1 + roomImages.length) % roomImages.length
-  //   );
 
   return (
     <div
