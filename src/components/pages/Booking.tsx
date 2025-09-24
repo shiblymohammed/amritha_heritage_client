@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 // =================================================================
 // == 1. TYPE DEFINITIONS
@@ -485,23 +485,47 @@ const BookingPage = memo(() => {
   const [submitError, setSubmitError] = useState<string>("");
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isRoomDropdownOpen, setIsRoomDropdownOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    // Check if we have a selectedRoom from navigation state
+    const selectedRoom = location.state?.selectedRoom;
+    if (selectedRoom) {
+      // Scroll to booking form instead of top
+      setTimeout(() => {
+        const bookingForm = document.getElementById('booking-form');
+        if (bookingForm) {
+          bookingForm.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.state]);
 
-  // Handle URL parameters for pre-selecting rooms
+  // Handle room pre-selection from navigation state or URL parameters
   useEffect(() => {
-    const roomParam = searchParams.get("room");
-    if (roomParam) {
-      const roomId = parseInt(roomParam);
-      if (roomId && roomId >= 1 && roomId <= roomsData.length) {
-        setSelectedRooms({ [roomId]: 1 });
+    const selectedRoom = location.state?.selectedRoom;
+    if (selectedRoom) {
+      // Find room by name since AccommodationPage uses string names
+      const room = roomsData.find(r => r.name === selectedRoom.name);
+      if (room) {
+        setSelectedRooms({ [room.id]: 1 });
+        setRoomOccupancy({ [room.id]: 'single' });
+      }
+    } else {
+      // Fallback to URL parameters
+      const roomParam = searchParams.get("room");
+      if (roomParam) {
+        const roomId = parseInt(roomParam);
+        if (roomId && roomId >= 1 && roomId <= roomsData.length) {
+          setSelectedRooms({ [roomId]: 1 });
+        }
       }
     }
-  }, [searchParams]);
+  }, [searchParams, location.state]);
 
   // Memoized price calculation
   const calculatedPriceSummary = useMemo(() => {

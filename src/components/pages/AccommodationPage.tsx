@@ -348,12 +348,12 @@ const AccommodationPage: React.FC = () => {
                           <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
                         </button>
                         <button
-                          onClick={() => handleOpenPano(room.panoSceneId)}
+                          onClick={() => handleBookNow(room)}
                           className="w-full btn btn-secondary flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-3"
-                          title="Open 360° view"
+                          title="Book this room"
                         >
-                          <span className="hidden sm:inline">View 360°</span>
-                          <span className="sm:hidden">360°</span>
+                          <span className="hidden sm:inline">Book Now</span>
+                          <span className="sm:hidden">Book</span>
                         </button>
                       </div>
                     </div>
