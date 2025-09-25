@@ -10,8 +10,11 @@ import {
   Car,
   Utensils,
   Dumbbell,
+  Eye,
 } from "lucide-react";
-import MarzipanoViewer from "../ui/MarziPanoViewer"; // Make sure this path is correct
+import Marzipano360Viewer from "../Marzipano360Viewer";
+import { getVirtual360Rooms, getRoomById } from "../../data/marzipano-config";
+
 
 interface RoomType {
   id: string;
@@ -27,7 +30,6 @@ interface RoomType {
   size: string;
   features: string[];
   amenities: string[];
-  panoSceneId: string; // Links room to a 360 scene
 }
 
 const roomTypes: RoomType[] = [
@@ -53,7 +55,6 @@ const roomTypes: RoomType[] = [
       "Air Conditioning",
       "Free WiFi",
     ],
-    panoSceneId: "0-president-deluxe",
   },
   {
     id: "magistrate-deluxe",
@@ -74,7 +75,6 @@ const roomTypes: RoomType[] = [
       "Work Desk",
       "Coffee Maker",
     ],
-    panoSceneId: "1-magistrate-deluxe",
   },
   {
     id: "collector-deluxe",
@@ -99,7 +99,6 @@ const roomTypes: RoomType[] = [
       "Free WiFi",
       "Mini Bar",
     ],
-    panoSceneId: "2-collector-deluxe",
   },
   {
     id: "residency-deluxe",
@@ -123,7 +122,6 @@ const roomTypes: RoomType[] = [
       "Air Conditioning",
       "Free WiFi",
     ],
-    panoSceneId: "0-president-deluxe", // Example: reusing a scene
   },
   {
     id: "plantation-executive",
@@ -148,7 +146,6 @@ const roomTypes: RoomType[] = [
       "Free WiFi",
       "Mini Bar",
     ],
-    panoSceneId: "1-magistrate-executive", // Example: reusing a scene
   },
 ];
 
@@ -185,7 +182,8 @@ const AccommodationPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [showRoomDetails, setShowRoomDetails] = useState(false);
-  const [panoScene, setPanoScene] = useState<string | null>(null); // State for 360 viewer
+  const [show360Viewer, setShow360Viewer] = useState(false);
+  const [selected360Room, setSelected360Room] = useState<string | null>(null);
   const modalRef = useRef(null);
   const roomTypesRef = useRef<HTMLElement>(null);
 
@@ -224,9 +222,6 @@ const AccommodationPage: React.FC = () => {
     setTimeout(() => setSelectedRoom(null), 300);
   };
 
-  const handleOpenPano = (sceneId: string) => setPanoScene(sceneId);
-  const handleClosePano = () => setPanoScene(null);
-
   const handleBookNow = (room: RoomType) => {
     // Navigate to booking page with room pre-selected
     navigate("/booking", { state: { selectedRoom: room } });
@@ -234,6 +229,18 @@ const AccommodationPage: React.FC = () => {
 
   const scrollToRooms = () => {
     roomTypesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handle360View = (roomId: string) => {
+    setSelected360Room(roomId);
+    setShow360Viewer(true);
+  };
+
+  const handleClose360Viewer = () => {
+    setShow360Viewer(false);
+    // Immediately restore scrolling
+    document.body.style.overflow = 'auto';
+    setTimeout(() => setSelected360Room(null), 300);
   };
 
   return (
@@ -356,6 +363,77 @@ const AccommodationPage: React.FC = () => {
                           <span className="sm:hidden">Book</span>
                         </button>
                       </div>
+                    </div>
+                  </div>
+                </AnimateOnScroll>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Virtual 360 Tour Section */}
+        <section className="py-24 bg-background">
+          <div className="container mx-auto px-6 lg:px-8">
+            <AnimateOnScroll className="text-center mb-16 space-y-6">
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent" />
+                <span className="font-poppins text-sm tracking-widest text-accent uppercase font-medium">
+                  Immersive Experience
+                </span>
+                <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent" />
+              </div>
+              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-2 relative animate-float">
+                Virtual 360° Tour
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent" />
+              </h2>
+              <p className="font-cormorant text-xl text-foreground-subtle max-w-2xl mx-auto">
+                Step inside our heritage rooms with immersive 360° virtual tours. 
+                Experience the colonial elegance and intricate details before your visit.
+              </p>
+            </AnimateOnScroll>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {getVirtual360Rooms().map((room, index) => (
+                <AnimateOnScroll key={room.id} delay={index * 100}>
+                  <div className="card-base border border-border hover-lift hover-glow h-full flex flex-col">
+                    <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-2xl img-overlay">
+                      <img
+                        src={room.thumbnail}
+                        alt={room.name}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                        <div className="bg-accent/90 text-foreground-on-color px-4 py-2 rounded-full flex items-center gap-2 font-poppins font-semibold">
+                          <Eye className="w-4 h-4" />
+                          <span>360° View</span>
+                        </div>
+                      </div>
+                      <div className="absolute top-4 right-4 bg-accent text-foreground-on-color px-3 py-1 rounded-full text-sm font-poppins font-semibold shadow-golden-glow-sm">
+                        Virtual Tour
+                      </div>
+                    </div>
+                    <div className="p-4 md:p-5 flex flex-col flex-grow">
+                      <h3 className="font-playfair text-lg md:text-xl lg:text-2xl text-text-heading mb-2">
+                        {room.name}
+                      </h3>
+                      <p className="font-cormorant text-sm md:text-base text-foreground-subtle mb-4 leading-relaxed flex-grow line-clamp-3">
+                        {room.description}
+                      </p>
+                      <div className="mb-4">
+                        <div className="flex items-center gap-2 text-sm text-foreground-subtle">
+                          <Eye className="w-4 h-4 text-accent" />
+                          <span className="font-cormorant">
+                            {room.scenes.length} interactive scenes
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handle360View(room.id)}
+                        className="w-full btn btn-primary flex items-center justify-center gap-2 text-sm py-3"
+                      >
+                        <Eye className="w-4 h-4" />
+                        <span>Start 360° Tour</span>
+                      </button>
                     </div>
                   </div>
                 </AnimateOnScroll>
@@ -534,16 +612,20 @@ const AccommodationPage: React.FC = () => {
             room={selectedRoom}
             onClose={handleCloseDetails}
             show={showRoomDetails}
-            onOpenPano={handleOpenPano}
             onBookNow={handleBookNow}
           />
         </CSSTransition>
       )}
 
-      {/* Marzipano 360 Viewer Modal */}
-      {panoScene && (
-        <MarzipanoViewer initialSceneId={panoScene} onClose={handleClosePano} />
+      {/* 360 Viewer */}
+      {show360Viewer && selected360Room && getRoomById(selected360Room) && (
+        <Marzipano360Viewer
+          room={getRoomById(selected360Room)!}
+          isOpen={show360Viewer}
+          onClose={handleClose360Viewer}
+        />
       )}
+
     </>
   );
 };
@@ -553,14 +635,13 @@ interface RoomDetailsModalProps {
   room: RoomType;
   onClose: () => void;
   show: boolean;
-  onOpenPano: (sceneId: string) => void;
   onBookNow: (room: RoomType) => void;
 }
 
 const RoomDetailsModal = React.forwardRef<
   HTMLDivElement,
   RoomDetailsModalProps
->(({ room, onClose, show, onOpenPano, onBookNow }, ref) => {
+>(({ room, onClose, show, onBookNow }, ref) => {
   const contentRef = useRef(null);
 
   return (
@@ -671,22 +752,6 @@ const RoomDetailsModal = React.forwardRef<
                         </span>
                       </div>
                     ))}
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-playfair text-2xl text-text-heading mb-4">
-                    360° Room View
-                  </h3>
-                  <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft text-center">
-                    <p className="font-cormorant text-foreground-subtle mb-4">
-                      Explore this room in immersive 360°.
-                    </p>
-                    <button
-                      onClick={() => onOpenPano(room.panoSceneId)}
-                      className="btn btn-secondary"
-                    >
-                      Open 360° View
-                    </button>
                   </div>
                 </div>
               </div>
