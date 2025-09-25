@@ -793,7 +793,7 @@ const BookingPage = memo(() => {
             </div>
             <div className="animate-float" style={{ animationDelay: "0.2s" }}>
               <p className="text-body text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-                Select your preferred suite and embark on a journey through time
+                Select your preferred room and embark on a journey through time
                 and luxury.
                 <br />
                 <span className="text-accent-gold/80 text-lg">
@@ -853,7 +853,7 @@ const BookingPage = memo(() => {
               </div>
               <p className="text-body text-foreground-subtle max-w-3xl mx-auto leading-relaxed">
                 Experience the grandeur of colonial heritage in our carefully
-                curated collection of premium suites and rooms.
+                curated collection of premium rooms.
                 <br />
                 <span className="text-accent-gold/70 text-lg mt-2 block">
                   Where history meets modern luxury
@@ -989,7 +989,7 @@ const BookingPage = memo(() => {
                     <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-20 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent shadow-golden-glow" />
                   </h3>
                   <p className="text-body text-foreground-subtle mt-4 max-w-2xl mx-auto leading-relaxed">
-                    Select your preferred dates, guests, and heritage suites for
+                    Select your preferred dates, guests, and heritage rooms for
                     an unforgettable colonial experience.
                     <br />
                     <span className="text-accent-gold/70 text-lg mt-2 block">
@@ -1093,7 +1093,7 @@ const BookingPage = memo(() => {
                     <div className="space-y-6">
                       <div>
                         <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">
-                          Select Heritage Suites
+                          Select Heritage Rooms
                         </label>
                         <div className="relative">
                           <button
@@ -1105,8 +1105,8 @@ const BookingPage = memo(() => {
                               {Object.keys(selectedRooms).length > 0
                                 ? `${
                                     Object.keys(selectedRooms).length
-                                  } suite(s) selected`
-                                : "Choose your heritage suites"}
+                                  } room(s) selected`
+                                : "Choose your heritage rooms"}
                             </span>
                             <span
                               className={`transform transition-transform ${
@@ -1151,7 +1151,7 @@ const BookingPage = memo(() => {
                       {Object.keys(selectedRooms).length > 0 && (
                         <div className="space-y-3 overflow-hidden">
                           <h4 className="font-poppins text-sm font-medium text-foreground-heading">
-                            Selected Suites:
+                            Selected Rooms:
                           </h4>
                           {Object.entries(selectedRooms).map(
                             ([roomId, quantity]) => {

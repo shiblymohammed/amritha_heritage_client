@@ -254,55 +254,79 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
   // Handle fullscreen
   const toggleFullscreen = useCallback(async () => {
     try {
-      // Check if screenfull is available
-      if (!window.screenfull) {
-        console.warn('Screenfull library not loaded');
-        return;
-      }
-
-      if (!window.screenfull.isEnabled) {
-        console.warn('Fullscreen not supported by this browser');
-        return;
-      }
-
       const element = viewerRef.current;
       if (!element) {
         console.warn('Viewer element not found');
         return;
       }
 
-      if (window.screenfull.isFullscreen) {
-        await window.screenfull.exit();
+      // Try native fullscreen API first
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
         setIsFullscreen(false);
       } else {
-        await window.screenfull.request(element);
+        await element.requestFullscreen();
         setIsFullscreen(true);
+      }
+
+      // Fallback to screenfull if available
+      if (window.screenfull && window.screenfull.isEnabled) {
+        if (window.screenfull.isFullscreen) {
+          await window.screenfull.exit();
+          setIsFullscreen(false);
+        } else {
+          await window.screenfull.request(element);
+          setIsFullscreen(true);
+        }
       }
     } catch (error) {
       console.error('Error toggling fullscreen:', error);
-      // Reset fullscreen state on error
       setIsFullscreen(false);
     }
   }, []);
 
   // Listen for fullscreen changes
   useEffect(() => {
-    if (!window.screenfull || !window.screenfull.isEnabled) return;
-
     const handleFullscreenChange = () => {
-      setIsFullscreen(window.screenfull.isFullscreen);
+      if (window.screenfull && window.screenfull.isEnabled) {
+        setIsFullscreen(window.screenfull.isFullscreen);
+      } else {
+        // Fallback to native fullscreen API
+        setIsFullscreen(!!document.fullscreenElement);
+      }
     };
 
-    window.screenfull.on('change', handleFullscreenChange);
-    window.screenfull.on('error', (event: any) => {
-      console.error('Fullscreen error:', event);
-      setIsFullscreen(false);
-    });
+    // Add native fullscreen event listeners as fallback
+    const handleNativeFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    if (window.screenfull && window.screenfull.isEnabled) {
+      window.screenfull.on('change', handleFullscreenChange);
+      window.screenfull.on('error', (event: any) => {
+        console.error('Fullscreen error:', event);
+        setIsFullscreen(false);
+      });
+    } else {
+      // Use native fullscreen events
+      document.addEventListener('fullscreenchange', handleNativeFullscreenChange);
+      document.addEventListener('fullscreenerror', () => {
+        console.error('Native fullscreen error');
+        setIsFullscreen(false);
+      });
+    }
 
     return () => {
-      if (window.screenfull) {
+      if (window.screenfull && window.screenfull.isEnabled) {
         window.screenfull.off('change', handleFullscreenChange);
         window.screenfull.off('error');
+      } else {
+        // Remove native fullscreen event listeners
+        document.removeEventListener('fullscreenchange', handleNativeFullscreenChange);
+        document.removeEventListener('fullscreenerror', () => {
+          console.error('Native fullscreen error');
+          setIsFullscreen(false);
+        });
       }
     };
   }, [isOpen]);
@@ -353,35 +377,39 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
         {/* Header */}
         <div className="marzipano-header">
           <div className="marzipano-title">
-            <h3>{room.name}</h3>
-            <p>{currentScene.name}</p>
+            <h3 className="font-playfair text-xl lg:text-2xl text-white font-bold tracking-wide">{room.name}</h3>
+            <p className="font-cormorant text-sm lg:text-base text-white/80 mt-1">{currentScene.name}</p>
           </div>
           <div className="marzipano-controls">
             {!isMobile && (
               <button
-                className="marzipano-btn"
+                className="btn btn-ghost text-sm px-4 py-2 bg-background-secondary/90 hover:bg-background-tertiary/90 border-border/50 backdrop-blur-sm transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-accent/50"
                 onClick={toggleFullscreen}
                 title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                aria-label="Toggle fullscreen mode"
               >
-                {isFullscreen ? (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="mr-2">
+                  {isFullscreen ? (
                     <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                ) : (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  ) : (
                     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                )}
+                  )}
+                </svg>
+                <span className="font-poppins font-medium">
+                  {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+                </span>
               </button>
             )}
             <button
-              className="marzipano-btn marzipano-close"
+              className="btn btn-ghost text-sm px-4 py-2 bg-background-secondary/90 hover:bg-background-tertiary/90 border-border/50 backdrop-blur-sm transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-accent/50"
               onClick={onClose}
               title="Close"
+              aria-label="Close viewer"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="mr-2">
                 <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2"/>
               </svg>
+              <span className="font-poppins font-medium">Close</span>
             </button>
           </div>
         </div>
@@ -393,7 +421,7 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
           {isLoading && (
             <div className="marzipano-loading">
               <div className="loading-spinner"></div>
-              <p>Loading 360° View...</p>
+              <p className="font-poppins text-white font-medium">Loading 360° View...</p>
             </div>
           )}
         </div>
@@ -401,12 +429,16 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
         {/* Scene Navigation */}
         {room.scenes.length > 1 && (
           <div className="marzipano-navigation">
-            <h4>Explore Areas</h4>
+            <h4 className="font-playfair text-lg text-white font-semibold tracking-wide mb-4">Explore Areas</h4>
             <div className="scene-buttons">
               {room.scenes.map((scene) => (
                 <button
                   key={scene.id}
-                  className={`scene-btn ${currentScene.id === scene.id ? 'active' : ''}`}
+                  className={`btn text-sm px-4 py-2 font-poppins font-medium transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-accent/50 ${
+                    currentScene.id === scene.id 
+                      ? 'btn-primary bg-accent text-white border-accent shadow-lg' 
+                      : 'btn-secondary bg-background-secondary hover:bg-background-tertiary border-border'
+                  }`}
                   onClick={() => switchToScene(scene)}
                 >
                   {scene.name}
@@ -419,8 +451,22 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
         {/* Mobile Instructions */}
         {isMobile && (
           <div className="mobile-instructions">
-            <p>👆 Drag to look around • 🤏 Pinch to zoom</p>
+            <p className="font-poppins text-sm text-white/70 font-medium">Drag to look around • Pinch to zoom</p>
           </div>
+        )}
+
+        {/* Fullscreen Close Button */}
+        {isFullscreen && (
+          <button
+            className="btn btn-ghost fixed top-4 right-4 z-50 p-3 bg-background-secondary/90 hover:bg-background-tertiary/90 border-border/50 backdrop-blur-sm transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-accent/50 rounded-full"
+            onClick={toggleFullscreen}
+            title="Exit Fullscreen"
+            aria-label="Exit fullscreen mode"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         )}
       </div>
     </div>

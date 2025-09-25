@@ -267,7 +267,7 @@ const AccommodationPage: React.FC = () => {
                 Accommodation
                 <br />
                 <span className="italic bg-gradient-to-r from-accent-gold to-accent bg-clip-text text-transparent">
-                  Rooms & Suites
+                  Rooms
                 </span>
               </h1>
             </div>
@@ -401,6 +401,18 @@ const AccommodationPage: React.FC = () => {
                         src={room.thumbnail}
                         alt={room.name}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        onError={(e) => {
+                          // Fallback to accommodation gallery images if 360° thumbnail fails
+                          const fallbackImages = [
+                            "/images/Accommodation/roomgallery (1).webp",
+                            "/images/Accommodation/roomgallery (2).webp",
+                            "/images/Accommodation/roomgallery (3).webp",
+                            "/images/Accommodation/roomgallery (4).webp",
+                            "/images/Accommodation/roomgallery (5).webp"
+                          ];
+                          const fallbackIndex = index % fallbackImages.length;
+                          (e.target as HTMLImageElement).src = fallbackImages[fallbackIndex];
+                        }}
                       />
                       <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                         <div className="bg-accent/90 text-foreground-on-color px-4 py-2 rounded-full flex items-center gap-2 font-poppins font-semibold">

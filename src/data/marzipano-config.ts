@@ -4,7 +4,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
   scenes: [
     {
       id: "0-room-1-bedroom",
-      name: "Room 1 Bedroom",
+      name: "Residency Bedroom",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -30,7 +30,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "1-room-1---bathroom",
-      name: "Room 1 - Bathroom",
+      name: "Residency Bathroom",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -56,7 +56,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "2-room-2-living",
-      name: "Room 2 Living",
+      name: "Plantation Living Area",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -82,7 +82,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "3-room-2-bedroom",
-      name: "Room 2 Bedroom",
+      name: "Plantation Bedroom",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -108,7 +108,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "4-room-2-bathroom",
-      name: "Room 2 Bathroom",
+      name: "Plantation Bathroom",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -134,7 +134,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "5-room-3-living",
-      name: "Room 3 Living",
+      name: "Magistrate Living Area",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -160,7 +160,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "6-room3---bedroom",
-      name: "Room3 - Bedroom",
+      name: "Magistrate Bedroom",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -186,7 +186,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "7-room-3---bathrrom",
-      name: "Room 3 - Bathrrom",
+      name: "Magistrate Bathroom",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -212,7 +212,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "8-room-4-portico",
-      name: "Room 4 Portico",
+      name: "Collector's Portico",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -238,7 +238,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "9-room-4---living",
-      name: "Room 4 - Living",
+      name: "Collector's Living Area",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -264,7 +264,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "10-room-4--bedroom",
-      name: "Room 4  Bedroom",
+      name: "Collector's Bedroom",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -290,7 +290,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "11-room-4-bathroom",
-      name: "Room 4 Bathroom",
+      name: "Collector's Bathroom",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -316,7 +316,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "12-room-5-bedroom",
-      name: "Room 5 Bedroom",
+      name: "Royal Bedroom",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -342,7 +342,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
     },
     {
       id: "13-room-5-bathroom",
-      name: "Room 5 Bathroom",
+      name: "Royal Bathroom",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -376,7 +376,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
 export const ROOM_MAPPINGS: RoomMapping[] = [
   {
     id: "room-1-residency",
-    name: "Room 1 - Residency Room",
+    name: "The Residency Room",
     description: "A comfortable bedroom with attached bathroom, perfect for a peaceful stay.",
     sceneIds: ["0-room-1-bedroom", "1-room-1---bathroom"],
     primarySceneId: "0-room-1-bedroom",
@@ -384,7 +384,7 @@ export const ROOM_MAPPINGS: RoomMapping[] = [
   },
   {
     id: "room-2-plantation",
-    name: "Room 2 - Plantation",
+    name: "The Plantation",
     description: "Spacious living area with bedroom and bathroom, ideal for extended stays.",
     sceneIds: ["2-room-2-living", "3-room-2-bedroom", "4-room-2-bathroom"],
     primarySceneId: "2-room-2-living",
@@ -392,7 +392,7 @@ export const ROOM_MAPPINGS: RoomMapping[] = [
   },
   {
     id: "room-3-magistrate",
-    name: "Room 3 - Magistrate",
+    name: "The Magistrate's Chamber",
     description: "Elegant living space with bedroom and bathroom, featuring traditional decor.",
     sceneIds: ["5-room-3-living", "6-room3---bedroom", "7-room-3---bathrrom"],
     primarySceneId: "5-room-3-living",
@@ -400,7 +400,7 @@ export const ROOM_MAPPINGS: RoomMapping[] = [
   },
   {
     id: "room-4-collectors",
-    name: "Room 4 - Collectors",
+    name: "The Collector's",
     description: "Premium suite with portico, living area, bedroom and bathroom.",
     sceneIds: ["8-room-4-portico", "9-room-4---living", "10-room-4--bedroom", "11-room-4-bathroom"],
     primarySceneId: "8-room-4-portico",
@@ -408,7 +408,7 @@ export const ROOM_MAPPINGS: RoomMapping[] = [
   },
   {
     id: "room-5-royal",
-    name: "Room 5 - Royal",
+    name: "The Royal",
     description: "Luxurious royal suite with bedroom and bathroom, the finest accommodation.",
     sceneIds: ["12-room-5-bedroom", "13-room-5-bathroom"],
     primarySceneId: "12-room-5-bedroom",
