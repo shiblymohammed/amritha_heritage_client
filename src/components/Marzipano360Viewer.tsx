@@ -331,10 +331,10 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
     };
   }, [isOpen]);
 
-  // Handle escape key and body scroll management
+  // Handle keyboard events and body scroll lock
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
@@ -348,12 +348,14 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
       
       return () => {
         document.removeEventListener('keydown', handleKeyDown);
-        // Restore original overflow or set to auto
-        document.body.style.overflow = originalOverflow || 'auto';
+        // Restore original overflow, but only if it was explicitly set
+        if (originalOverflow) {
+          document.body.style.overflow = originalOverflow;
+        } else {
+          // Remove the style property entirely to let CSS take over
+          document.body.style.removeProperty('overflow');
+        }
       };
-    } else {
-      // Ensure overflow is restored when viewer is closed
-      document.body.style.overflow = 'auto';
     }
 
     return () => {
@@ -364,8 +366,8 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
   // Additional cleanup on component unmount
   useEffect(() => {
     return () => {
-      // Force restore scrolling on unmount
-      document.body.style.overflow = 'auto';
+      // Remove overflow style property to let other components manage it
+      document.body.style.removeProperty('overflow');
     };
   }, []);
 
@@ -381,25 +383,23 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
             <p className="font-cormorant text-sm lg:text-base text-white/80 mt-1">{currentScene.name}</p>
           </div>
           <div className="marzipano-controls">
-            {!isMobile && (
-              <button
-                className="btn btn-ghost text-sm px-4 py-2 bg-background-secondary/90 hover:bg-background-tertiary/90 border-border/50 backdrop-blur-sm transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-accent/50"
-                onClick={toggleFullscreen}
-                title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                aria-label="Toggle fullscreen mode"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="mr-2">
-                  {isFullscreen ? (
-                    <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" stroke="currentColor" strokeWidth="2"/>
-                  ) : (
-                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="currentColor" strokeWidth="2"/>
-                  )}
-                </svg>
-                <span className="font-poppins font-medium">
-                  {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-                </span>
-              </button>
-            )}
+            <button
+              className="btn btn-ghost text-sm px-4 py-2 bg-background-secondary/90 hover:bg-background-tertiary/90 border-border/50 backdrop-blur-sm transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-accent/50"
+              onClick={toggleFullscreen}
+              title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+              aria-label="Toggle fullscreen mode"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="mr-2">
+                {isFullscreen ? (
+                  <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" stroke="currentColor" strokeWidth="2"/>
+                ) : (
+                  <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="currentColor" strokeWidth="2"/>
+                )}
+              </svg>
+              <span className="font-poppins font-medium">
+                {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+              </span>
+            </button>
             <button
               className="btn btn-ghost text-sm px-4 py-2 bg-background-secondary/90 hover:bg-background-tertiary/90 border-border/50 backdrop-blur-sm transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-accent/50"
               onClick={onClose}

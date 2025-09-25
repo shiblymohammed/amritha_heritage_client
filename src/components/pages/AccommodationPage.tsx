@@ -238,8 +238,6 @@ const AccommodationPage: React.FC = () => {
 
   const handleClose360Viewer = () => {
     setShow360Viewer(false);
-    // Immediately restore scrolling
-    document.body.style.overflow = 'auto';
     setTimeout(() => setSelected360Room(null), 300);
   };
 
