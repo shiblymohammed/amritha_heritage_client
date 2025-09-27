@@ -542,24 +542,9 @@ const BookingPage = memo(() => {
     setIsRoomDropdownOpen(false);
   }, []);
 
-  const handleAddRoom = useCallback((roomId: number, quantity: number = 1) => {
-    setSelectedRooms((prev) => ({ ...prev, [roomId]: quantity }));
-    setRoomOccupancy((prev) => ({ ...prev, [roomId]: "single" }));
-    setIsRoomDropdownOpen(false);
-  }, []);
 
-  const handleRemoveRoom = useCallback((roomId: number) => {
-    setSelectedRooms((prev) => {
-      const newRooms = { ...prev };
-      delete newRooms[roomId];
-      return newRooms;
-    });
-    setRoomOccupancy((prev) => {
-      const newOccupancy = { ...prev };
-      delete newOccupancy[roomId];
-      return newOccupancy;
-    });
-  }, []);
+
+
 
   const handleBookingChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
