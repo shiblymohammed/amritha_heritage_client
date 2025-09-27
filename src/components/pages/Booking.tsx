@@ -297,51 +297,13 @@ const RoomShowcaseCard = memo<{ room: Room }>(({ room }) => (
 ));
 
 // Room Dropdown Option
-const RoomDropdownOption = memo<{ room: Room; onSelect: () => void }>(
-  ({ room, onSelect }) => (
-    <div
-      onClick={onSelect}
-      className="flex items-center gap-4 p-4 hover:bg-accent/10 transition-colors cursor-pointer border-b border-accent/10 last:border-b-0 hover-lift"
-    >
-      <img
-        src={room.image}
-        alt={room.name}
-        className="w-16 h-16 rounded-lg object-cover"
-        loading="lazy"
-      />
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-1">
-          <h4 className="font-playfair font-semibold text-foreground">
-            {room.name}
-          </h4>
-          <div className="text-xs bg-accent/10 text-accent px-2 py-1 rounded-full font-medium">
-            {room.category}
-          </div>
-        </div>
-        <p className="text-sm text-foreground-subtle">
-          {room.amenities.slice(0, 2).join(", ")}
-        </p>
-        <div className="flex gap-4 mt-1">
-          <p className="font-poppins font-bold text-accent text-sm">
-            Single: ₹{room.pricing.single.toLocaleString()}
-          </p>
-          <p className="font-poppins font-bold text-accent text-sm">
-            Double: ₹{room.pricing.double.toLocaleString()}
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-);
-
 // Enhanced Selected Room Card
 const SelectedRoomCard = memo<{
   room: Room;
-  quantity: number;
   occupancy: "single" | "double";
   onRemove: () => void;
   onOccupancyChange: (occupancy: "single" | "double") => void;
-}>(({ room, quantity, occupancy, onRemove, onOccupancyChange }) => (
+}>(({ room, occupancy, onRemove, onOccupancyChange }) => (
   <div className="card-interactive glass-card border border-accent/20 rounded-xl p-4 hover-lift animate-fade-in-up">
     <div className="flex items-center gap-3 mb-3">
       <img
@@ -355,13 +317,12 @@ const SelectedRoomCard = memo<{
           {room.name}
         </h5>
         <p className="text-xs text-foreground-subtle">
-          Quantity:{" "}
-          <strong className="text-accent font-medium">{quantity}</strong>
+          {room.category} Room
         </p>
       </div>
       <div className="text-right">
         <p className="font-poppins font-bold text-accent text-sm text-glow-primary">
-          ₹{(room.pricing[occupancy] * quantity).toLocaleString()}
+          ₹{room.pricing[occupancy].toLocaleString()}
         </p>
         <button
           onClick={onRemove}
@@ -455,9 +416,7 @@ const ConfirmationModal = memo<{
 // == 5. MAIN BOOKING PAGE COMPONENT (Performance Optimized)
 // =================================================================
 const BookingPage = memo(() => {
-  const [selectedRooms, setSelectedRooms] = useState<Record<number, number>>(
-    {}
-  );
+  const [selectedRooms, setSelectedRooms] = useState<Set<number>>(new Set());
   const [roomOccupancy, setRoomOccupancy] = useState<
     Record<number, "single" | "double">
   >({});
@@ -512,43 +471,38 @@ const BookingPage = memo(() => {
       // Find room by name since AccommodationPage uses string names
       const room = roomsData.find(r => r.name === selectedRoom.name);
       if (room) {
-        setSelectedRooms({ [room.id]: 1 });
+        setSelectedRooms(new Set([room.id]));
         setRoomOccupancy({ [room.id]: 'single' });
       }
     } else {
       // Fallback to URL parameters
       const roomParam = searchParams.get("room");
       if (roomParam) {
-        const roomId = parseInt(roomParam);
-        if (roomId && roomId >= 1 && roomId <= roomsData.length) {
-          setSelectedRooms({ [roomId]: 1 });
+        const room = roomsData.find(r => r.name === roomParam);
+        if (room) {
+          setSelectedRooms(new Set([room.id]));
+          setRoomOccupancy({ [room.id]: 'single' });
         }
       }
     }
   }, [searchParams, location.state]);
 
-  // Memoized price calculation
+  // Calculate price summary based on selected rooms and dates
   const calculatedPriceSummary = useMemo(() => {
-    const { checkIn, checkOut } = bookingDetails;
-    if (
-      checkIn &&
-      checkOut &&
-      new Date(checkOut) > new Date(checkIn) &&
-      Object.keys(selectedRooms).length > 0
-    ) {
-      // Use UTC dates to avoid timezone issues
+    if (bookingDetails.checkIn && bookingDetails.checkOut && selectedRooms.size > 0) {
+      const checkIn = bookingDetails.checkIn;
+      const checkOut = bookingDetails.checkOut;
       const date1 = new Date(checkIn + "T00:00:00.000Z");
       const date2 = new Date(checkOut + "T00:00:00.000Z");
       const timeDiff = date2.getTime() - date1.getTime();
       const nights = Math.max(1, Math.floor(timeDiff / (1000 * 3600 * 24)));
 
-      const roomTotal =
-        Object.entries(selectedRooms).reduce((total, [roomId, quantity]) => {
-          const room = roomsData.find((r) => r.id === parseInt(roomId));
-          const occupancy = roomOccupancy[parseInt(roomId)] || "single";
-          const price = room ? room.pricing[occupancy] : 0;
-          return total + price * quantity;
-        }, 0) * nights;
+      const roomTotal = Array.from(selectedRooms).reduce((total, roomId) => {
+        const room = roomsData.find((r) => r.id === roomId);
+        const occupancy = roomOccupancy[roomId] || "single";
+        const price = room ? room.pricing[occupancy] : 0;
+        return total + price;
+      }, 0) * nights;
 
       const taxes = roomTotal * 0.05;
       const total = roomTotal + taxes;
@@ -564,6 +518,30 @@ const BookingPage = memo(() => {
   }, [calculatedPriceSummary]);
 
   // Memoized handlers for performance
+  const handleToggleRoom = useCallback((roomId: number) => {
+    setSelectedRooms((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(roomId)) {
+        newSet.delete(roomId);
+        // Remove occupancy when room is deselected
+        setRoomOccupancy((prevOccupancy) => {
+          const newOccupancy = { ...prevOccupancy };
+          delete newOccupancy[roomId];
+          return newOccupancy;
+        });
+      } else {
+        newSet.add(roomId);
+        // Set default occupancy when room is selected
+        setRoomOccupancy((prevOccupancy) => ({ 
+          ...prevOccupancy, 
+          [roomId]: "single" 
+        }));
+      }
+      return newSet;
+    });
+    setIsRoomDropdownOpen(false);
+  }, []);
+
   const handleAddRoom = useCallback((roomId: number, quantity: number = 1) => {
     setSelectedRooms((prev) => ({ ...prev, [roomId]: quantity }));
     setRoomOccupancy((prev) => ({ ...prev, [roomId]: "single" }));
@@ -585,9 +563,10 @@ const BookingPage = memo(() => {
 
   const handleBookingChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value } = e.target;
       setBookingDetails((prev) => ({
         ...prev,
-        [e.target.name]: e.target.value,
+        [name]: name === 'adults' || name === 'children' ? parseInt(value, 10) : value,
       }));
     },
     []
@@ -607,65 +586,63 @@ const BookingPage = memo(() => {
     []
   );
 
-  // Memoized form validation
+  const toggleRoomDropdown = useCallback(() => {
+    setIsRoomDropdownOpen((prev) => !prev);
+  }, []);
+
+  // Validation function
   const validateForm = useCallback(() => {
     const newErrors: Errors = {};
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
 
-    // Room selection validation
-    if (Object.keys(selectedRooms).length === 0)
+    // Room validation
+    if (selectedRooms.size === 0) {
       newErrors.room = "Please select at least one room.";
-
-    // Date validations
-    if (!bookingDetails.checkIn) {
-      newErrors.checkIn = "Check-in date is required.";
     } else {
-      // Use UTC dates to avoid timezone issues
-      const checkInDate = new Date(bookingDetails.checkIn + "T00:00:00.000Z");
-      const todayUTC = new Date(
-        new Date().toISOString().split("T")[0] + "T00:00:00.000Z"
-      );
-      if (checkInDate < todayUTC) {
-        newErrors.checkIn = "Check-in date cannot be in the past.";
+      // Calculate total capacity of selected rooms
+      const totalCapacity = Array.from(selectedRooms).reduce((total, roomId) => {
+        const room = roomsData.find((r) => r.id === roomId);
+        return total + (room ? room.capacity : 0);
+      }, 0);
+
+      const totalAdults = bookingDetails.adults;
+      
+      // Only validate adults against room capacity (children don't count towards capacity)
+      if (totalCapacity < totalAdults) {
+        newErrors.room = `Selected rooms can accommodate ${totalCapacity} adults, but you have ${totalAdults} adults.`;
       }
     }
 
+    // Date validation
+    if (!bookingDetails.checkIn) {
+      newErrors.checkIn = "Please select a check-in date.";
+    }
     if (!bookingDetails.checkOut) {
-      newErrors.checkOut = "Check-out date is required.";
-    } else if (bookingDetails.checkIn) {
-      // Use UTC dates to avoid timezone issues
-      const checkInDate = new Date(bookingDetails.checkIn + "T00:00:00.000Z");
-      const checkOutDate = new Date(bookingDetails.checkOut + "T00:00:00.000Z");
-
-      if (checkOutDate <= checkInDate) {
-        newErrors.checkOut = "Check-out must be at least 1 day after check-in.";
-      }
+      newErrors.checkOut = "Please select a check-out date.";
+    }
+    if (
+      bookingDetails.checkIn &&
+      bookingDetails.checkOut &&
+      new Date(bookingDetails.checkOut) <= new Date(bookingDetails.checkIn)
+    ) {
+      newErrors.checkOut = "Check-out date must be after check-in date.";
     }
 
-    // Room capacity validation
-    const totalGuests = bookingDetails.adults + bookingDetails.children;
-    const totalCapacity = Object.entries(selectedRooms).reduce(
-      (total, [roomId, quantity]) => {
-        const room = roomsData.find((r) => r.id === parseInt(roomId));
-        return total + (room ? room.capacity * quantity : 0);
-      },
-      0
-    );
-
-    if (totalGuests > totalCapacity) {
-      newErrors.room = `Selected rooms can accommodate ${totalCapacity} guests, but you have ${totalGuests} guests.`;
+    // Guest info validation
+    if (!guestInfo.name.trim()) {
+      newErrors.name = "Please enter your name.";
     }
-
-    // Guest info validations
-    if (!guestInfo.name.trim()) newErrors.name = "Full name is required.";
-    if (!guestInfo.email || !/\S+@\S+\.\S+/.test(guestInfo.email))
-      newErrors.email = "A valid email is required.";
-    if (!guestInfo.phone.trim()) newErrors.phone = "Phone number is required.";
+    if (!guestInfo.email.trim()) {
+      newErrors.email = "Please enter your email.";
+    } else if (!/\S+@\S+\.\S+/.test(guestInfo.email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+    if (!guestInfo.phone.trim()) {
+      newErrors.phone = "Please enter your phone number.";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [selectedRooms, bookingDetails, guestInfo]);
+  }, [selectedRooms, roomOccupancy, bookingDetails, guestInfo]);
 
   // Memoized submit handler
   const handleSubmit = useCallback(
@@ -752,11 +729,6 @@ const BookingPage = memo(() => {
 
   const handleSlideSelect = useCallback((index: number) => {
     setCurrentSlide(index);
-  }, []);
-
-  // Memoized dropdown toggle
-  const toggleRoomDropdown = useCallback(() => {
-    setIsRoomDropdownOpen((prev) => !prev);
   }, []);
 
   return (
@@ -1102,10 +1074,8 @@ const BookingPage = memo(() => {
                             className="w-full p-4 glass-card border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 text-left flex justify-between items-center hover-lift"
                           >
                             <span className="text-foreground">
-                              {Object.keys(selectedRooms).length > 0
-                                ? `${
-                                    Object.keys(selectedRooms).length
-                                  } room(s) selected`
+                              {selectedRooms.size > 0
+                                ? `${selectedRooms.size} room(s) selected`
                                 : "Choose your heritage rooms"}
                             </span>
                             <span
@@ -1120,65 +1090,80 @@ const BookingPage = memo(() => {
                           {/* Room Dropdown */}
                           {isRoomDropdownOpen && (
                             <div className="absolute top-full left-0 right-0 mt-2 glass-card border-2 border-accent/20 rounded-xl shadow-heritage-lg z-50 max-h-80 overflow-y-auto">
-                              {roomsData.map((room) => (
-                                <div
-                                  key={room.id}
-                                  className="border-b border-accent/10 last:border-b-0"
-                                >
-                                  <RoomDropdownOption
-                                    room={room}
-                                    onSelect={() => {
-                                      const quantity = prompt(
-                                        `How many ${room.name} rooms would you like?`,
-                                        "1"
-                                      );
-                                      if (quantity && parseInt(quantity) > 0) {
-                                        handleAddRoom(
-                                          room.id,
-                                          parseInt(quantity)
-                                        );
-                                      }
-                                    }}
-                                  />
-                                </div>
-                              ))}
+                              {roomsData.map((room) => {
+                                const isSelected = selectedRooms.has(room.id);
+                                return (
+                                  <div
+                                    key={room.id}
+                                    className="border-b border-accent/10 last:border-b-0"
+                                  >
+                                    <div
+                                      onClick={() => handleToggleRoom(room.id)}
+                                      className={`flex items-center gap-4 p-4 hover:bg-accent/10 transition-colors cursor-pointer border-b border-accent/10 last:border-b-0 hover-lift ${
+                                        isSelected ? "bg-accent/5" : ""
+                                      }`}
+                                    >
+                                      <img
+                                        src={room.image}
+                                        alt={room.name}
+                                        className="w-16 h-16 rounded-lg object-cover"
+                                        loading="lazy"
+                                      />
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                          <h4 className="font-playfair font-semibold text-foreground">
+                                            {room.name}
+                                          </h4>
+                                          <div className="text-xs bg-accent/10 text-accent px-2 py-1 rounded-full font-medium">
+                                            {room.category}
+                                          </div>
+                                          {isSelected && (
+                                            <div className="text-xs bg-green-500 text-white px-2 py-1 rounded-full font-medium">
+                                              Selected
+                                            </div>
+                                          )}
+                                        </div>
+                                        <p className="text-sm text-foreground-subtle">
+                                          {room.amenities.slice(0, 2).join(", ")}
+                                        </p>
+                                        <div className="flex gap-4 mt-1">
+                                          <p className="font-poppins font-bold text-accent text-sm">
+                                            Single: ₹{room.pricing.single.toLocaleString()}
+                                          </p>
+                                          <p className="font-poppins font-bold text-accent text-sm">
+                                            Double: ₹{room.pricing.double.toLocaleString()}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
                             </div>
                           )}
                         </div>
                       </div>
 
                       {/* Selected Rooms Display */}
-                      {Object.keys(selectedRooms).length > 0 && (
-                        <div className="space-y-3 overflow-hidden">
+                      {selectedRooms.size > 0 && (
+                        <div className="space-y-3">
                           <h4 className="font-poppins text-sm font-medium text-foreground-heading">
                             Selected Rooms:
                           </h4>
-                          {Object.entries(selectedRooms).map(
-                            ([roomId, quantity]) => {
-                              const room = roomsData.find(
-                                (r) => r.id === parseInt(roomId)
-                              );
-                              return room ? (
-                                <SelectedRoomCard
-                                  key={roomId}
-                                  room={room}
-                                  quantity={quantity}
-                                  occupancy={
-                                    roomOccupancy[parseInt(roomId)] || "single"
-                                  }
-                                  onRemove={() =>
-                                    handleRemoveRoom(parseInt(roomId))
-                                  }
-                                  onOccupancyChange={(occupancy) =>
-                                    handleOccupancyChange(
-                                      parseInt(roomId),
-                                      occupancy
-                                    )
-                                  }
-                                />
-                              ) : null;
-                            }
-                          )}
+                          {Array.from(selectedRooms).map((roomId) => {
+                            const room = roomsData.find((r) => r.id === roomId);
+                            return room ? (
+                              <SelectedRoomCard
+                                key={roomId}
+                                room={room}
+                                occupancy={roomOccupancy[roomId] || "single"}
+                                onRemove={() => handleToggleRoom(roomId)}
+                                onOccupancyChange={(occupancy) =>
+                                  handleOccupancyChange(roomId, occupancy)
+                                }
+                              />
+                            ) : null;
+                          })}
                         </div>
                       )}
                     </div>
@@ -1190,31 +1175,23 @@ const BookingPage = memo(() => {
                       <h4 className="font-playfair text-h4 text-foreground-heading text-center mb-4 text-glow-gold">
                         Booking Summary
                       </h4>
-                      {Object.entries(selectedRooms).map(
-                        ([roomId, quantity]) => {
-                          const room = roomsData.find(
-                            (r) => r.id === parseInt(roomId)
-                          );
-                          const occupancy =
-                            roomOccupancy[parseInt(roomId)] || "single";
-                          return room ? (
-                            <div
-                              key={roomId}
-                              className="flex justify-between items-center py-3 border-b border-accent/10 last:border-b-0 hover-lift"
-                            >
-                              <span className="font-cormorant text-foreground-subtle">
-                                {quantity} x {room.name}
-                              </span>
-                              <span className="font-poppins font-semibold text-accent text-glow-primary">
-                                ₹
-                                {(
-                                  room.pricing[occupancy] * quantity
-                                ).toLocaleString()}
-                              </span>
-                            </div>
-                          ) : null;
-                        }
-                      )}
+                      {Array.from(selectedRooms).map((roomId) => {
+                        const room = roomsData.find((r) => r.id === roomId);
+                        const occupancy = roomOccupancy[roomId] || "single";
+                        return room ? (
+                          <div
+                            key={roomId}
+                            className="flex justify-between items-center py-3 border-b border-accent/10 last:border-b-0 hover-lift"
+                          >
+                            <span className="font-cormorant text-foreground-subtle">
+                              {room.name} ({occupancy})
+                            </span>
+                            <span className="font-poppins font-semibold text-accent text-glow-primary">
+                              ₹{room.pricing[occupancy].toLocaleString()}
+                            </span>
+                          </div>
+                        ) : null;
+                      })}
                       <div className="flex justify-between text-base pt-2">
                         <span className="font-cormorant text-foreground-subtle">
                           Subtotal ({priceSummary.nights} nights)
