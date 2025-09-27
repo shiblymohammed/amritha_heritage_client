@@ -594,7 +594,10 @@ const AccommodationPage: React.FC = () => {
                 Amritha. Our team is ready to make your experience
                 unforgettable.
               </p>
-              <button className="btn btn-primary px-4 sm:px-6 lg:px-10 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg shadow-soft-sunlight hover:shadow-golden-glow transition-transform duration-200 hover:scale-105 active:scale-95">
+              <button 
+                onClick={() => navigate('/booking')}
+                className="btn btn-primary px-4 sm:px-6 lg:px-10 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg shadow-soft-sunlight hover:shadow-golden-glow transition-transform duration-200 hover:scale-105 active:scale-95"
+              >
                 <span className="hidden sm:inline">Book Your Stay</span>
                 <span className="sm:hidden">Book Now</span>
               </button>
