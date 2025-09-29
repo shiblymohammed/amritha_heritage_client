@@ -154,6 +154,12 @@ export const MARZIPANO_DATA: MarzipanoData = {
           pitch: 0.5280412165959643,
           rotation: 0,
           target: "6-room3---bedroom"
+        },
+        {
+          yaw: -0.5,
+          pitch: 0.5,
+          rotation: 0,
+          target: "8-room-4-portico"
         }
       ],
       infoHotspots: []
@@ -205,14 +211,14 @@ export const MARZIPANO_DATA: MarzipanoData = {
           yaw: -0.005471359070496007,
           pitch: 0.5827452226978309,
           rotation: 0,
-          target: "9-room-4---living"
+          target: "6-room3---bedroom"
         }
       ],
       infoHotspots: []
     },
     {
       id: "8-room-4-portico",
-      name: "Collector's Portico",
+      name: "Magistrate's Portico",
       levels: [
         { tileSize: 256, size: 256, fallbackOnly: true },
         { tileSize: 512, size: 512 },
@@ -231,7 +237,7 @@ export const MARZIPANO_DATA: MarzipanoData = {
           yaw: -1.9212419429747705,
           pitch: 0.6260778726647498,
           rotation: 0,
-          target: "9-room-4---living"
+          target: "5-room-3-living"
         }
       ],
       infoHotspots: []
@@ -393,18 +399,18 @@ export const ROOM_MAPPINGS: RoomMapping[] = [
   {
     id: "room-3-magistrate",
     name: "The Magistrate's Chamber",
-    description: "Elegant living space with bedroom and bathroom, featuring traditional decor.",
-    sceneIds: ["5-room-3-living", "6-room3---bedroom", "7-room-3---bathrrom"],
-    primarySceneId: "5-room-3-living",
-    category: "living"
+    description: "Elegant living space with portico, bedroom and bathroom, featuring traditional decor.",
+    sceneIds: ["8-room-4-portico", "5-room-3-living", "6-room3---bedroom", "7-room-3---bathrrom"],
+    primarySceneId: "8-room-4-portico",
+    category: "portico"
   },
   {
     id: "room-4-collectors",
     name: "The Collector's",
-    description: "Premium suite with portico, living area, bedroom and bathroom.",
-    sceneIds: ["8-room-4-portico", "9-room-4---living", "10-room-4--bedroom", "11-room-4-bathroom"],
-    primarySceneId: "8-room-4-portico",
-    category: "portico"
+    description: "Premium suite with living area, bedroom and bathroom.",
+    sceneIds: ["9-room-4---living", "10-room-4--bedroom", "11-room-4-bathroom"],
+    primarySceneId: "9-room-4---living",
+    category: "living"
   },
   {
     id: "room-5-royal",

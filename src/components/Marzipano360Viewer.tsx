@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import type { MarzipanoScene, Virtual360Room } from "../types";
-import { getSceneById } from "../data/marzipano-config";
+import { getSceneById, getVirtual360Rooms } from "../data/marzipano-config";
 import "./Marzipano360Viewer.css";
 
 interface Marzipano360ViewerProps {
   room: Virtual360Room;
   isOpen: boolean;
   onClose: () => void;
+  onRoomChange?: (roomId: string) => void;
 }
 
 interface MarzipanoViewer {
@@ -18,6 +19,7 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
   room,
   isOpen,
   onClose,
+  onRoomChange,
 }) => {
   // Early return if room or primaryScene is not available
   if (!room || !room.primaryScene) {
@@ -44,6 +46,44 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
+  // Room navigation logic
+  const getAllRooms = useCallback(() => {
+    return getVirtual360Rooms();
+  }, []);
+
+  const getCurrentRoomIndex = useCallback(() => {
+    const allRooms = getAllRooms();
+    return allRooms.findIndex(r => r.id === room.id);
+  }, [room.id, getAllRooms]);
+
+  const getPreviousRoom = useCallback(() => {
+    const allRooms = getAllRooms();
+    const currentIndex = getCurrentRoomIndex();
+    if (currentIndex <= 0) return null;
+    return allRooms[currentIndex - 1];
+  }, [getAllRooms, getCurrentRoomIndex]);
+
+  const getNextRoom = useCallback(() => {
+    const allRooms = getAllRooms();
+    const currentIndex = getCurrentRoomIndex();
+    if (currentIndex >= allRooms.length - 1) return null;
+    return allRooms[currentIndex + 1];
+  }, [getAllRooms, getCurrentRoomIndex]);
+
+  const handlePreviousRoom = useCallback(() => {
+    const prevRoom = getPreviousRoom();
+    if (prevRoom && onRoomChange) {
+      onRoomChange(prevRoom.id);
+    }
+  }, [getPreviousRoom, onRoomChange]);
+
+  const handleNextRoom = useCallback(() => {
+    const nextRoom = getNextRoom();
+    if (nextRoom && onRoomChange) {
+      onRoomChange(nextRoom.id);
+    }
+  }, [getNextRoom, onRoomChange]);
 
   // Initialize Marzipano viewer
   const initializeViewer = useCallback(() => {
@@ -379,8 +419,15 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
           }
         } catch {}
 
-        // Restore scroll position
-        window.scrollTo(0, y);
+        // Restore scroll position with a slight delay to ensure DOM is ready
+        // Use requestAnimationFrame to ensure the scroll restoration happens after any other DOM updates
+        requestAnimationFrame(() => {
+          window.scrollTo(0, y);
+          // Double-check scroll restoration after a brief delay
+          setTimeout(() => {
+            window.scrollTo(0, y);
+          }, 10);
+        });
       };
     }
 
@@ -553,6 +600,77 @@ const Marzipano360Viewer: React.FC<Marzipano360ViewerProps> = ({
                   {scene.name}
                 </button>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Room Navigation */}
+        {onRoomChange && (
+          <div className="marzipano-room-navigation">
+            <h4 className="font-playfair text-lg text-white font-semibold tracking-wide mb-4">
+              Switch Rooms
+            </h4>
+            <div className="room-nav-buttons">
+              <button
+                className={`btn btn-secondary text-sm px-4 py-2 font-poppins font-medium transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-accent/50 bg-background-secondary hover:bg-background-tertiary border-border ${
+                  !getPreviousRoom() ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                onClick={handlePreviousRoom}
+                disabled={!getPreviousRoom()}
+                title={getPreviousRoom()?.name || 'No previous room'}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="mr-2"
+                >
+                  <path
+                    d="M15 18L9 12L15 6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Previous Room
+              </button>
+              
+              <div className="current-room-info text-center px-4">
+                <p className="font-poppins text-sm text-white/70 font-medium">
+                  {getCurrentRoomIndex() + 1} of {getAllRooms().length}
+                </p>
+                <p className="font-playfair text-white font-semibold">
+                  {room.name}
+                </p>
+              </div>
+              
+              <button
+                className={`btn btn-secondary text-sm px-4 py-2 font-poppins font-medium transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-accent/50 bg-background-secondary hover:bg-background-tertiary border-border ${
+                  !getNextRoom() ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                onClick={handleNextRoom}
+                disabled={!getNextRoom()}
+                title={getNextRoom()?.name || 'No next room'}
+              >
+                Next Room
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="ml-2"
+                >
+                  <path
+                    d="M9 18L15 12L9 6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         )}

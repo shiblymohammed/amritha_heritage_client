@@ -140,7 +140,7 @@ const roomsData: Room[] = [
       "Coffee Maker",
       "Flat-screen TV",
     ],
-    capacity: 3,
+    capacity: 2,
     category: "Deluxe",
     pricing: { single: 5000, double: 7000 },
     image: "/images/Accommodation/magistratechamber.jpeg",
@@ -174,7 +174,7 @@ const roomsData: Room[] = [
       "Air Conditioned",
       "Flat-screen TV",
     ],
-    capacity: 3,
+    capacity: 2,
     category: "Deluxe",
     pricing: { single: 5000, double: 7000 },
     image: "/images/Accommodation/residencyroom.jpeg",
@@ -337,11 +337,10 @@ const RoomDropdownOption = memo<{ room: Room; onSelect: () => void }>(
 // Enhanced Selected Room Card
 const SelectedRoomCard = memo<{
   room: Room;
-  quantity: number;
   occupancy: "single" | "double";
   onRemove: () => void;
   onOccupancyChange: (occupancy: "single" | "double") => void;
-}>(({ room, quantity, occupancy, onRemove, onOccupancyChange }) => (
+}>(({ room, occupancy, onRemove, onOccupancyChange }) => (
   <div className="card-interactive glass-card border border-accent/20 rounded-xl p-4 hover-lift animate-fade-in-up">
     <div className="flex items-center gap-3 mb-3">
       <img
@@ -355,13 +354,12 @@ const SelectedRoomCard = memo<{
           {room.name}
         </h5>
         <p className="text-xs text-foreground-subtle">
-          Quantity:{" "}
-          <strong className="text-accent font-medium">{quantity}</strong>
+          {room.category} Room
         </p>
       </div>
       <div className="text-right">
         <p className="font-poppins font-bold text-accent text-sm text-glow-primary">
-          ₹{(room.pricing[occupancy] * quantity).toLocaleString()}
+          ₹{room.pricing[occupancy].toLocaleString()}
         </p>
         <button
           onClick={onRemove}
@@ -455,8 +453,8 @@ const ConfirmationModal = memo<{
 // == 5. MAIN BOOKING PAGE COMPONENT (Performance Optimized)
 // =================================================================
 const BookingPage = memo(() => {
-  const [selectedRooms, setSelectedRooms] = useState<Record<number, number>>(
-    {}
+  const [selectedRooms, setSelectedRooms] = useState<Set<number>>(
+    new Set()
   );
   const [roomOccupancy, setRoomOccupancy] = useState<
     Record<number, "single" | "double">
@@ -512,7 +510,7 @@ const BookingPage = memo(() => {
       // Find room by name since AccommodationPage uses string names
       const room = roomsData.find(r => r.name === selectedRoom.name);
       if (room) {
-        setSelectedRooms({ [room.id]: 1 });
+        setSelectedRooms(new Set([room.id]));
         setRoomOccupancy({ [room.id]: 'single' });
       }
     } else {
@@ -521,7 +519,8 @@ const BookingPage = memo(() => {
       if (roomParam) {
         const roomId = parseInt(roomParam);
         if (roomId && roomId >= 1 && roomId <= roomsData.length) {
-          setSelectedRooms({ [roomId]: 1 });
+          setSelectedRooms(new Set([roomId]));
+          setRoomOccupancy({ [roomId]: 'single' });
         }
       }
     }
@@ -534,7 +533,7 @@ const BookingPage = memo(() => {
       checkIn &&
       checkOut &&
       new Date(checkOut) > new Date(checkIn) &&
-      Object.keys(selectedRooms).length > 0
+      selectedRooms.size > 0
     ) {
       // Use UTC dates to avoid timezone issues
       const date1 = new Date(checkIn + "T00:00:00.000Z");
@@ -543,11 +542,11 @@ const BookingPage = memo(() => {
       const nights = Math.max(1, Math.floor(timeDiff / (1000 * 3600 * 24)));
 
       const roomTotal =
-        Object.entries(selectedRooms).reduce((total, [roomId, quantity]) => {
-          const room = roomsData.find((r) => r.id === parseInt(roomId));
-          const occupancy = roomOccupancy[parseInt(roomId)] || "single";
+        Array.from(selectedRooms).reduce((total, roomId) => {
+          const room = roomsData.find((r) => r.id === roomId);
+          const occupancy = roomOccupancy[roomId] || "single";
           const price = room ? room.pricing[occupancy] : 0;
-          return total + price * quantity;
+          return total + price;
         }, 0) * nights;
 
       const taxes = roomTotal * 0.05;
@@ -564,17 +563,17 @@ const BookingPage = memo(() => {
   }, [calculatedPriceSummary]);
 
   // Memoized handlers for performance
-  const handleAddRoom = useCallback((roomId: number, quantity: number = 1) => {
-    setSelectedRooms((prev) => ({ ...prev, [roomId]: quantity }));
+  const handleAddRoom = useCallback((roomId: number) => {
+    setSelectedRooms((prev) => new Set(prev).add(roomId));
     setRoomOccupancy((prev) => ({ ...prev, [roomId]: "single" }));
     setIsRoomDropdownOpen(false);
   }, []);
 
   const handleRemoveRoom = useCallback((roomId: number) => {
     setSelectedRooms((prev) => {
-      const newRooms = { ...prev };
-      delete newRooms[roomId];
-      return newRooms;
+      const newSet = new Set(prev);
+      newSet.delete(roomId);
+      return newSet;
     });
     setRoomOccupancy((prev) => {
       const newOccupancy = { ...prev };
@@ -615,7 +614,7 @@ const BookingPage = memo(() => {
     today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
 
     // Room selection validation
-    if (Object.keys(selectedRooms).length === 0)
+    if (selectedRooms.size === 0)
       newErrors.room = "Please select at least one room.";
 
     // Date validations
@@ -646,10 +645,10 @@ const BookingPage = memo(() => {
 
     // Room capacity validation (only count adults, children don't require separate beds)
     const totalAdults = bookingDetails.adults;
-    const totalCapacity = Object.entries(selectedRooms).reduce(
-      (total, [roomId, quantity]) => {
-        const room = roomsData.find((r) => r.id === parseInt(roomId));
-        return total + (room ? room.capacity * quantity : 0);
+    const totalCapacity = Array.from(selectedRooms).reduce(
+      (total, roomId) => {
+        const room = roomsData.find((r) => r.id === roomId);
+        return total + (room ? room.capacity : 0);
       },
       0
     );
@@ -1129,16 +1128,7 @@ const BookingPage = memo(() => {
                                   <RoomDropdownOption
                                     room={room}
                                     onSelect={() => {
-                                      const quantity = prompt(
-                                        `How many ${room.name} rooms would you like?`,
-                                        "1"
-                                      );
-                                      if (quantity && parseInt(quantity) > 0) {
-                                        handleAddRoom(
-                                          room.id,
-                                          parseInt(quantity)
-                                        );
-                                      }
+                                      handleAddRoom(room.id);
                                     }}
                                   />
                                 </div>
@@ -1149,30 +1139,28 @@ const BookingPage = memo(() => {
                       </div>
 
                       {/* Selected Rooms Display */}
-                      {Object.keys(selectedRooms).length > 0 && (
+                      {selectedRooms.size > 0 && (
                         <div className="space-y-3 overflow-hidden">
                           <h4 className="font-poppins text-sm font-medium text-foreground-heading">
                             Selected Rooms:
                           </h4>
-                          {Object.entries(selectedRooms).map(
-                            ([roomId, quantity]) => {
+                          {Array.from(selectedRooms).map((roomId) => {
                               const room = roomsData.find(
-                                (r) => r.id === parseInt(roomId)
+                                (r) => r.id === roomId
                               );
                               return room ? (
                                 <SelectedRoomCard
                                   key={roomId}
                                   room={room}
-                                  quantity={quantity}
                                   occupancy={
-                                    roomOccupancy[parseInt(roomId)] || "single"
+                                    roomOccupancy[roomId] || "single"
                                   }
                                   onRemove={() =>
-                                    handleRemoveRoom(parseInt(roomId))
+                                    handleRemoveRoom(roomId)
                                   }
                                   onOccupancyChange={(occupancy) =>
                                     handleOccupancyChange(
-                                      parseInt(roomId),
+                                      roomId,
                                       occupancy
                                     )
                                   }
@@ -1186,31 +1174,27 @@ const BookingPage = memo(() => {
                   </div>
 
                   {/* Price Summary */}
-                  {Object.keys(selectedRooms).length > 0 && (
+                  {selectedRooms.size > 0 && (
                     <div className="bg-gradient-to-r from-accent/10 to-accent-gold/10 border border-accent/20 rounded-xl p-6 space-y-4 overflow-hidden">
                       <h4 className="font-playfair text-h4 text-foreground-heading text-center mb-4 text-glow-gold">
                         Booking Summary
                       </h4>
-                      {Object.entries(selectedRooms).map(
-                        ([roomId, quantity]) => {
+                      {Array.from(selectedRooms).map((roomId) => {
                           const room = roomsData.find(
-                            (r) => r.id === parseInt(roomId)
+                            (r) => r.id === roomId
                           );
                           const occupancy =
-                            roomOccupancy[parseInt(roomId)] || "single";
+                            roomOccupancy[roomId] || "single";
                           return room ? (
                             <div
                               key={roomId}
                               className="flex justify-between items-center py-3 border-b border-accent/10 last:border-b-0 hover-lift"
                             >
                               <span className="font-cormorant text-foreground-subtle">
-                                {quantity} x {room.name}
+                                {room.name}
                               </span>
                               <span className="font-poppins font-semibold text-accent text-glow-primary">
-                                ₹
-                                {(
-                                  room.pricing[occupancy] * quantity
-                                ).toLocaleString()}
+                                ₹{room.pricing[occupancy].toLocaleString()}
                               </span>
                             </div>
                           ) : null;

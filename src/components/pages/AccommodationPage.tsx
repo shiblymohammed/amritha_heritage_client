@@ -241,24 +241,6 @@ const AccommodationPage: React.FC = () => {
   };
 
   const handleClose360Viewer = () => {
-    // Defensive: restore scrollability in case any global locks persist
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.width = '';
-    (document.body.style as any).overflowY = 'auto';
-    (document.body.style as any).overflowX = '';
-    (document.documentElement.style as any).overflowY = 'auto';
-    try {
-      if (document.fullscreenElement) {
-        document.exitFullscreen?.();
-      }
-      if ((window as any).screenfull?.isEnabled && (window as any).screenfull.isFullscreen) {
-        (window as any).screenfull.exit();
-      }
-    } catch {}
-
     setShow360Viewer(false);
     // Slight delay to allow modal close animation (if any), then clear selected
     setTimeout(() => {
@@ -661,6 +643,7 @@ const AccommodationPage: React.FC = () => {
           room={getRoomById(selected360Room)!}
           isOpen={show360Viewer}
           onClose={handleClose360Viewer}
+          onRoomChange={(newRoomId) => setSelected360Room(newRoomId)}
         />
       )}
 

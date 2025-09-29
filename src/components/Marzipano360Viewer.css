@@ -163,6 +163,53 @@
   flex-wrap: wrap;
 }
 
+/* Room Navigation Styles */
+.marzipano-room-navigation {
+  background: rgb(237, 232, 218);
+  padding: 16px 20px;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.marzipano-room-navigation h4 {
+  color: #2c2c2c;
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-shadow: none;
+}
+
+.room-nav-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.current-room-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.current-room-info p:first-child {
+  color: #6b6b6b;
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.current-room-info p:last-child {
+  color: #2c2c2c;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .mobile-instructions {
   background: rgba(212, 175, 55, 0.08);
   border-top: 1px solid rgba(212, 175, 55, 0.2);
@@ -241,6 +288,14 @@
     padding: 12px 16px;
   }
 
+  .marzipano-room-navigation {
+    padding: 12px 16px;
+  }
+
+  .room-nav-buttons {
+    gap: 12px;
+  }
+
   .marzipano-viewer-container {
     margin: 4px;
   }
@@ -275,6 +330,18 @@
 
   .marzipano-navigation {
     padding: 10px 12px;
+  }
+
+  .marzipano-room-navigation {
+    padding: 10px 12px;
+  }
+
+  .room-nav-buttons {
+    gap: 10px;
+  }
+
+  .current-room-info p:last-child {
+    font-size: 13px;
   }
 
   .marzipano-viewer-container {
