@@ -145,9 +145,9 @@ const Gallery = () => {
   // Effect hook to disable body scrolling for the modal.
   useEffect(() => {
     // Disable body scroll when modal is open.
-    document.body.style.overflow = isModalOpen ? 'hidden' : 'unset';
+    document.body.style.overflow = isModalOpen ? 'hidden' : '';
     return () => { 
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
     };
   }, [isModalOpen]);
 

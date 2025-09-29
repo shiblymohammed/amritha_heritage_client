@@ -71,10 +71,10 @@ const NavBar: React.FC = () => {
 
   // Effect to prevent body scroll when the full-screen menu is open.
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "unset";
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
     // Cleanup function to reset overflow when component unmounts
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
 

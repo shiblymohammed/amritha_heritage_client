@@ -175,17 +175,21 @@ const AnimateOnScroll: React.FC<{
 };
 
 const AccommodationPage: React.FC = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [showRoomDetails, setShowRoomDetails] = useState(false);
   const [show360Viewer, setShow360Viewer] = useState(false);
   const [selected360Room, setSelected360Room] = useState<string | null>(null);
+
+  // Removed savedScrollPosition; Marzipano viewer preserves scroll via body position locking
   const modalRef = useRef(null);
   const roomTypesRef = useRef<HTMLElement>(null);
+
+  // Do not force scroll-to-top on mount to avoid jumps after closing overlays
+  useEffect(() => {
+    // No-op
+  }, []);
 
   // Mapping between numeric room IDs (from AccommodationSection) and string room IDs (AccommodationPage)
   const roomIdMapping: { [key: string]: string } = {
@@ -237,8 +241,29 @@ const AccommodationPage: React.FC = () => {
   };
 
   const handleClose360Viewer = () => {
+    // Defensive: restore scrollability in case any global locks persist
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    (document.body.style as any).overflowY = 'auto';
+    (document.body.style as any).overflowX = '';
+    (document.documentElement.style as any).overflowY = 'auto';
+    try {
+      if (document.fullscreenElement) {
+        document.exitFullscreen?.();
+      }
+      if ((window as any).screenfull?.isEnabled && (window as any).screenfull.isFullscreen) {
+        (window as any).screenfull.exit();
+      }
+    } catch {}
+
     setShow360Viewer(false);
-    setTimeout(() => setSelected360Room(null), 300);
+    // Slight delay to allow modal close animation (if any), then clear selected
+    setTimeout(() => {
+      setSelected360Room(null);
+    }, 200);
   };
 
   return (

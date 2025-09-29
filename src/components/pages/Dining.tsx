@@ -400,10 +400,10 @@ const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose, menuData }) => {
         setSelectedCategory(menuData[0].categories[0]?.category || "");
       }
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "";
     };
   }, [isOpen, menuData]);
 
