@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import emailjs from '@emailjs/browser';
+import { sendContactEmail, initEmailJS } from "../../services/emailService";
 
 const Contact = () => {
   const [searchParams] = useSearchParams();
@@ -11,12 +13,18 @@ const Contact = () => {
     message: "",
     specialOccasion: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
   // --- Animation Logic ---
   const sectionRef = useRef(null);
 
-  // --- Scroll to top when component mounts ---
+  // --- Initialize EmailJS when component mounts ---
   useEffect(() => {
+    initEmailJS();
     window.scrollTo(0, 0);
   }, []);
 
@@ -31,8 +39,6 @@ const Contact = () => {
     }
   }, [searchParams]);
 
-
-
   // --- Handlers ---
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -41,19 +47,51 @@ const Contact = () => {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear submit status when user starts typing again
+    if (submitStatus) {
+      setSubmitStatus(null);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    alert("Thank you for your enquiry! We will get back to you soon.");
-    setFormData({
-      fullName: "",
-      email: "",
-      contactNumber: "",
-      message: "",
-      specialOccasion: "",
-    });
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+    
+    console.log("Form data being submitted:", formData);
+    
+    try {
+      // Send email using EmailJS
+      console.log("Attempting to send email with EmailJS...");
+      const response = await sendContactEmail(formData);
+      console.log("EmailJS response:", response);
+      
+      // Show success message
+      setSubmitStatus({
+        success: true,
+        message: "Thank you for your enquiry! We will get back to you soon."
+      });
+      
+      // Reset form
+      setFormData({
+        fullName: "",
+        email: "",
+        contactNumber: "",
+        message: "",
+        specialOccasion: "",
+      });
+    } catch (error) {
+      console.error("Detailed error when sending email:", error);
+      // Show error message
+      setSubmitStatus({
+        success: false,
+        message: "There was an error sending your message. Please try again later."
+      });
+      console.error("Error sending email:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -481,14 +519,37 @@ const Contact = () => {
                 ></textarea>
               </div>
 
+              {/* Status Message */}
+              {submitStatus && (
+                <div 
+                  className={`p-4 rounded-lg ${
+                    submitStatus.success 
+                      ? "bg-green-100 text-green-800 border border-green-200" 
+                      : "bg-red-100 text-red-800 border border-red-200"
+                  }`}
+                >
+                  {submitStatus.message}
+                </div>
+              )}
+
               {/* Submit Button */}
               <motion.button
                 type="submit"
-                className="w-full btn btn-primary py-4 px-8"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                className="w-full btn btn-primary py-4 px-8 relative"
+                whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                disabled={isSubmitting}
               >
-                Submit Enquiry
+                {isSubmitting ? (
+                  <>
+                    <span className="opacity-0">Submit Enquiry</span>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  </>
+                ) : (
+                  "Submit Enquiry"
+                )}
               </motion.button>
             </form>
           </motion.div>
