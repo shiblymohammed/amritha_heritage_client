@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import emailjs from '@emailjs/browser';
 import { sendContactEmail, initEmailJS } from "../../services/emailService";
 
 const Contact = () => {
