@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Booking Received - Amritha Heritage Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', 'Cormorant Garamond', serif;
+            color: #435547;
+            line-height: 1.7;
+            background-color: #FBF9F6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .email-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        
+        /* Header with Brand Colors */
+        .header {
+            background: linear-gradient(135deg, #3A4A3E 0%, #435547 100%);
+            color: #FBF9F6;
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 4px solid #DAA520;
+        }
+        
+        .logo {
+            max-width: 200px;
+            height: auto;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        
+        .header h1 {
+            font-family: 'Cinzel', 'Georgia', serif;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #FBF9F6;
+            letter-spacing: 1px;
+        }
+        
+        .header .subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            opacity: 0.95;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #DCD7C9;
+        }
+        
+        /* Alert Banner */
+        .alert-banner {
+            background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
+            color: #FBF9F6;
+            padding: 18px 30px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .content {
+            padding: 35px 30px;
+        }
+        
+        /* Booking ID Box */
+        .booking-id {
+            background: linear-gradient(135deg, #A57156 0%, #8D7555 100%);
+            color: #FBF9F6;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(165, 113, 86, 0.2);
+        }
+        
+        .booking-id .label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        
+        .booking-id .id {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Section Titles */
+        .section-title {
+            background: #F5F0E6;
+            padding: 14px 20px;
+            margin: 30px -30px 25px -30px;
+            border-left: 5px solid #A57156;
+            font-size: 18px;
+            font-weight: bold;
+            color: #3A4A3E;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .info-box {
+            background: #FBF9F6;
+            padding: 18px;
+            border-radius: 10px;
+            border-left: 3px solid #A57156;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .info-box .label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #5A594D;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        
+        .info-box .value {
+            font-size: 17px;
+            color: #435547;
+            font-weight: 600;
+        }
+        
+        .info-box.highlight {
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CD 100%);
+            border-left-color: #DAA520;
+        }
+        
+        .info-box.highlight .value {
+            color: #B8860B;
+            font-size: 19px;
+        }
+        
+        /* Guest Details */
+        .guest-details {
+            background: linear-gradient(135deg, #F5F0E6 0%, #EDE8DA 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #DCD7C9;
+        }
+        
+        .guest-details h3 {
+            color: #3A4A3E;
+            font-size: 17px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .guest-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #DCD7C9;
+        }
+        
+        .guest-row:last-child {
+            border-bottom: none;
+        }
+        
+        .guest-label {
+            font-weight: 600;
+            color: #5A594D;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .guest-value {
+            color: #435547;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .action-button {
+            display: block;
+            padding: 16px 25px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .action-button.call {
+            background: linear-gradient(135deg, #3A4A3E 0%, #435547 100%);
+            color: #FBF9F6;
+        }
+        
+        .action-button.email {
+            background: linear-gradient(135deg, #A57156 0%, #8D7555 100%);
+            color: #FBF9F6;
+        }
+        
+        .action-button.whatsapp {
+            background: linear-gradient(135deg, #25d366 0%, #20ba5a 100%);
+            color: #FBF9F6;
+        }
+        
+        .action-button.sms {
+            background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
+            color: #FBF9F6;
+        }
+        
+        /* Rooms Section */
+        .rooms-section {
+            background: linear-gradient(135deg, #FBF9F6 0%, #F5F0E6 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #DCD7C9;
+        }
+        
+        .rooms-section h3 {
+            color: #3A4A3E;
+            font-size: 17px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .room-list {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #435547;
+            border: 1px solid #DCD7C9;
+        }
+        
+        /* Special Requests */
+        .special-requests {
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CD 100%);
+            border: 2px solid #DAA520;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .special-requests h3 {
+            color: #B8860B;
+            font-size: 17px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .special-requests .content {
+            padding: 0;
+            color: #435547;
+            font-size: 15px;
+            line-height: 1.8;
+            font-style: italic;
+        }
+        
+        /* Payment Summary */
+        .payment-summary {
+            background: linear-gradient(135deg, #3A4A3E 0%, #435547 100%);
+            color: #FBF9F6;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(58, 74, 62, 0.3);
+        }
+        
+        .payment-summary h3 {
+            font-size: 19px;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(251, 249, 246, 0.2);
+        }
+        
+        .payment-row:last-child {
+            border-bottom: none;
+        }
+        
+        .payment-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 18px 0;
+            font-size: 26px;
+            font-weight: bold;
+            border-top: 2px solid rgba(218, 165, 32, 0.5);
+            margin-top: 12px;
+            color: #DAA520;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            background: #F5F0E6;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #DCD7C9;
+        }
+        
+        .quick-actions h3 {
+            color: #3A4A3E;
+            font-size: 17px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .quick-actions ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .quick-actions li {
+            padding: 10px 0;
+            color: #435547;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .quick-actions li:before {
+            content: "✓ ";
+            color: #A57156;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        /* Important Notes */
+        .important-notes {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border: 2px solid #DAA520;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .important-notes h3 {
+            color: #B8860B;
+            font-size: 17px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .important-notes ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .important-notes li {
+            padding: 10px 0;
+            color: #435547;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .important-notes li:before {
+            content: "⚠ ";
+            color: #DAA520;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        /* Contact Summary Box */
+        .contact-summary {
+            background: linear-gradient(135deg, #F5F0E6 0%, #EDE8DA 100%);
+            border: 2px solid #A57156;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .contact-summary h3 {
+            color: #3A4A3E;
+            font-size: 17px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .contact-summary-content {
+            font-size: 15px;
+            line-height: 2;
+            color: #435547;
+        }
+        
+        .contact-summary a {
+            color: #A57156;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .contact-summary a:hover {
+            color: #8D7555;
+            text-decoration: underline;
+        }
+        
+        .contact-summary .amount {
+            color: #3A4A3E;
+            font-weight: bold;
+            font-size: 19px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #3A4A3E 0%, #2C3E50 100%);
+            color: #FBF9F6;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .footer-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #DAA520;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+        }
+        
+        .footer-text {
+            font-size: 13px;
+            line-height: 1.9;
+            opacity: 0.9;
+            color: #DCD7C9;
+        }
+        
+        /* Timestamp */
+        .timestamp {
+            background: #435547;
+            color: #DCD7C9;
+            padding: 16px;
+            text-align: center;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Mobile Responsive */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+            
+            .header {
+                padding: 30px 20px !important;
+            }
+            
+            .header h1 {
+                font-size: 22px !important;
+            }
+            
+            .logo {
+                max-width: 150px !important;
+            }
+            
+            .content {
+                padding: 25px 15px !important;
+            }
+            
+            .section-title {
+                margin-left: -15px !important;
+                margin-right: -15px !important;
+                font-size: 16px !important;
+                padding: 12px 15px !important;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            
+            .guest-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .guest-value {
+                text-align: left !important;
+            }
+            
+            .payment-row {
+                font-size: 14px !important;
+            }
+            
+            .payment-total {
+                font-size: 20px !important;
+            }
+            
+            .booking-id .id {
+                font-size: 18px !important;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .action-buttons {
+                display: none;
+            }
+            
+            .email-container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header with Logo -->
+        <div class="header">
+            <!-- Logo - Replace with your actual logo URL -->
+            <img src="https://yourdomain.com/logo.png" alt="Amritha Heritage Logo" class="logo">
+            <h1>🔔 NEW BOOKING RECEIVED</h1>
+            <div class="subtitle">Amritha Heritage - Admin Notification</div>
+        </div>
+        
+        <!-- Alert Banner -->
+        <div class="alert-banner">
+            ⚡ ACTION REQUIRED - New booking needs confirmation
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Booking ID -->
+            <div class="booking-id">
+                <div class="label">Booking Reference</div>
+                <div class="id">{{bookingDate}}</div>
+            </div>
+            
+            <!-- Quick Info Grid -->
+            <div class="info-grid">
+                <div class="info-box highlight">
+                    <div class="label">Check-in Date</div>
+                    <div class="value">{{checkIn}}</div>
+                </div>
+                
+                <div class="info-box highlight">
+                    <div class="label">Check-out Date</div>
+                    <div class="value">{{checkOut}}</div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="label">Duration</div>
+                    <div class="value">{{nights}} Night(s)</div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="label">Total Guests</div>
+                    <div class="value">{{adults}} Adults, {{children}} Children</div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="label">Rooms Booked</div>
+                    <div class="value">{{roomCount}} Room(s)</div>
+                </div>
+                
+                <div class="info-box highlight">
+                    <div class="label">Total Amount</div>
+                    <div class="value">{{totalAmount}}</div>
+                </div>
+            </div>
+            
+            <!-- Guest Details -->
+            <div class="section-title">👤 Guest Information</div>
+            <div class="guest-details">
+                <h3>Primary Guest Contact</h3>
+                
+                <div class="guest-row">
+                    <span class="guest-label">Full Name:</span>
+                    <span class="guest-value">{{guestName}}</span>
+                </div>
+                
+                <div class="guest-row">
+                    <span class="guest-label">Email Address:</span>
+                    <span class="guest-value">{{guestEmail}}</span>
+                </div>
+                
+                <div class="guest-row">
+                    <span class="guest-label">Phone Number:</span>
+                    <span class="guest-value">{{guestPhone}}</span>
+                </div>
+                
+                <div class="guest-row">
+                    <span class="guest-label">Booking Date:</span>
+                    <span class="guest-value">{{bookingDate}}</span>
+                </div>
+            </div>
+            
+            <!-- Contact Action Buttons -->
+            <div class="action-buttons">
+                <a href="tel:{{guestPhone}}" class="action-button call">
+                    📞 Call Guest
+                </a>
+                <a href="mailto:{{guestEmail}}" class="action-button email">
+                    ✉️ Email Guest
+                </a>
+                <a href="https://wa.me/{{guestPhone}}" class="action-button whatsapp">
+                    💬 WhatsApp
+                </a>
+                <a href="sms:{{guestPhone}}" class="action-button sms">
+                    📱 Send SMS
+                </a>
+            </div>
+            
+            <!-- Room Details -->
+            <div class="section-title">🛏️ Room Details</div>
+            <div class="rooms-section">
+                <h3>Booked Rooms ({{roomCount}})</h3>
+                <div class="room-list">{{roomsList}}</div>
+            </div>
+            
+            <!-- Special Requests -->
+            <div class="section-title">💬 Special Requests</div>
+            <div class="special-requests">
+                <h3>Guest Requirements</h3>
+                <div class="content">{{specialRequests}}</div>
+            </div>
+            
+            <!-- Payment Summary -->
+            <div class="section-title">💰 Payment Breakdown</div>
+            <div class="payment-summary">
+                <h3>Financial Summary</h3>
+                
+                <div class="payment-row">
+                    <span>Room Charges ({{nights}} nights):</span>
+                    <span>{{roomTotal}}</span>
+                </div>
+                
+                <div class="payment-row">
+                    <span>Taxes & Service Fees (5%):</span>
+                    <span>{{taxes}}</span>
+                </div>
+                
+                <div class="payment-total">
+                    <span>TOTAL AMOUNT:</span>
+                    <span>{{totalAmount}}</span>
+                </div>
+            </div>
+            
+            <!-- Quick Actions Checklist -->
+            <div class="section-title">✅ Action Checklist</div>
+            <div class="quick-actions">
+                <h3>Required Actions</h3>
+                <ul>
+                    <li>Verify room availability for selected dates</li>
+                    <li>Contact guest to confirm booking</li>
+                    <li>Process payment/advance if required</li>
+                    <li>Update booking calendar/system</li>
+                    <li>Prepare room allocation</li>
+                    <li>Note special requests in system</li>
+                    <li>Send confirmation email to guest</li>
+                    <li>Assign staff for check-in preparation</li>
+                </ul>
+            </div>
+            
+            <!-- Important Notes -->
+            <div class="section-title">⚠️ Important Information</div>
+            <div class="important-notes">
+                <h3>Admin Notes</h3>
+                <ul>
+                    <li>Check-in time: 2:00 PM (14:00)</li>
+                    <li>Check-out time: 12:00 PM (Noon)</li>
+                    <li>Guest must present valid government ID</li>
+                    <li>Confirm payment method with guest</li>
+                    <li>Review special requests feasibility</li>
+                    <li>Update room status in management system</li>
+                    <li>Prepare welcome amenities if applicable</li>
+                </ul>
+            </div>
+            
+            <!-- Guest Contact Summary -->
+            <div class="contact-summary">
+                <h3>📞 Quick Contact Reference</h3>
+                <div class="contact-summary-content">
+                    <strong>Guest:</strong> {{guestName}}<br>
+                    <strong>Phone:</strong> <a href="tel:{{guestPhone}}">{{guestPhone}}</a><br>
+                    <strong>Email:</strong> <a href="mailto:{{guestEmail}}">{{guestEmail}}</a><br>
+                    <strong>Dates:</strong> {{checkIn}} to {{checkOut}}<br>
+                    <strong>Amount:</strong> <span class="amount">{{totalAmount}}</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Timestamp -->
+        <div class="timestamp">
+            Booking received on: {{bookingDate}} | System: Amritha Heritage Booking Portal
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-title">Amritha Heritage</div>
+            <div class="footer-text">
+                This is an automated admin notification for new bookings.<br>
+                Please process this booking within 24 hours.<br>
+                <br>
+                Thycaud, Thiruvananthapuram – 695014, Kerala, India<br>
+                📞 +91 96335 55199 | ✉️ info@amrithaheritage.com
+            </div>
+        </div>
+    </div>
+</body>
+</html>

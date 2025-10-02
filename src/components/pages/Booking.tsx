@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import { sendBookingEmail, initEmailJS } from "../../services/emailService";
 
 // =================================================================
 // == 1. TYPE DEFINITIONS
@@ -487,6 +488,11 @@ const BookingPage = memo(() => {
   const [isRoomDropdownOpen, setIsRoomDropdownOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Initialize EmailJS when component mounts
+  useEffect(() => {
+    initEmailJS();
+  }, []);
+
   useEffect(() => {
     // Check if we have a selectedRoom from navigation state
     const selectedRoom = location.state?.selectedRoom;
@@ -681,53 +687,71 @@ const BookingPage = memo(() => {
       }
       setIsSubmitting(true);
 
-      const bookingData = {
-        full_name: guestInfo.name,
-        email: guestInfo.email,
-        phone: guestInfo.phone,
-        special_requests: guestInfo.requests,
-        check_in: bookingDetails.checkIn,
-        check_out: bookingDetails.checkOut,
-        adults: bookingDetails.adults,
-        children: bookingDetails.children,
-        selected_rooms: selectedRooms,
-        total_price: priceSummary.total,
-        nights: priceSummary.nights,
-      };
-
       try {
-        // Use environment variable for API base URL, fallback to localhost for development
-        const API_BASE_URL =
-          import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
-
-        const response = await fetch(`${API_BASE_URL}/room-bookings/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(bookingData),
+        // Prepare room details for email
+        const roomDetails = Array.from(selectedRooms).map((roomId) => {
+          const room = roomsData.find((r) => r.id === roomId);
+          const occupancy = roomOccupancy[roomId] || "single";
+          return {
+            roomId: room!.id,
+            roomName: room!.name,
+            roomCategory: room!.category,
+            occupancy: occupancy,
+            price: room!.pricing[occupancy],
+          };
         });
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          const errorMessage =
-            errorData.message ||
-            errorData.error ||
-            `Booking failed with status ${response.status}. Please try again later.`;
-          throw new Error(errorMessage);
-        }
+        // Prepare booking data for email
+        const bookingEmailData = {
+          guestName: guestInfo.name,
+          guestEmail: guestInfo.email,
+          guestPhone: guestInfo.phone,
+          checkIn: bookingDetails.checkIn,
+          checkOut: bookingDetails.checkOut,
+          adults: bookingDetails.adults,
+          children: bookingDetails.children,
+          rooms: roomDetails,
+          specialRequests: guestInfo.requests,
+          nights: priceSummary.nights,
+          roomTotal: priceSummary.roomTotal,
+          taxes: priceSummary.taxes,
+          totalAmount: priceSummary.total,
+          bookingDate: new Date().toLocaleString('en-GB', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        };
 
+        console.log('Sending booking email with data:', bookingEmailData);
+
+        // Send booking confirmation email using EmailJS
+        const response = await sendBookingEmail(bookingEmailData);
+        console.log('Booking email sent successfully:', response);
+
+        // Show confirmation modal
         setIsConfirmed(true);
       } catch (error: any) {
+        console.error('Booking email error:', error);
+        
+        // Handle different error types
         if (error.name === "TypeError" && error.message.includes("fetch")) {
           setSubmitError(
-            "Unable to connect to the booking service. Please check your internet connection and try again."
+            "Unable to send booking confirmation. Please check your internet connection and try again."
+          );
+        } else if (error.text) {
+          // EmailJS specific error
+          setSubmitError(
+            `Failed to send booking confirmation: ${error.text}. Please try again or contact us directly at +91 96335 55199.`
           );
         } else {
           setSubmitError(
-            error.message || "An unexpected error occurred. Please try again."
+            error.message || "An unexpected error occurred while sending your booking. Please try again or contact us directly."
           );
         }
+        
         // Scroll to error message
         setTimeout(() => {
           document
@@ -738,7 +762,7 @@ const BookingPage = memo(() => {
         setIsSubmitting(false);
       }
     },
-    [validateForm, guestInfo, bookingDetails, selectedRooms, priceSummary]
+    [validateForm, guestInfo, bookingDetails, selectedRooms, roomOccupancy, priceSummary]
   );
 
   // Memoized slider handlers

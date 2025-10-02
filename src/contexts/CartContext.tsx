@@ -11,6 +11,8 @@ export interface CartItem {
 }
 
 export interface ReservationDetails {
+  name: string;
+  phone: string;
   time: string;
   guests: number;
   date: string;
@@ -37,6 +39,8 @@ const initialState: CartState = {
   items: [],
   isVisible: false,
   reservation: {
+    name: '',
+    phone: '',
     time: '',
     guests: 2,
     date: new Date().toISOString().split('T')[0],

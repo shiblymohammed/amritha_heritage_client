@@ -1,55 +1,310 @@
-# Setting Up EmailJS for Contact Form
+# 📧 Email Templates for Amritha Heritage
 
-This guide will help you set up EmailJS to send emails from your contact form.
+This folder contains professional HTML email templates for the booking and reservation systems.
 
-## Step 1: Create an EmailJS Account
+---
 
-1. Go to [EmailJS](https://www.emailjs.com/) and sign up for an account.
-2. After signing up, log in to your dashboard.
+## 📁 Templates
 
-## Step 2: Add an Email Service
+### 1. `booking-email-template.html`
+**Purpose:** Room booking confirmation emails
 
-1. In your EmailJS dashboard, go to "Email Services" and click "Add New Service".
-2. Choose your email provider (Gmail, Outlook, etc.) and follow the instructions to connect your email account.
-3. Give your service a name (e.g., "Amritha Heritage Contact") and save it.
-4. Note down the Service ID for later use.
+**Features:**
+- ✅ Professional heritage-themed design
+- ✅ Responsive layout (mobile-friendly)
+- ✅ Complete booking details
+- ✅ Room information with pricing breakdown
+- ✅ Check-in/check-out times
+- ✅ Amenities list
+- ✅ Contact buttons (call & email)
+- ✅ Important guest information
 
-## Step 3: Create an Email Template
+**Variables Used:**
+```
+{{guestName}}        - Guest's full name
+{{guestEmail}}       - Guest's email address
+{{guestPhone}}       - Guest's phone number
+{{checkIn}}          - Check-in date (formatted)
+{{checkOut}}         - Check-out date (formatted)
+{{nights}}           - Number of nights
+{{adults}}           - Number of adults
+{{children}}         - Number of children
+{{roomsList}}        - List of booked rooms (formatted)
+{{roomCount}}        - Number of rooms
+{{specialRequests}}  - Special requests from guest
+{{roomTotal}}        - Room subtotal (formatted with ₹)
+{{taxes}}            - Taxes and fees (formatted with ₹)
+{{totalAmount}}      - Total amount (formatted with ₹)
+{{bookingDate}}      - Date and time of booking
+```
 
-1. In your EmailJS dashboard, go to "Email Templates" and click "Create New Template".
-2. Give your template a name (e.g., "Contact Form Template").
-3. Design your email template using the EmailJS template editor.
-   - You can use the HTML template provided in `contact-email-template.html` as a reference.
-   - Make sure to use the correct variable names in your template:
-     - `{{fullName}}` - The user's full name
-     - `{{email}}` - The user's email address
-     - `{{contactNumber}}` - The user's contact number
-     - `{{specialOccasion}}` - The special occasion (if any)
-     - `{{message}}` - The user's message
-4. Save your template and note down the Template ID.
+---
 
-## Step 4: Get Your Public Key
+### 2. `reservation-email-template.html`
+**Purpose:** Dining table reservation confirmation emails
 
-1. In your EmailJS dashboard, go to "Account" > "API Keys".
-2. Copy your Public Key.
+**Features:**
+- ✅ Professional restaurant-themed design
+- ✅ Responsive layout (mobile-friendly)
+- ✅ Reservation date and time highlight
+- ✅ Pre-ordered menu items list
+- ✅ Restaurant hours information
+- ✅ Dining experience details
+- ✅ Contact button
+- ✅ Important reservation policies
 
-## Step 5: Update Your Code
+**Variables Used:**
+```
+{{customerName}}      - Customer's name
+{{customerPhone}}     - Customer's phone number
+{{reservationDate}}   - Reservation date (formatted)
+{{reservationTime}}   - Reservation time (formatted)
+{{guestCount}}        - Number of guests
+{{itemsList}}         - List of pre-ordered items (formatted)
+{{totalItems}}        - Total number of items
+{{totalAmount}}       - Total amount (formatted with ₹)
+{{submissionDate}}    - Date and time of reservation
+```
 
-1. Open `src/services/emailService.ts`.
-2. Replace the placeholder values with your actual EmailJS credentials:
-   ```typescript
-   const SERVICE_ID = 'your_service_id';
-   const TEMPLATE_ID = 'your_template_id';
-   const PUBLIC_KEY = 'your_public_key';
-   ```
+---
 
-## Step 6: Test Your Implementation
+## 🚀 How to Use These Templates in EmailJS
 
-1. Fill out the contact form on your website.
-2. Submit the form and check if you receive the email.
-3. If you encounter any issues, check the browser console for error messages.
+### Step 1: Copy Template Content
 
-## Additional Resources
+1. Open the HTML file you want to use
+2. Copy the entire HTML content (Ctrl+A, Ctrl+C)
 
-- [EmailJS Documentation](https://www.emailjs.com/docs/)
-- [EmailJS React Integration](https://www.emailjs.com/docs/examples/reactjs/)
+### Step 2: Create Template in EmailJS
+
+1. Log into https://dashboard.emailjs.com/
+2. Go to "Email Templates"
+3. Click "Create New Template"
+4. Give it a name (e.g., "Room Booking Confirmation")
+
+### Step 3: Paste HTML Content
+
+1. In the EmailJS template editor, switch to "HTML" mode
+2. Delete any default content
+3. Paste your copied HTML template
+4. Click "Save"
+
+### Step 4: Get Template ID
+
+1. After saving, you'll see the Template ID (e.g., `template_abc123`)
+2. Copy this ID
+
+### Step 5: Update Your Code
+
+1. Open `src/services/emailService.ts`
+2. Update the TEMPLATES object:
+
+```typescript
+const TEMPLATES = {
+  CONTACT: 'template_lxili2s',
+  BOOKING: 'template_abc123',      // Your booking template ID
+  RESERVATION: 'template_xyz789'   // Your reservation template ID
+};
+```
+
+---
+
+## 🎨 Design Features
+
+### Color Scheme
+- **Primary:** `#8B7355` (Heritage Brown)
+- **Secondary:** `#6B5344` (Dark Brown)
+- **Accent:** `#D4AF37` (Gold)
+- **Success:** `#4caf50` (Green)
+- **Warning:** `#ffc107` (Amber)
+
+### Typography
+- **Font Family:** Georgia, Times New Roman (serif)
+- **Headings:** Bold, larger sizes
+- **Body:** Regular weight, comfortable line-height
+
+### Layout
+- **Max Width:** 600px (email-safe)
+- **Responsive:** Mobile-friendly breakpoints
+- **Sections:** Clearly separated with backgrounds and borders
+
+---
+
+## 📱 Mobile Responsive
+
+Both templates are fully responsive and will look great on:
+- ✅ Desktop email clients (Outlook, Thunderbird, etc.)
+- ✅ Web email (Gmail, Yahoo, Outlook.com)
+- ✅ Mobile devices (iOS Mail, Gmail app, etc.)
+
+---
+
+## 🧪 Testing Templates
+
+### Test in EmailJS Dashboard
+
+1. Open your template in EmailJS
+2. Click "Test It" button
+3. Fill in sample data for all variables
+4. Send test email to yourself
+5. Check how it looks in your email client
+
+### Test Variables
+
+**For Booking Template:**
+```
+guestName: John Doe
+guestEmail: john@example.com
+guestPhone: +91 98765 43210
+checkIn: 15 January 2025
+checkOut: 18 January 2025
+nights: 3
+adults: 2
+children: 1
+roomsList: 1. Royal's Chamber (Deluxe) - Double Occupancy - ₹7,000
+roomCount: 1
+specialRequests: Early check-in if possible
+roomTotal: ₹21,000
+taxes: ₹1,050
+totalAmount: ₹22,050
+bookingDate: 10 January 2025, 10:30 AM
+```
+
+**For Reservation Template:**
+```
+customerName: Jane Smith
+customerPhone: +91 98765 43210
+reservationDate: 20 January 2025
+reservationTime: 7:30 PM
+guestCount: 4
+itemsList: 1. Beef With Onion x2 - ₹840
+2. Amritha Roast Chicken x1 - ₹450
+totalItems: 3
+totalAmount: ₹1,290
+submissionDate: 15 January 2025, 2:45 PM
+```
+
+---
+
+## 🔧 Customization
+
+### Changing Colors
+
+Find and replace color codes in the HTML:
+- `#8B7355` → Your primary color
+- `#6B5344` → Your secondary color
+- `#D4AF37` → Your accent color
+
+### Changing Logo/Branding
+
+Update the footer section:
+```html
+<div class="footer-logo">Your Hotel Name</div>
+```
+
+### Adding Images
+
+To add images (like logo), use absolute URLs:
+```html
+<img src="https://yourdomain.com/logo.png" alt="Logo" style="max-width: 200px;">
+```
+
+### Modifying Content
+
+Edit the HTML directly to:
+- Add/remove sections
+- Change text content
+- Modify layout
+- Add more information
+
+---
+
+## ⚠️ Important Notes
+
+### Email Client Compatibility
+
+These templates are designed to work with most email clients, but:
+- Some advanced CSS may not work in older Outlook versions
+- Always test in multiple email clients
+- Keep layouts simple for best compatibility
+
+### Variable Names
+
+- Variable names are **case-sensitive**
+- Must match exactly between template and code
+- Use double curly braces: `{{variableName}}`
+
+### File Size
+
+- Keep HTML under 100KB for best deliverability
+- Optimize images if you add them
+- Avoid large embedded files
+
+---
+
+## 📊 Template Structure
+
+```
+┌─────────────────────────────────────┐
+│           HEADER                     │
+│  (Gradient background, title)        │
+├─────────────────────────────────────┤
+│           CONTENT                    │
+│  ├─ Greeting                        │
+│  ├─ Intro text                      │
+│  ├─ Details box                     │
+│  ├─ Items/Rooms list                │
+│  ├─ Total section                   │
+│  ├─ Info boxes                      │
+│  ├─ Contact buttons                 │
+│  └─ Additional info                 │
+├─────────────────────────────────────┤
+│           FOOTER                     │
+│  (Contact info, disclaimer)          │
+└─────────────────────────────────────┘
+```
+
+---
+
+## 🎯 Best Practices
+
+1. **Test Thoroughly:** Always test emails before going live
+2. **Keep It Simple:** Don't overcomplicate the design
+3. **Mobile First:** Check mobile view first
+4. **Clear CTAs:** Make contact buttons prominent
+5. **Readable Text:** Use good contrast and font sizes
+6. **Professional Tone:** Maintain brand voice
+7. **Include Contact:** Always provide contact information
+
+---
+
+## 📞 Support
+
+If you need help with these templates:
+1. Check EmailJS documentation: https://www.emailjs.com/docs/
+2. Test in EmailJS template tester
+3. Verify all variables are correctly mapped
+4. Check browser console for errors
+
+---
+
+## ✅ Checklist
+
+Before using templates in production:
+
+- [ ] Copied HTML to EmailJS
+- [ ] Saved template and got Template ID
+- [ ] Updated `emailService.ts` with Template ID
+- [ ] Tested with sample data in EmailJS
+- [ ] Sent test email to yourself
+- [ ] Checked email on desktop
+- [ ] Checked email on mobile
+- [ ] Verified all variables display correctly
+- [ ] Confirmed links work (phone, email)
+- [ ] Reviewed content for accuracy
+- [ ] Got approval from stakeholders
+
+---
+
+**Templates created for Amritha Heritage**
+**Last updated:** January 2025

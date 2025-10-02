@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { sendContactEmail, initEmailJS } from "../../services/emailService";
+import { sendContactEmail, initContactEmailJS } from "../../services/emailService2";
 
 const Contact = () => {
   const [searchParams] = useSearchParams();
@@ -21,9 +21,9 @@ const Contact = () => {
   // --- Animation Logic ---
   const sectionRef = useRef(null);
 
-  // --- Initialize EmailJS when component mounts ---
+  // --- Initialize Contact EmailJS when component mounts ---
   useEffect(() => {
-    initEmailJS();
+    initContactEmailJS();
     window.scrollTo(0, 0);
   }, []);
 
