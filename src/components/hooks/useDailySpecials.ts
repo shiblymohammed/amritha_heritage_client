@@ -23,8 +23,19 @@ export const useDailySpecials = () => {
       setError(null);
       setIsRetrying(false);
 
-      // Use environment variable for API base URL, fallback to localhost for development
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+      // Resolve API base URL with production fallback when env is missing
+      const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
+      const fallbackProdBase = 'https://amritha-heritage-backend.onrender.com/api';
+      let API_BASE_URL = envBase;
+      if (!API_BASE_URL) {
+        try {
+          const host = typeof window !== 'undefined' ? window.location.hostname : '';
+          const isProdHost = host.endsWith('vercel.app') || host.includes('amrithaheritage.com');
+          API_BASE_URL = isProdHost ? fallbackProdBase : 'http://127.0.0.1:8000/api';
+        } catch {
+          API_BASE_URL = 'http://127.0.0.1:8000/api';
+        }
+      }
       
       // Try to fetch from API
       const response = await fetch(
