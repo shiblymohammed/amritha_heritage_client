@@ -1,5 +1,5 @@
 {
-  "name": "heritage-hotel-client",
+  "name": "amritha-heritage-client",
   "version": 2,
   "builds": [
     {
@@ -20,6 +20,6 @@
     }
   ],
   "env": {
-    "VITE_API_BASE_URL": "https://heritage-hotel-backend.onrender.com/api"
+    "VITE_API_BASE_URL": "https://your-render-backend-url.onrender.com/api"
   }
 }
