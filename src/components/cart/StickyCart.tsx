@@ -112,11 +112,11 @@ A confirmation email has been sent to the restaurant. They will contact you shor
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 100 }}
-            className="bg-background border-t border-border shadow-heritage-lg backdrop-blur-xl max-h-[70vh] overflow-hidden"
+            className="bg-background border-t border-border shadow-heritage-lg backdrop-blur-xl h-screen overflow-hidden flex flex-col"
           >
-            <div className="max-w-7xl mx-auto p-6">
+            <div className="max-w-7xl mx-auto p-6 flex-1 flex flex-col">
               {/* Compact Header */}
-              <div className="flex justify-between items-center mb-6 pb-4 border-b border-border">
+              <div className="flex justify-between items-center mb-6 pb-4 border-b border-border flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -142,14 +142,14 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
                 {/* Cart Items - Compact Design */}
-                <div className="space-y-3 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
-                  <div className="flex items-center justify-between mb-4">
+                <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar flex-1 min-h-0">
+                  <div className="flex items-center justify-between mb-4 sticky top-0 bg-background z-10 pb-2">
                     <h4 className="text-lg font-playfair font-bold text-text-heading">
                       Selected Dishes
                     </h4>
-                    <span className="px-2 py-1 bg-accent/10 text-accent rounded-full text-xs font-poppins font-medium">
+                    <span className="text-sm text-foreground-subtle font-poppins">
                       {state.totalItems} {state.totalItems === 1 ? 'item' : 'items'}
                     </span>
                   </div>
@@ -227,8 +227,8 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                 </div>
 
                 {/* Reservation Form - Compact Design */}
-                <div className="bg-background-secondary rounded-xl p-5 border border-border h-fit">
-                  <div className="flex items-center gap-2 mb-4">
+                <div className="bg-background-secondary rounded-xl p-5 border border-border h-fit flex flex-col">
+                  <div className="flex items-center gap-2 mb-4 flex-shrink-0">
                     <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
                       <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v10m6-10v10m-6-4h6" />
@@ -239,7 +239,7 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                     </h4>
                   </div>
                   
-                  <div className="space-y-4">
+                  <div className="flex-1 space-y-4 overflow-y-auto">
                     {/* Name and Phone - Side by side */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
@@ -364,8 +364,10 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Reserve Button */}
+                  {/* Reserve Button - Always visible at bottom */}
+                  <div className="flex-shrink-0 pt-4 border-t border-border">
                     <button
                       onClick={handleReservation}
                       disabled={isSubmitting || !state.reservation.time || !state.reservation.name || !state.reservation.phone}
@@ -387,7 +389,7 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                     </button>
                     
                     {(!state.reservation.time || !state.reservation.name || !state.reservation.phone) && (
-                      <p className="text-center text-xs text-accent font-poppins">
+                      <p className="text-center text-xs text-accent font-poppins mt-2">
                         Please fill all required fields to proceed
                       </p>
                     )}
