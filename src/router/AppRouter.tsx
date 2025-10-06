@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import MainLayout from "../layout/MainLayout"; // Fixed import
 import LoadingSpinner from "../components/loadingspinner/LoadingSpinner";
 import NotFound from "../components/error/NotFound";
+import AdminRedirect from "../components/redirect/AdminRedirect";
 
 // Lazy load all pages for better performance
 const Home = lazy(() => import("../components/pages/Home"));
@@ -218,6 +219,12 @@ function AppRouter() {
                 <Contact />
               </Suspense>
             }
+          />
+
+          {/* Admin Redirect Route */}
+          <Route
+            path="/admin"
+            element={<AdminRedirect />}
           />
 
           {/* 404 Page - Page Not Found */}
