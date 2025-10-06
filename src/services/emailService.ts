@@ -3,7 +3,7 @@ import emailjs from '@emailjs/browser';
 // =================================================================
 // EmailJS Configuration
 // =================================================================
-const SERVICE_ID = 'service_arz46ex';
+const SERVICE_ID = 'service_x59jfyo'                    //'service_arz46ex';
 const PUBLIC_KEY = 'gPBcWSxjGAy5MMQa-';
 
 // Template IDs for different email types
