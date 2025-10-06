@@ -23,10 +23,12 @@ export const useDailySpecials = () => {
       setError(null);
       setIsRetrying(false);
 
-      // Resolve API base URL with production fallback when env is missing
+      // Resolve API base URL with production fallback for Vercel deployment
       const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
       const fallbackProdBase = 'https://amritha-heritage-backend.onrender.com/api';
       let API_BASE_URL = envBase;
+      
+      // If no env var set, detect production environment and use fallback
       if (!API_BASE_URL) {
         try {
           const host = typeof window !== 'undefined' ? window.location.hostname : '';
