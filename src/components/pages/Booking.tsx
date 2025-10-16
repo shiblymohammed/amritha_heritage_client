@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
-import { sendBookingEmail, initEmailJS } from "../../services/emailService";
 
 // =================================================================
 // == 1. TYPE DEFINITIONS
@@ -488,11 +487,6 @@ const BookingPage = memo(() => {
   const [isRoomDropdownOpen, setIsRoomDropdownOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Initialize EmailJS when component mounts
-  useEffect(() => {
-    initEmailJS();
-  }, []);
-
   useEffect(() => {
     // Check if we have a selectedRoom from navigation state
     const selectedRoom = location.state?.selectedRoom;
@@ -688,69 +682,14 @@ const BookingPage = memo(() => {
       setIsSubmitting(true);
 
       try {
-        // Prepare room details for email
-        const roomDetails = Array.from(selectedRooms).map((roomId) => {
-          const room = roomsData.find((r) => r.id === roomId);
-          const occupancy = roomOccupancy[roomId] || "single";
-          return {
-            roomId: room!.id,
-            roomName: room!.name,
-            roomCategory: room!.category,
-            occupancy: occupancy,
-            price: room!.pricing[occupancy],
-          };
-        });
-
-        // Prepare booking data for email
-        const bookingEmailData = {
-          guestName: guestInfo.name,
-          guestEmail: guestInfo.email,
-          guestPhone: guestInfo.phone,
-          checkIn: bookingDetails.checkIn,
-          checkOut: bookingDetails.checkOut,
-          adults: bookingDetails.adults,
-          children: bookingDetails.children,
-          rooms: roomDetails,
-          specialRequests: guestInfo.requests,
-          nights: priceSummary.nights,
-          roomTotal: priceSummary.roomTotal,
-          taxes: priceSummary.taxes,
-          totalAmount: priceSummary.total,
-          bookingDate: new Date().toLocaleString('en-GB', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          })
-        };
-
-        console.log('Sending booking email with data:', bookingEmailData);
-
-        // Send booking confirmation email using EmailJS
-        const response = await sendBookingEmail(bookingEmailData);
-        console.log('Booking email sent successfully:', response);
-
         // Show confirmation modal
         setIsConfirmed(true);
       } catch (error: any) {
-        console.error('Booking email error:', error);
+        console.error('Booking error:', error);
         
-        // Handle different error types
-        if (error.name === "TypeError" && error.message.includes("fetch")) {
-          setSubmitError(
-            "Unable to send booking confirmation. Please check your internet connection and try again."
-          );
-        } else if (error.text) {
-          // EmailJS specific error
-          setSubmitError(
-            `Failed to send booking confirmation: ${error.text}. Please try again or contact us directly at +91 96335 55199.`
-          );
-        } else {
-          setSubmitError(
-            error.message || "An unexpected error occurred while sending your booking. Please try again or contact us directly."
-          );
-        }
+        setSubmitError(
+          error.message || "An unexpected error occurred while processing your booking. Please try again or contact us directly."
+        );
         
         // Scroll to error message
         setTimeout(() => {

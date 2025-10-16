@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useCart } from '../../contexts/CartContext';
-import { motion, AnimatePresence } from 'framer-motion';
-import { sendReservationEmail, initEmailJS } from '../../services/emailService';
+import React, { useState } from "react";
+import { useCart } from "../../contexts/CartContext";
+import { motion, AnimatePresence } from "framer-motion";
+// ✅ Import your new service
+import { sendReservationRequest } from "../../services/emailService";
 
 const StickyCart: React.FC = () => {
-  const { state, removeItem, updateQuantity, updateReservation, clearCart } = useCart();
+  const { state, removeItem, updateQuantity, updateReservation, clearCart } =
+    useCart();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Initialize EmailJS when component mounts
-  useEffect(() => {
-    initEmailJS();
-  }, []);
 
   // Generate time slots from 7:30 AM to 10:30 PM
   const generateTimeSlots = () => {
@@ -20,12 +17,16 @@ const StickyCart: React.FC = () => {
       for (let minute = 0; minute < 60; minute += 30) {
         if (hour === 22 && minute > 30) break; // Stop at 10:30 PM
         if (hour === 7 && minute === 0) continue; // Start from 7:30 AM
-        
-        const time24 = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+        const time24 = `${hour.toString().padStart(2, "0")}:${minute
+          .toString()
+          .padStart(2, "0")}`;
         const hour12 = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        const time12 = `${hour12}:${minute.toString().padStart(2, '0')} ${ampm}`;
-        
+        const ampm = hour >= 12 ? "PM" : "AM";
+        const time12 = `${hour12}:${minute
+          .toString()
+          .padStart(2, "0")} ${ampm}`;
+
         slots.push({ value: time24, label: time12 });
       }
     }
@@ -34,67 +35,53 @@ const StickyCart: React.FC = () => {
 
   const timeSlots = generateTimeSlots();
 
+  // ✅ UPDATED reservation handler
   const handleReservation = async () => {
+    // Keep your existing validation checks
     if (state.items.length === 0) {
-      alert('Please add items to your cart before making a reservation.');
+      alert("Please add items to your cart before making a reservation.");
       return;
     }
-
-    if (!state.reservation.name.trim()) {
-      alert('Please enter your full name.');
-      return;
-    }
-
-    if (!state.reservation.phone.trim()) {
-      alert('Please enter your phone number.');
-      return;
-    }
-
-    if (!state.reservation.time) {
-      alert('Please select a time for your reservation.');
+    if (
+      !state.reservation.name.trim() ||
+      !state.reservation.phone.trim() ||
+      !state.reservation.time
+    ) {
+      alert("Please fill all required fields (Name, Phone, and Time).");
       return;
     }
 
     setIsSubmitting(true);
-    
-    try {
-      const reservationData = {
-        customerName: state.reservation.name,
-        customerPhone: state.reservation.phone,
-        reservationDate: state.reservation.date,
-        reservationTime: state.reservation.time,
-        guestCount: state.reservation.guests,
-        selectedItems: state.items,
-        totalAmount: state.totalAmount,
-        totalItems: state.totalItems,
-      };
 
-      console.log('Sending reservation email with data:', reservationData);
-      
-      // Send reservation email using EmailJS
-      const response = await sendReservationEmail(reservationData);
-      console.log('EmailJS reservation response:', response);
-      
-      // Show success message
+    try {
+      // Use the new service to send data to your Django backend
+      await sendReservationRequest({
+        reservation: state.reservation,
+        items: state.items,
+        totalAmount: state.totalAmount,
+      });
+
+      // If the API call is successful, show the success message to the user
       alert(`Table reserved successfully! 
       
 Reservation Details:
 • Name: ${state.reservation.name}
 • Phone: ${state.reservation.phone}
-• Date: ${new Date(state.reservation.date).toLocaleDateString('en-GB')}
+• Date: ${new Date(state.reservation.date).toLocaleDateString("en-GB")}
 • Time: ${state.reservation.time}
 • Guests: ${state.reservation.guests}
 • Total: ₹${state.totalAmount.toLocaleString()}
 
-A confirmation email has been sent to the restaurant. They will contact you shortly to confirm your reservation.`);
-      
+Your reservation has been recorded. We will contact you shortly to confirm your reservation.`);
+
       // Clear cart and close modal
       clearCart();
       setIsExpanded(false);
-      
     } catch (error) {
-      console.error('Reservation email error:', error);
-      alert('Failed to send reservation email. Please try again or call us directly at +91 96335 55199.');
+      console.error("Reservation error:", error);
+      alert(
+        "Failed to process reservation. Please try again or call us directly at +91 96335 55199."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -119,8 +106,18 @@ A confirmation email has been sent to the restaurant. They will contact you shor
               <div className="flex justify-between items-center mb-6 pb-4 border-b border-border flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    <svg
+                      className="w-5 h-5 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                      />
                     </svg>
                   </div>
                   <div>
@@ -136,8 +133,18 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                   onClick={() => setIsExpanded(false)}
                   className="w-10 h-10 bg-background-secondary hover:bg-background-tertiary rounded-xl transition-all duration-300 flex items-center justify-center group"
                 >
-                  <svg className="w-5 h-5 text-foreground group-hover:text-text-heading transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg
+                    className="w-5 h-5 text-foreground group-hover:text-text-heading transition-colors"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
               </div>
@@ -150,10 +157,11 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                       Selected Dishes
                     </h4>
                     <span className="text-sm text-foreground-subtle font-poppins">
-                      {state.totalItems} {state.totalItems === 1 ? 'item' : 'items'}
+                      {state.totalItems}{" "}
+                      {state.totalItems === 1 ? "item" : "items"}
                     </span>
                   </div>
-                  
+
                   {state.items.map((item, index) => (
                     <motion.div
                       key={item.id}
@@ -176,47 +184,83 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                             </span>
                           </div>
                         </div>
-                        
+
                         <button
                           onClick={() => removeItem(item.id)}
                           className="w-8 h-8 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg transition-all duration-300 flex items-center justify-center"
                           title="Remove item"
                         >
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
                           </svg>
                         </button>
                       </div>
-                      
+
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1 bg-background-tertiary rounded-lg p-1">
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity - 1)
+                            }
                             className="w-8 h-8 bg-background hover:bg-border rounded-md flex items-center justify-center transition-colors"
                           >
-                            <svg className="w-3 h-3 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                            <svg
+                              className="w-3 h-3 text-foreground"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M20 12H4"
+                              />
                             </svg>
                           </button>
-                          
+
                           <div className="w-12 h-8 flex items-center justify-center">
                             <span className="font-bold text-foreground font-poppins">
                               {item.quantity}
                             </span>
                           </div>
-                          
+
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity + 1)
+                            }
                             className="w-8 h-8 bg-background hover:bg-border rounded-md flex items-center justify-center transition-colors"
                           >
-                            <svg className="w-3 h-3 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            <svg
+                              className="w-3 h-3 text-foreground"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 4v16m8-8H4"
+                              />
                             </svg>
                           </button>
                         </div>
-                        
+
                         <div className="text-right">
-                          <p className="text-xs text-foreground-subtle font-poppins">Subtotal</p>
+                          <p className="text-xs text-foreground-subtle font-poppins">
+                            Subtotal
+                          </p>
                           <p className="font-bold text-foreground font-poppins">
                             ₹{(item.price * item.quantity).toLocaleString()}
                           </p>
@@ -230,15 +274,25 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                 <div className="bg-background-secondary rounded-xl p-5 border border-border h-fit flex flex-col">
                   <div className="flex items-center gap-2 mb-4 flex-shrink-0">
                     <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v10m6-10v10m-6-4h6" />
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v10m6-10v10m-6-4h6"
+                        />
                       </svg>
                     </div>
                     <h4 className="text-lg font-playfair font-bold text-text-heading">
                       Reservation Details
                     </h4>
                   </div>
-                  
+
                   <div className="flex-1 space-y-4 overflow-y-auto">
                     {/* Name and Phone - Side by side */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -249,7 +303,9 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                         <input
                           type="text"
                           value={state.reservation.name}
-                          onChange={(e) => updateReservation({ name: e.target.value })}
+                          onChange={(e) =>
+                            updateReservation({ name: e.target.value })
+                          }
                           placeholder="Enter your name"
                           className="w-full p-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 text-foreground font-poppins text-sm"
                         />
@@ -261,7 +317,9 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                         <input
                           type="tel"
                           value={state.reservation.phone}
-                          onChange={(e) => updateReservation({ phone: e.target.value })}
+                          onChange={(e) =>
+                            updateReservation({ phone: e.target.value })
+                          }
                           placeholder="Enter phone number"
                           className="w-full p-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 text-foreground font-poppins text-sm"
                         />
@@ -277,8 +335,10 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                         <input
                           type="date"
                           value={state.reservation.date}
-                          min={new Date().toISOString().split('T')[0]}
-                          onChange={(e) => updateReservation({ date: e.target.value })}
+                          min={new Date().toISOString().split("T")[0]}
+                          onChange={(e) =>
+                            updateReservation({ date: e.target.value })
+                          }
                           className="w-full p-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 text-foreground font-poppins text-sm"
                         />
                       </div>
@@ -288,7 +348,9 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                         </label>
                         <select
                           value={state.reservation.time}
-                          onChange={(e) => updateReservation({ time: e.target.value })}
+                          onChange={(e) =>
+                            updateReservation({ time: e.target.value })
+                          }
                           className="w-full p-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 text-foreground font-poppins text-sm"
                         >
                           <option value="">Select time</option>
@@ -308,29 +370,62 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                       </label>
                       <div className="flex items-center gap-3 bg-background-tertiary rounded-lg p-2">
                         <button
-                          onClick={() => updateReservation({ guests: Math.max(1, state.reservation.guests - 1) })}
+                          onClick={() =>
+                            updateReservation({
+                              guests: Math.max(1, state.reservation.guests - 1),
+                            })
+                          }
                           className="w-8 h-8 bg-background hover:bg-border rounded-md flex items-center justify-center transition-colors"
                         >
-                          <svg className="w-4 h-4 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                          <svg
+                            className="w-4 h-4 text-foreground"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M20 12H4"
+                            />
                           </svg>
                         </button>
-                        
+
                         <div className="flex-1 text-center">
                           <div className="text-xl font-bold text-foreground font-poppins">
                             {state.reservation.guests}
                           </div>
                           <div className="text-xs text-foreground-subtle font-poppins">
-                            {state.reservation.guests === 1 ? 'Guest' : 'Guests'}
+                            {state.reservation.guests === 1
+                              ? "Guest"
+                              : "Guests"}
                           </div>
                         </div>
-                        
+
                         <button
-                          onClick={() => updateReservation({ guests: Math.min(20, state.reservation.guests + 1) })}
+                          onClick={() =>
+                            updateReservation({
+                              guests: Math.min(
+                                20,
+                                state.reservation.guests + 1
+                              ),
+                            })
+                          }
                           className="w-8 h-8 bg-background hover:bg-border rounded-md flex items-center justify-center transition-colors"
                         >
-                          <svg className="w-4 h-4 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                          <svg
+                            className="w-4 h-4 text-foreground"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 4v16m8-8H4"
+                            />
                           </svg>
                         </button>
                       </div>
@@ -341,7 +436,7 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                       <h5 className="font-playfair font-bold text-foreground mb-3">
                         Order Summary
                       </h5>
-                      
+
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between items-center">
                           <span className="text-foreground-subtle font-poppins">
@@ -351,7 +446,7 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                             ₹{state.totalAmount.toLocaleString()}
                           </span>
                         </div>
-                        
+
                         <div className="border-t border-border pt-2">
                           <div className="flex justify-between items-center">
                             <span className="font-playfair font-bold text-foreground">
@@ -370,7 +465,12 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                   <div className="flex-shrink-0 pt-4 border-t border-border">
                     <button
                       onClick={handleReservation}
-                      disabled={isSubmitting || !state.reservation.time || !state.reservation.name || !state.reservation.phone}
+                      disabled={
+                        isSubmitting ||
+                        !state.reservation.time ||
+                        !state.reservation.name ||
+                        !state.reservation.phone
+                      }
                       className="w-full btn btn-primary py-3 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {isSubmitting ? (
@@ -380,15 +480,27 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                         </>
                       ) : (
                         <>
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
                           </svg>
                           <span>Reserve Table</span>
                         </>
                       )}
                     </button>
-                    
-                    {(!state.reservation.time || !state.reservation.name || !state.reservation.phone) && (
+
+                    {(!state.reservation.time ||
+                      !state.reservation.name ||
+                      !state.reservation.phone) && (
                       <p className="text-center text-xs text-accent font-poppins mt-2">
                         Please fill all required fields to proceed
                       </p>
@@ -413,22 +525,27 @@ A confirmation email has been sent to the restaurant. They will contact you shor
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-sm font-bold text-white font-poppins">{state.totalItems}</span>
+                  <span className="text-sm font-bold text-white font-poppins">
+                    {state.totalItems}
+                  </span>
                 </div>
                 <div>
                   <div className="text-foreground-on-color font-poppins font-semibold">
-                    {state.totalItems} {state.totalItems === 1 ? 'Dish' : 'Dishes'} Selected
+                    {state.totalItems}{" "}
+                    {state.totalItems === 1 ? "Dish" : "Dishes"} Selected
                   </div>
                   <div className="text-foreground-on-color/80 font-poppins text-sm">
                     Ready for reservation
                   </div>
                 </div>
               </div>
-              
+
               <div className="hidden sm:block w-px h-10 bg-foreground-on-color/20"></div>
-              
+
               <div className="hidden sm:block">
-                <div className="text-foreground-on-color/80 font-poppins text-sm">Total Amount</div>
+                <div className="text-foreground-on-color/80 font-poppins text-sm">
+                  Total Amount
+                </div>
                 <div className="text-xl font-bold text-accent-gold font-poppins">
                   ₹{state.totalAmount.toLocaleString()}
                 </div>
@@ -442,24 +559,31 @@ A confirmation email has been sent to the restaurant. They will contact you shor
                   ₹{state.totalAmount.toLocaleString()}
                 </div>
               </div>
-              
+
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="flex items-center gap-2 bg-accent hover:bg-accent-hover px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg font-poppins font-semibold text-white"
               >
                 <span className="hidden sm:inline text-sm">
-                  {isExpanded ? 'Hide Cart' : 'View Cart & Reserve'}
+                  {isExpanded ? "Hide Cart" : "View Cart & Reserve"}
                 </span>
                 <span className="sm:hidden text-sm">
-                  {isExpanded ? 'Hide' : 'Reserve'}
+                  {isExpanded ? "Hide" : "Reserve"}
                 </span>
-                <svg 
-                  className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                <svg
+                  className={`w-4 h-4 transition-transform duration-300 ${
+                    isExpanded ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 15l7-7 7 7"
+                  />
                 </svg>
               </button>
             </div>

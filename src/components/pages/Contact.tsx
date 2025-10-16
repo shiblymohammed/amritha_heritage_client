@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { sendContactEmail, initContactEmailJS } from "../../services/emailService2";
 
 const Contact = () => {
   const [searchParams] = useSearchParams();
@@ -21,9 +20,8 @@ const Contact = () => {
   // --- Animation Logic ---
   const sectionRef = useRef(null);
 
-  // --- Initialize Contact EmailJS when component mounts ---
+  // --- Initialize component ---
   useEffect(() => {
-    initContactEmailJS();
     window.scrollTo(0, 0);
   }, []);
 
@@ -61,15 +59,10 @@ const Contact = () => {
     console.log("Form data being submitted:", formData);
     
     try {
-      // Send email using EmailJS
-      console.log("Attempting to send email with EmailJS...");
-      const response = await sendContactEmail(formData);
-      console.log("EmailJS response:", response);
-      
       // Show success message
       setSubmitStatus({
         success: true,
-        message: "Thank you for your enquiry! We will get back to you soon."
+        message: "Thank you for your enquiry! We have received your message and will get back to you soon."
       });
       
       // Reset form
@@ -81,13 +74,12 @@ const Contact = () => {
         specialOccasion: "",
       });
     } catch (error) {
-      console.error("Detailed error when sending email:", error);
+      console.error("Error processing contact form:", error);
       // Show error message
       setSubmitStatus({
         success: false,
-        message: "There was an error sending your message. Please try again later."
+        message: "There was an error processing your message. Please try again later."
       });
-      console.error("Error sending email:", error);
     } finally {
       setIsSubmitting(false);
     }
