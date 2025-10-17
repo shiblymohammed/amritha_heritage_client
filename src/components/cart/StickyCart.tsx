@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useCart } from "../../contexts/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 // ✅ Import your new service
-import { sendReservationRequest } from "../../services/reservationService";
+
 
 const StickyCart: React.FC = () => {
   const { state, removeItem, updateQuantity, updateReservation, clearCart } =
@@ -54,14 +54,7 @@ const StickyCart: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Use the new service to send data to your Django backend
-      await sendReservationRequest({
-        reservation: state.reservation,
-        items: state.items,
-        totalAmount: state.totalAmount,
-      });
-
-      // If the API call is successful, show the success message to the user
+      // Show success message directly without backend call
       alert(`Table reserved successfully! 
       
 Reservation Details:
@@ -72,7 +65,7 @@ Reservation Details:
 • Guests: ${state.reservation.guests}
 • Total: ₹${state.totalAmount.toLocaleString()}
 
-Your reservation has been recorded. We will contact you shortly to confirm your reservation.`);
+Your reservation has been recorded locally.`);
 
       // Clear cart and close modal
       clearCart();
