@@ -2,9 +2,9 @@
 import emailjs from '@emailjs/browser';
 
 // EmailJS configuration - these should be set in your .env file
-const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'your_service_id';
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'your_template_id';
-const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'your_public_key';
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_klu49f8';
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_0gb7w5k';
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'asyiqNIOeobdCBLOA';
 
 // Initialize EmailJS with your public key
 emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -43,6 +43,17 @@ export const sendAdminNotification = async (reservationData: ReservationData): P
       .map(item => `• ${item.name} x${item.quantity} - ₹${(item.price * item.quantity).toLocaleString()}`)
       .join('\n');
 
+    // Get current date and time for timestamp
+    const currentDateTime = new Date().toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+
     // Prepare email template parameters
     const templateParams = {
       customer_name: reservationData.reservation.name,
@@ -53,6 +64,7 @@ export const sendAdminNotification = async (reservationData: ReservationData): P
       ordered_items: itemsList,
       total_amount: `₹${reservationData.totalAmount.toLocaleString()}`,
       admin_email: 'admin@amrithaheritage.com', // Admin email to receive notifications
+      current_datetime: currentDateTime,
     };
 
     // Send email using EmailJS
