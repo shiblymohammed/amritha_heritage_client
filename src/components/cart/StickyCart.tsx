@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useCart } from "../../contexts/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
-// ✅ Import your new service
+import { sendAdminNotification } from "../../services/emailService";
 
 
 const StickyCart: React.FC = () => {
@@ -54,7 +54,14 @@ const StickyCart: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Show success message directly without backend call
+      // Send admin notification via EmailJS
+      await sendAdminNotification({
+        reservation: state.reservation,
+        items: state.items,
+        totalAmount: state.totalAmount
+      });
+
+      // Show success message
       alert(`Table reserved successfully! 
       
 Reservation Details:
@@ -65,7 +72,7 @@ Reservation Details:
 • Guests: ${state.reservation.guests}
 • Total: ₹${state.totalAmount.toLocaleString()}
 
-Your reservation has been recorded locally.`);
+Admin has been notified via email. We will contact you shortly to confirm your reservation.`);
 
       // Clear cart and close modal
       clearCart();
