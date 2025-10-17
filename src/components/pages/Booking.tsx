@@ -410,8 +410,7 @@ const ConfirmationModal = memo<{
         <span className="text-accent-gold font-semibold">
           {bookingDetails.name}
         </span>
-        . Your heritage stay is confirmed. A confirmation email has been sent to{" "}
-        <span className="text-accent">{bookingDetails.email}</span>.
+        . Your heritage stay is confirmed.
       </p>
       <div className="text-left glass-card p-4 rounded-lg border border-accent/20 mb-6 space-y-2">
         <p className="text-foreground">

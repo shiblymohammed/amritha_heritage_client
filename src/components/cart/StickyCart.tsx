@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useCart } from "../../contexts/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 // ✅ Import your new service
-import { sendReservationRequest } from "../../services/emailService";
+import { sendReservationRequest } from "../../services/reservationService";
 
 const StickyCart: React.FC = () => {
   const { state, removeItem, updateQuantity, updateReservation, clearCart } =

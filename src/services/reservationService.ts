@@ -1,4 +1,4 @@
-// src/services/emailService.ts
+// src/services/reservationService.ts
 
 // Define a type for the data we're sending for better code quality
 interface CartItem {
@@ -23,15 +23,13 @@ interface ReservationPayload {
 }
 
 /**
- * Sends the reservation data to the secure backend API.
- * The backend will then handle sending the email notification.
+ * Sends reservation data to the backend.
+ * Backend handles storage and optional notifications (e.g., Slack).
  * @param payload The reservation data from the cart state.
- * @returns A promise that resolves if the request is successful.
  */
 export const sendReservationRequest = async (
   payload: ReservationPayload
 ): Promise<void> => {
-  // Use an environment variable for your API URL
   const API_URL =
     import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
 
@@ -44,10 +42,7 @@ export const sendReservationRequest = async (
   });
 
   if (!response.ok) {
-    // If the server responds with an error, throw an error to be caught by the component
     const errorData = await response.json();
     throw new Error(errorData.error || "Failed to send reservation request.");
   }
-
-  // No need to return anything if successful, the component will handle the UI
 };
