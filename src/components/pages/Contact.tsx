@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { sendContactFormEmail } from "../../services/emailService";
 
 const Contact = () => {
   const [searchParams] = useSearchParams();
@@ -59,20 +60,33 @@ const Contact = () => {
     console.log("Form data being submitted:", formData);
     
     try {
-      // Show success message
-      setSubmitStatus({
-        success: true,
-        message: "Thank you for your enquiry! We have received your message and will get back to you soon."
+      // Send contact form email
+      const emailSent = await sendContactFormEmail({
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.contactNumber,
+        subject: formData.specialOccasion || "General Inquiry",
+        message: formData.message
       });
-      
-      // Reset form
-      setFormData({
-        fullName: "",
-        email: "",
-        contactNumber: "",
-        message: "",
-        specialOccasion: "",
-      });
+
+      if (emailSent) {
+        // Show success message
+        setSubmitStatus({
+          success: true,
+          message: "Thank you for your enquiry! We have received your message and will get back to you soon."
+        });
+        
+        // Reset form
+        setFormData({
+          fullName: "",
+          email: "",
+          contactNumber: "",
+          message: "",
+          specialOccasion: "",
+        });
+      } else {
+        throw new Error("Failed to send email");
+      }
     } catch (error) {
       console.error("Error processing contact form:", error);
       // Show error message

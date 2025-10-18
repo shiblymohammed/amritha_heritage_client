@@ -1,4 +1,5 @@
 import React, { useState, useCallback, memo } from 'react';
+import { sendContactFormEmail } from '../../services/emailService';
 
 interface FormData {
   name: string;
@@ -27,7 +28,7 @@ const SectionHeader = memo(() => (
 SectionHeader.displayName = 'SectionHeader';
 
 // Optimized Contact Form Component
-const ContactForm = memo<{ formData: FormData; onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void; onSubmit: () => void }>(({ formData, onInputChange, onSubmit }) => (
+const ContactForm = memo<{ formData: FormData; onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void; onSubmit: () => void; isSubmitting: boolean }>(({ formData, onInputChange, onSubmit, isSubmitting }) => (
   <div className="group animate-fade-in-up">
     <div className="card-base relative h-[500px] md:h-[600px] p-6 md:p-8 flex flex-col justify-center hover:shadow-golden-glow-sm animate-float">
       {/* Heritage pattern overlay */}
@@ -80,10 +81,21 @@ const ContactForm = memo<{ formData: FormData; onInputChange: (e: React.ChangeEv
             <button
               type="button"
               onClick={onSubmit}
-              className="btn btn-primary w-full py-3 md:py-4 px-6 md:px-8 text-sm md:text-lg font-semibold shadow-soft-sunlight-lg hover:shadow-golden-glow animate-float transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent active:scale-95 transition-all duration-300"
+              disabled={isSubmitting}
+              className="btn btn-primary w-full py-3 md:py-4 px-6 md:px-8 text-sm md:text-lg font-semibold shadow-soft-sunlight-lg hover:shadow-golden-glow animate-float transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              <span className="hidden md:inline">✨ Send Heritage Message</span>
-              <span className="md:hidden">Send Message</span>
+              {isSubmitting ? (
+                <>
+                  <div className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  <span className="hidden md:inline">Sending...</span>
+                  <span className="md:hidden">Sending...</span>
+                </>
+              ) : (
+                <>
+                  <span className="hidden md:inline">✨ Send Heritage Message</span>
+                  <span className="md:hidden">Send Message</span>
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -130,6 +142,7 @@ const ContactSection: React.FC = () => {
     email: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Optimized event handlers
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -137,11 +150,37 @@ const ContactSection: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   }, []);
 
-  const handleSubmit = useCallback(() => {
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message!');
-    // Reset form after submission
-    setFormData({ name: '', email: '', message: '' });
+  const handleSubmit = useCallback(async () => {
+    if (!formData.name || !formData.email || !formData.message) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      // Send contact form email
+      const emailSent = await sendContactFormEmail({
+        name: formData.name,
+        email: formData.email,
+        phone: '', // Optional field for home page contact
+        subject: "Contact from Home Page",
+        message: formData.message
+      });
+
+      if (emailSent) {
+        alert('Thank you for your message! We will get back to you soon.');
+        // Reset form after successful submission
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        throw new Error("Failed to send email");
+      }
+    } catch (error) {
+      console.error('Error sending contact form:', error);
+      alert('There was an error sending your message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   }, [formData]);
 
   return (
@@ -162,6 +201,7 @@ const ContactSection: React.FC = () => {
             formData={formData} 
             onInputChange={handleInputChange} 
             onSubmit={handleSubmit} 
+            isSubmitting={isSubmitting}
           />
         </div>
       </div>

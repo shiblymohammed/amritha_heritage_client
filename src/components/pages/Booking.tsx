@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import { sendRoomBookingNotification } from "../../services/emailService2";
 
 // =================================================================
 // == 1. TYPE DEFINITIONS
@@ -681,6 +682,35 @@ const BookingPage = memo(() => {
       setIsSubmitting(true);
 
       try {
+        // Prepare booking data for email
+        const bookingData = {
+          customerName: guestInfo.name,
+          customerEmail: guestInfo.email,
+          customerPhone: guestInfo.phone,
+          checkInDate: bookingDetails.checkIn,
+          checkOutDate: bookingDetails.checkOut,
+          numberOfNights: priceSummary.nights || 1,
+          numberOfGuests: (bookingDetails.adults || 0) + (bookingDetails.children || 0),
+          roomType: Array.from(selectedRooms).map(roomId => {
+            const room = roomsData.find(r => r.id === roomId);
+            const type = roomOccupancy[roomId] || 'single';
+            return `${room?.name || 'Unknown Room'} (${type})`;
+          }).join(', '),
+          totalAmount: priceSummary.total || 0,
+          specialRequests: guestInfo.specialRequests || '',
+          bookingId: `RB${Date.now()}`
+        };
+
+        // Send room booking notification email
+        try {
+          await sendRoomBookingNotification(bookingData);
+          console.log('Room booking email sent successfully');
+        } catch (emailError: any) {
+          console.error('Failed to send booking email:', emailError);
+          // Continue with booking confirmation even if email fails
+          // You might want to show a warning to the user that email notification failed
+        }
+        
         // Show confirmation modal
         setIsConfirmed(true);
       } catch (error: any) {
