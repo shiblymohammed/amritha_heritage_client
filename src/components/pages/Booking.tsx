@@ -697,7 +697,7 @@ const BookingPage = memo(() => {
             return `${room?.name || 'Unknown Room'} (${type})`;
           }).join(', '),
           totalAmount: priceSummary.total || 0,
-          specialRequests: guestInfo.specialRequests || '',
+          specialRequests: guestInfo.requests || '',
           bookingId: `RB${Date.now()}`
         };
 
